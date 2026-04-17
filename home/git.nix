@@ -12,45 +12,52 @@
     rm -f ~/.gitconfig
   '';
 
-  programs.git = {
-    enable = true;
-    lfs.enable = true;
+  programs = {
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
+    };
 
-    settings = {
-      user.email = useremail;
-      user.name = username;
+    git = {
+      enable = true;
+      lfs.enable = true;
 
-      init.defaultBranch = "main";
+      settings = {
+        user.email = useremail;
+        user.name = username;
 
-      push.autoSetupRemote = true;
-      push.default = "current";
+        init.defaultBranch = "main";
 
-      core = {
-        autocrlf = true;
-        longpaths = true;
-        fsmonitor = true;
-      };
+        push.autoSetupRemote = true;
+        push.default = "current";
 
-      log.date = "iso"; # use iso format for date
+        core = {
+          autocrlf = true;
+          longpaths = true;
+          fsmonitor = true;
+        };
 
-      alias = {
-        # common aliases
-        br = "branch";
-        co = "checkout";
-        st = "status";
-        sq = "!f() { \
+        log.date = "iso"; # use iso format for date
+
+        alias = {
+          # common aliases
+          br = "branch";
+          co = "checkout";
+          st = "status";
+          sq = "!f() { \
       		let a=$1-1; \
 		      c=$(git log --format='%h' HEAD~$a -1); \
 		      message=$(git log --format='%s' $c -1); \
 		      git reset --soft $c^; \
 		      git commit -m $\"$message\"; \
 	      }; f";
-        ls = "log --format='%C(auto) %h %<(14)%aN %<(14)%C(cyan)%cd%C(auto) %s %d' --date=relative -20";
-        lbr = "branch --sort=-committerdate";
-        ll = "log --pretty=format:\"%C(yellow)%h%Cred%d\\\\ %Creset%s%Cblue\\\\ [%cn]\" --decorate --numstat";
-        cm = "commit -m";
-        cne = "commit --amend --no-edit";
-        pf = "push -f";
+          ls = "log --format='%C(auto) %h %<(14)%aN %<(14)%C(cyan)%cd%C(auto) %s %d' --date=relative -20";
+          lbr = "branch --sort=-committerdate";
+          ll = "log --pretty=format:\"%C(yellow)%h%Cred%d\\\\ %Creset%s%Cblue\\\\ [%cn]\" --decorate --numstat";
+          cm = "commit -m";
+          cne = "commit --amend --no-edit";
+          pf = "push -f";
+        };
       };
     };
   };

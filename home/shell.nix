@@ -14,22 +14,12 @@
       enable = true;
       plugins = [
         {name = "jeffreytse/zsh-vi-mode";}
-        {name = "zsh-users/zsh-autosuggestions";} # Simple plugin installation
+        {name = "zsh-users/zsh-autosuggestions";}
       ];
     };
 
-    # oh-my-zsh = {
-    #   enable = false;
-
-    #   theme = "robbyrussell";
-    # };
-
     shellAliases = {
-      ls = "eza --icons";
+      ls = "eza";
     };
-  };
-
-  programs.starship = {
-    enable = true;
   };
 }
