@@ -30,9 +30,17 @@
 
         InitialKeyRepeat = 15; # normal minimum is 15 (225 ms), maximum is 120 (1800 ms)
         KeyRepeat = 2; # normal minimum is 2 (30 ms), maximum is 120 (1800 ms)
+
+        "com.apple.trackpad.scaling" = 1.5;
       };
 
       CustomUserPreferences = {
+        "com.apple.desktopservices" = {
+          # Avoid creating .DS_Store files on network or USB volumes
+          DSDontWriteNetworkStores = true;
+          DSDontWriteUSBStores = true;
+        };
+
         "com.microsoft.VSCode" = {
           ApplePressAndHoldEnabled = false; # disable press and hold for VS Code to enable key repeat
         };
@@ -42,8 +50,4 @@
 
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
-
-  # Create /etc/zshrc that loads the nix-darwin environment.d
-  # this is required if you want to use darwin's default shell - zsh
-  programs.zsh.enable = true;
 }

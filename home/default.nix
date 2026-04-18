@@ -4,6 +4,7 @@
     ./shell.nix
     ./core.nix
     ./git.nix
+    # ./ghostty.nix
     ./zellij.nix
     ./starship.nix
   ];

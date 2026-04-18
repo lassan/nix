@@ -21,6 +21,7 @@
     eza
     bat
     gitui
+
     temporal-cli
   ];
 
