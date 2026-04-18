@@ -45,10 +45,8 @@
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
 
-      # Set Git commit hash for darwin-version.
-
       # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "aarch64-darwin";
+      nixpkgs.hostPlatform = "${system}";
     };
   in {
     # Build darwin flake using:

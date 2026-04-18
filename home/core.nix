@@ -16,6 +16,10 @@
     atuin
     # productivity
     glow # markdown previewer in terminal
+
+    worktrunk
+
+    tldr
   ];
 
   programs = {
@@ -24,15 +28,6 @@
       git = true;
       icons = "auto";
       enableZshIntegration = true;
-    };
-
-    television = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
-    nix-search-tv = {
-      enable = true;
     };
   };
 }
