@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  nixpkgs.config.allowUnfree = true;
+
   environment.shells = with pkgs; [
     zsh
   ];
@@ -20,9 +22,13 @@
     atuin
     eza
     bat
-    gitui
 
     temporal-cli
+
+    github-copilot-cli
+
+    podman
+    podman-compose
   ];
 
   homebrew = {
