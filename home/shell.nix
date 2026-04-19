@@ -8,6 +8,8 @@
       eval "$(zoxide init zsh)"
       eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(temporal completion zsh)"
+
+      # export DOCKER_HOST=unix:///var/run/docker.sock
     '';
 
     zplug = {
@@ -20,6 +22,10 @@
 
     shellAliases = {
       ls = "eza";
+      docker = "podman";
+      pn = "pnpm";
+
+      nx = "pnpm nx"; # temporary alias until I figure out dev shells for globals
     };
   };
 }

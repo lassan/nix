@@ -26,9 +26,8 @@
     temporal-cli
 
     github-copilot-cli
-
-    podman
-    podman-compose
+    just
+    just-lsp
   ];
 
   homebrew = {
@@ -44,7 +43,10 @@
       vimari = 1480933944;
     };
 
-    brews = [];
+    brews = [
+      "podman"
+      "podman-compose"
+    ];
     casks = [
       "zen"
       "rectangle"
@@ -57,6 +59,8 @@
       "discord"
       "whatsapp"
 
+      "bazecor"
+
       # dev tool
       "ghostty"
       "bruno"
@@ -64,6 +68,8 @@
       "claude-code"
       "linear-linear"
       "webstorm"
+
+      "podman-desktop"
     ];
     taps = [];
   };
