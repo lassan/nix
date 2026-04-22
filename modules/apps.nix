@@ -22,12 +22,13 @@
     atuin
     eza
     bat
+    just
+    just-lsp
+    flyctl
 
     temporal-cli
 
     github-copilot-cli
-    just
-    just-lsp
   ];
 
   homebrew = {
@@ -70,6 +71,8 @@
       "webstorm"
 
       "podman-desktop"
+
+      "dockdoor"
     ];
     taps = [];
   };

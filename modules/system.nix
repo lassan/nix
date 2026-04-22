@@ -17,7 +17,7 @@
       dock = {
         autohide = true;
         magnification = false;
-        autohide-delay = 0.03;
+        autohide-delay = 0.01;
         autohide-time-modifier = 0.3;
         mineffect = "scale";
         show-recents = false;

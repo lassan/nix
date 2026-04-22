@@ -22,6 +22,10 @@
       enable = true;
       lfs.enable = true;
 
+      extraConfig = {
+        rerere.enabled = true;
+      };
+
       settings = {
         user.email = useremail;
         user.name = username;

@@ -9,6 +9,8 @@
       eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(temporal completion zsh)"
 
+      if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init bash)"; fi
+
       # export DOCKER_HOST=unix:///var/run/docker.sock
     '';
 
