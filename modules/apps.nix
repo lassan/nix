@@ -29,6 +29,8 @@
     temporal-cli
 
     github-copilot-cli
+    colima
+    docker
   ];
 
   homebrew = {
@@ -45,8 +47,8 @@
     };
 
     brews = [
-      "podman"
-      "podman-compose"
+      # "podman"
+      # "podman-compose"
     ];
     casks = [
       "zen"
@@ -70,7 +72,7 @@
       "linear-linear"
       "webstorm"
 
-      "podman-desktop"
+      # "podman-desktop"
 
       "dockdoor"
     ];
