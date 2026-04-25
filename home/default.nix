@@ -9,6 +9,7 @@
     ./core.nix
     ./git.nix
     ./gitui.nix
+    ./kitty.nix
     # ./ghostty.nix
     ./zellij.nix
     ./starship.nix

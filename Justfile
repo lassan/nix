@@ -4,6 +4,9 @@ default:
 rebuild:
     sudo darwin-rebuild switch --flake .#macbook
 
+rebuild-home:
+    sudo home-manager switch --flake .#macbook
+
 check:
     nix flake check
 

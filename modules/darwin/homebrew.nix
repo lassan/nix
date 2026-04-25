@@ -52,7 +52,7 @@
       "bazecor"
 
       # dev tool
-      "ghostty"
+      # "ghostty"
       "bruno"
       "claude"
       "claude-code"
