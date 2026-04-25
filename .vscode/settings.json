@@ -23,5 +23,26 @@
         },
       },
     }
-  }
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#997fc1",
+    "activityBar.background": "#997fc1",
+    "sash.hoverBorder": "#997fc1",
+    "statusBar.background": "#7e5db0",
+    "statusBarItem.hoverBackground": "#997fc1",
+    "statusBarItem.remoteBackground": "#7e5db0",
+    "tab.activeBorder": "#997fc1",
+    "titleBar.activeBackground": "#7e5db0",
+    "titleBar.inactiveBackground": "#7e5db099",
+    "activityBarBadge.background": "#e0ccbf",
+    "activityBarBadge.foreground": "#15202b",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "commandCenter.border": "#e7e7e799",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#7e5db0"
 }

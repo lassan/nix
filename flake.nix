@@ -49,9 +49,9 @@
       system.configurationRevision = self.rev or self.dirtyRev or null;
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
-
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "${system}";
+      environment.variables.EDITOR = "vim";
     };
   in {
     # Build darwin flake using:
