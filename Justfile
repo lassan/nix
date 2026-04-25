@@ -6,3 +6,6 @@ rebuild:
 
 update:
     nix flake update
+
+clean:
+    sudo nix-collect-garbage -d
