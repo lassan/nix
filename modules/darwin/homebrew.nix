@@ -1,38 +1,27 @@
-{pkgs, ...}: {
-  nixpkgs.config.allowUnfree = true;
+{
+  username,
+  homebrew-core,
+  homebrew-cask,
+  config,
+  ...
+}: {
+  nix-homebrew = {
+    enable = true;
+    enableRosetta = true;
 
-  environment.shells = with pkgs; [
-    zsh
-  ];
+    user = username;
 
-  environment.systemPackages = with pkgs; [
-    git
-    vim
+    taps = {
+      "homebrew/homebrew-core" = homebrew-core;
+      "homebrew/homebrew-cask" = homebrew-cask;
+    };
 
-    # nix
-    nixd
-    alejandra
-
-    # dev tools
-    zellij
-    fnm
-    gh
-    zoxide
-    atuin
-    eza
-    bat
-    just
-    just-lsp
-    flyctl
-
-    temporal-cli
-
-    github-copilot-cli
-    colima
-    docker
-  ];
+    mutableTaps = false;
+  };
 
   homebrew = {
+    taps = builtins.attrNames config.nix-homebrew.taps;
+
     enable = true;
 
     onActivation = {
@@ -73,6 +62,5 @@
       "dockdoor"
       "reader"
     ];
-    taps = [];
   };
 }

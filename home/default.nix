@@ -1,4 +1,8 @@
-{username, ...}: {
+{
+  username,
+  homeDirectory,
+  ...
+}: {
   # import sub modules
   imports = [
     ./shell.nix
@@ -16,7 +20,7 @@
   # paths it should manage.
   home = {
     username = username;
-    homeDirectory = "/Users/${username}";
+    homeDirectory = homeDirectory;
 
     # This value determines the Home Manager release that your
     # configuration is compatible with. This helps avoid breakage

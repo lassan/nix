@@ -1,5 +1,5 @@
 {
-  description = "Macbook Pro Flake";
+  description = " ";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -29,87 +29,69 @@
     nix-darwin,
     nixpkgs,
     nix-homebrew,
-    homebrew-core,
-    homebrew-cask,
     home-manager,
     worktrunk,
+    ...
   }: let
-    username = "hassan";
-    useremail = "hassanmunir@live.com";
-    hostname = "macbook";
-    system = "aarch64-darwin";
+    lib = nixpkgs.lib;
 
-    specialArgs =
-      inputs
-      // {
-        inherit username useremail hostname self;
+    hosts = {
+      macbook = {
+        platform = "darwin";
+        system = "aarch64-darwin";
+        hostname = "macbook";
+        username = "hassan";
+        useremail = "hassanmunir@live.com";
+        homeDirectory = "/Users/hassan";
+        modules = [./hosts/macbook];
       };
-
-    configuration = {...}: {
-      system.configurationRevision = self.rev or self.dirtyRev or null;
-      # system.activationScripts.postUserActivation.text = ''
-      #   # Following line should allow us to avoid a logout/login cycle
-      #   /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-      # '';
-      # List packages installed in system profile. To search by name, run:
-      # $ nix-env -qaP | grep wget
-      # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "${system}";
-      environment.variables.EDITOR = "vim";
     };
+
+    hostSystems = lib.unique (map (host: host.system) (builtins.attrValues hosts));
+
+    darwinHosts = lib.filterAttrs (_: host: host.platform == "darwin") hosts;
+
+    mkSpecialArgs = host:
+      inputs
+      // host
+      // {inherit self;};
+
+    mkDarwinSystem = host: let
+      specialArgs = mkSpecialArgs host;
+    in
+      nix-darwin.lib.darwinSystem {
+        inherit specialArgs;
+
+        modules =
+          [
+            ({...}: {
+              # The platform the configuration will be used on.
+              nixpkgs.hostPlatform = host.system;
+              environment.variables.EDITOR = "vim";
+            })
+            ./modules/nix-core.nix
+            ./modules/common/apps.nix
+            ./modules/common/host.nix
+
+            # home manager
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.sharedModules = [worktrunk.homeModules.default];
+              home-manager.users.${host.username} = import ./home;
+            }
+
+            # homebrew
+            nix-homebrew.darwinModules.nix-homebrew
+          ]
+          ++ host.modules;
+      };
   in {
-    # Build darwin flake using:
-    darwinConfigurations."${hostname}" = nix-darwin.lib.darwinSystem {
-      inherit specialArgs;
+    # Build Darwin hosts using:
+    darwinConfigurations = lib.mapAttrs (_: mkDarwinSystem) darwinHosts;
 
-      modules = [
-        configuration
-        ./modules/nix-core.nix
-        ./modules/system.nix
-        ./modules/apps.nix
-        ./modules/host-users.nix
-
-        #home manager
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = specialArgs;
-          home-manager.sharedModules = [worktrunk.homeModules.default];
-          home-manager.users.${username} = import ./home;
-        }
-
-        # homebrew
-
-        nix-homebrew.darwinModules.nix-homebrew
-        {
-          nix-homebrew = {
-            enable = true;
-            enableRosetta = true;
-
-            user = "${username}";
-
-            # Optional: Declarative tap management
-            taps = {
-              "homebrew/homebrew-core" = homebrew-core;
-              "homebrew/homebrew-cask" = homebrew-cask;
-            };
-
-            # Optional: Enable fully-declarative tap management
-            #
-            # With mutableTaps disabled, taps can no longer be added imperatively with `brew tap`.
-            mutableTaps = false;
-          };
-        }
-        # Optional: Align homebrew taps config with nix-homebrew
-        (
-          {config, ...}: {
-            homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
-          }
-        )
-      ];
-    };
-
-    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
+    formatter = lib.genAttrs hostSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
   };
 }

@@ -1,7 +1,7 @@
 {...}: {
   programs.gitui = {
     enable = true;
-    
+
     keyConfig = ''
       (
         move_left: Some(( code: Char('h'), modifiers: "")),
