@@ -36,7 +36,7 @@
   }: let
     username = "hassan";
     useremail = "hassanmunir@live.com";
-    hostname = "Hassans-MacBook-Pro";
+    hostname = "macbook";
     system = "aarch64-darwin";
 
     specialArgs =
@@ -47,6 +47,10 @@
 
     configuration = {...}: {
       system.configurationRevision = self.rev or self.dirtyRev or null;
+      # system.activationScripts.postUserActivation.text = ''
+      #   # Following line should allow us to avoid a logout/login cycle
+      #   /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+      # '';
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       # The platform the configuration will be used on.
@@ -55,7 +59,6 @@
     };
   in {
     # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#Hassans-MacBook-Pro
     darwinConfigurations."${hostname}" = nix-darwin.lib.darwinSystem {
       inherit specialArgs;
 

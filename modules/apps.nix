@@ -46,6 +46,7 @@
     };
 
     brews = [
+      "asimov"
     ];
     casks = [
       "zen"

@@ -44,6 +44,8 @@
         "com.microsoft.VSCode" = {
           ApplePressAndHoldEnabled = false; # disable press and hold for VS Code to enable key repeat
         };
+
+        "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
       };
     };
   };
