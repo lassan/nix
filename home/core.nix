@@ -13,7 +13,6 @@
     zoxide
     fnm
     gitui
-    atuin
     # productivity
     glow # markdown previewer in terminal
 

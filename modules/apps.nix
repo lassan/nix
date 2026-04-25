@@ -10,7 +10,6 @@
     vim
 
     # nix
-    nixfmt
     nixd
     alejandra
 
@@ -37,8 +36,8 @@
     enable = true;
 
     onActivation = {
-      autoUpdate = true;
-      upgrade = true;
+      autoUpdate = false;
+      upgrade = false;
       cleanup = "zap";
     };
 
@@ -47,8 +46,6 @@
     };
 
     brews = [
-      # "podman"
-      # "podman-compose"
     ];
     casks = [
       "zen"
@@ -71,8 +68,6 @@
       "claude-code"
       "linear-linear"
       "webstorm"
-
-      # "podman-desktop"
 
       "dockdoor"
       "reader"

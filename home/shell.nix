@@ -1,22 +1,23 @@
-{...}: {
+{pkgs, ...}: {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     initContent = ''
-      . "$HOME/.atuin/bin/env"
-      eval "$(atuin init zsh)"
       eval "$(zoxide init zsh)"
       eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(temporal completion zsh)"
     '';
 
-    zplug = {
-      enable = true;
-      plugins = [
-        {name = "jeffreytse/zsh-vi-mode";}
-        {name = "zsh-users/zsh-autosuggestions";}
-      ];
-    };
+    plugins = [
+      {
+        name = "zsh-vi-mode";
+        src = pkgs.zsh-vi-mode;
+      }
+      {
+        name = "zsh-autosuggestions";
+        src = pkgs.zsh-autosuggestions;
+      }
+    ];
 
     shellAliases = {
       ls = "eza";
@@ -25,5 +26,10 @@
 
       nx = "pnpm nx"; # temporary alias until I figure out dev shells for globals
     };
+  };
+
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
   };
 }
