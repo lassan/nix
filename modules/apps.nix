@@ -75,6 +75,7 @@
       # "podman-desktop"
 
       "dockdoor"
+      "reader"
     ];
     taps = [];
   };

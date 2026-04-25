@@ -29,6 +29,8 @@
 
         init.defaultBranch = "main";
 
+        credential.helper = "store";
+
         push.autoSetupRemote = true;
         push.default = "current";
 

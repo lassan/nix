@@ -17,8 +17,6 @@
     # productivity
     glow # markdown previewer in terminal
 
-    worktrunk
-
     tldr
   ];
 

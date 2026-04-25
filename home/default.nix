@@ -9,6 +9,7 @@
     ./zellij.nix
     ./starship.nix
     ./television.nix
+    ./worktrunk.nix
   ];
 
   # Home Manager needs a bit of information about you and the

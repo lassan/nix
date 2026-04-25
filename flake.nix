@@ -10,6 +10,10 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    worktrunk = {
+      url = "github:max-sixty/worktrunk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -28,6 +32,7 @@
     homebrew-core,
     homebrew-cask,
     home-manager,
+    worktrunk,
   }: let
     username = "hassan";
     useremail = "hassanmunir@live.com";
@@ -67,6 +72,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = specialArgs;
+          home-manager.sharedModules = [worktrunk.homeModules.default];
           home-manager.users.${username} = import ./home;
         }
 
