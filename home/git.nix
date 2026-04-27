@@ -1,7 +1,7 @@
 {
   lib,
-  username,
   useremail,
+  fullname,
   ...
 }: {
   # `programs.git` will generate the config file: ~/.config/git/config
@@ -25,7 +25,7 @@
       settings = {
         rerere.enabled = true;
         user.email = useremail;
-        user.name = username;
+        user.name = fullname;
 
         init.defaultBranch = "main";
 

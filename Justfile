@@ -2,7 +2,7 @@ default:
     @just --list
 
 rebuild:
-    sudo darwin-rebuild switch --flake .#macbook
+    sudo darwin-rebuild switch --flake .#macbook --impure
 
 rebuild-home:
     sudo home-manager switch --flake .#macbook

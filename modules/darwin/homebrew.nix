@@ -61,6 +61,9 @@
 
       "dockdoor"
       "reader"
+
+      "stats"
+      "shortcat"
     ];
   };
 }

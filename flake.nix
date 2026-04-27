@@ -41,6 +41,7 @@
         system = "aarch64-darwin";
         hostname = "macbook";
         username = "hassan";
+        fullname = "Hassan Munir";
         useremail = "hassanmunir@live.com";
         homeDirectory = "/Users/hassan";
         modules = [./hosts/macbook];
