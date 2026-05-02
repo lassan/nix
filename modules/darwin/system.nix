@@ -32,6 +32,8 @@
         KeyRepeat = 2; # normal minimum is 2 (30 ms), maximum is 120 (1800 ms)
 
         "com.apple.trackpad.scaling" = 1.5;
+
+        "com.apple.keyboard.fnState" = true; # Use F1, F2, etc. keys as standard function keys.
       };
 
       CustomUserPreferences = {

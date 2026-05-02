@@ -8,6 +8,14 @@
       eval "$(temporal completion zsh)"
     '';
 
+    initExtra = ''
+      source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
+      zvm_after_init_commands+=(
+          'eval "$(atuin init zsh)"'
+        )
+    '';
+
     plugins = [
       {
         name = "zsh-vi-mode";
@@ -31,6 +39,7 @@
 
   programs.atuin = {
     enable = true;
-    enableZshIntegration = true;
+    enableZshIntegration = false;
+    forceOverwriteSettings = true;
   };
 }

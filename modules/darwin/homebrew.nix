@@ -62,7 +62,7 @@
       "dockdoor"
       "reader"
 
-      "stats"
+      "hot"
       "shortcat"
     ];
   };
