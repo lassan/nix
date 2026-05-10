@@ -30,5 +30,6 @@
     github-copilot-cli
     colima
     docker
+    uv
   ];
 }

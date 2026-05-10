@@ -8,7 +8,7 @@
 
     extraConfig = ''
 
-          theme "retro-wave"
+          theme "onedark"
 
           keybinds clear-defaults=true {
           normal {
