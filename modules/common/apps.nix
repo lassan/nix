@@ -31,5 +31,7 @@
     colima
     docker
     uv
+
+    bun
   ];
 }

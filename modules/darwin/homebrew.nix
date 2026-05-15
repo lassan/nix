@@ -36,6 +36,8 @@
 
     brews = [
       "asimov"
+      "doctl" #digital ocean cli
+      "pulumi"
     ];
     casks = [
       "zen"
