@@ -25,8 +25,8 @@
     enable = true;
 
     onActivation = {
-      autoUpdate = false;
-      upgrade = false;
+      autoUpdate = true;
+      upgrade = true;
       cleanup = "zap";
     };
 
@@ -58,14 +58,23 @@
       "bruno"
       "claude"
       "claude-code"
-      "linear-linear"
+      "linear"
       "webstorm"
+      "cyberduck"
 
       "dockdoor"
       "reader"
 
-      "hot"
       "shortcat"
+
+      "microsoft-outlook"
+      "microsoft-excel"
+
+      "macs-fan-control"
+
+      "jordanbaird-ice"
+      "TheBoredTeam/boring-notch/boring-notch"
+      "stats"
     ];
   };
 }

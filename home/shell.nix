@@ -34,6 +34,9 @@
       px = "pnpm exec";
 
       nx = "pnpm nx"; # temporary alias until I figure out dev shells for globals
+
+      k = "kubectl";
+      kns = "kubectl config set-context --current --namespace";
     };
   };
 
