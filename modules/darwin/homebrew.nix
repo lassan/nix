@@ -73,8 +73,12 @@
       "macs-fan-control"
 
       "jordanbaird-ice"
-      "TheBoredTeam/boring-notch/boring-notch"
       "stats"
+
+      "dash"
+      # "lookaway"
+
+      "ollama"
     ];
   };
 }
