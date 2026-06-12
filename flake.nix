@@ -79,6 +79,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = specialArgs;
               home-manager.sharedModules = [worktrunk.homeModules.default];
               home-manager.users.${host.username} = import ./home;

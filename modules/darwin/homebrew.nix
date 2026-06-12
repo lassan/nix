@@ -38,6 +38,7 @@
       "asimov"
       "doctl" #digital ocean cli
       "pulumi"
+      "llmfit"
     ];
     casks = [
       "zen"
@@ -57,7 +58,7 @@
       # "ghostty"
       "bruno"
       "claude"
-      "claude-code"
+      "claude-code@latest"
       "linear"
       "webstorm"
       "cyberduck"
@@ -79,6 +80,8 @@
       # "lookaway"
 
       "ollama"
+
+      "citrix-workspace"
     ];
   };
 }

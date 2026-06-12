@@ -2,6 +2,7 @@
   homeDirectory,
   lib,
   hostname,
+  pkgs,
   ...
 }: let
   tokenFile = /. + "${homeDirectory}/.config/github-runner/suphq.token";
@@ -12,6 +13,7 @@ in {
     Create a fine-grained PAT for the suphq org with "Self-hosted runners: Read and write",
     save it to that path, and rebuild to register the runner.
   '';
+  users.users._github-runner.home = lib.mkIf hasToken (lib.mkForce "/private/var/lib/github-runners");
   services.github-runners."${hostname}-01" = lib.mkIf hasToken {
     enable = true;
     url = "https://github.com/suphq";
@@ -19,7 +21,8 @@ in {
     replace = true;
     ephemeral = false;
     noDefaultLabels = false;
-    nodeRuntimes = ["node24"];
+    nodeRuntimes = ["node20" "node24"];
+    extraPackages = with pkgs; [gnused];
     runnerGroup = "macbook-nix";
     extraLabels = [
       hostname
