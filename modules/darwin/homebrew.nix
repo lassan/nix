@@ -2,6 +2,7 @@
   username,
   homebrew-core,
   homebrew-cask,
+  homebrew-can1357,
   config,
   ...
 }: {
@@ -14,6 +15,7 @@
     taps = {
       "homebrew/homebrew-core" = homebrew-core;
       "homebrew/homebrew-cask" = homebrew-cask;
+      "can1357/homebrew-tap" = homebrew-can1357;
     };
 
     mutableTaps = false;
@@ -39,6 +41,8 @@
       "doctl" #digital ocean cli
       "pulumi"
       "llmfit"
+
+      "omp"
     ];
     casks = [
       "zen"
@@ -70,6 +74,7 @@
 
       "microsoft-outlook"
       "microsoft-excel"
+      "onedrive"
 
       "macs-fan-control"
 
@@ -79,9 +84,11 @@
       "dash"
       # "lookaway"
 
-      "ollama"
+      "ollama-app"
 
       "citrix-workspace"
+
+      "logseq"
     ];
   };
 }

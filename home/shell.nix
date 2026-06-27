@@ -3,6 +3,12 @@
     enable = true;
     enableCompletion = true;
     initContent = ''
+      export PNPM_HOME="$HOME/Library/pnpm"
+      case ":$PATH:" in
+        *":$PNPM_HOME:"*) ;;
+        *) export PATH="$PNPM_HOME:$PATH" ;;
+      esac
+
       eval "$(zoxide init zsh)"
       eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(temporal completion zsh)"
@@ -11,7 +17,19 @@
 
       zvm_after_init_commands+=(
           'eval "$(atuin init zsh)"'
+          'source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh'
         )
+
+      zvm_after_lazy_keybindings_commands+=(
+          'bindkey -M viins "\ef" forward-word'
+          'bindkey -M viins "\eb" backward-word'
+          'bindkey -M viins "\e[1;3C" forward-word'
+          'bindkey -M viins "\e[1;3D" backward-word'
+        )
+
+      if [[ -z "$ZELLIJ_SESSION_NAME" && ( "$TERM" == *kitty* || "$TERM" == *ghostty* ) ]]; then
+        zellij attach -c $USER@$(hostname)
+      fi
     '';
 
     plugins = [

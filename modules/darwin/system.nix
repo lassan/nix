@@ -15,7 +15,7 @@
 
     defaults = {
       dock = {
-        autohide = true;
+        autohide = false;
         magnification = false;
         autohide-delay = 0.01;
         autohide-time-modifier = 0.3;

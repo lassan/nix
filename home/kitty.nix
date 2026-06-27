@@ -14,7 +14,7 @@
     settings = {
       macos_option_as_alt = "left";
 
-      background_opacity = "0.75";
+      background_opacity = "1";
       background_blur = 64;
     };
   };

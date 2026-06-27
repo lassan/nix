@@ -33,5 +33,7 @@
     uv
 
     bun
+
+    typescript-language-server
   ];
 }

@@ -22,6 +22,10 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+    homebrew-can1357 = {
+      url = "github:can1357/homebrew-tap";
+      flake = false;
+    };
   };
 
   outputs = inputs @ {

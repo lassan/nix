@@ -10,7 +10,8 @@
     ./git.nix
     ./gitui.nix
     ./kitty.nix
-    # ./ghostty.nix
+    ./ghostty.nix
+    ./firefox.nix
     ./zellij.nix
     ./starship.nix
     ./television.nix
