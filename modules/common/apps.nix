@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  treehouse,
+  ...
+}: {
   nixpkgs.config.allowUnfree = true;
 
   environment.shells = with pkgs; [
@@ -35,5 +39,7 @@
     bun
 
     typescript-language-server
+
+    treehouse.packages.${pkgs.system}.default
   ];
 }

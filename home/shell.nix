@@ -9,9 +9,15 @@
         *) export PATH="$PNPM_HOME:$PATH" ;;
       esac
 
+      case ":$PATH:" in
+        *":/Library/Frameworks/Python.framework/Versions/3.14/bin:"*) ;;
+        *) export PATH="/Library/Frameworks/Python.framework/Versions/3.14/bin:$PATH" ;;
+      esac
+
       eval "$(zoxide init zsh)"
       eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(temporal completion zsh)"
+      eval "$(zellij setup --generate-completion zsh)"
 
       source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 

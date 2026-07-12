@@ -14,6 +14,10 @@
       url = "github:max-sixty/worktrunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    treehouse = {
+      url = "github:kunchenguid/treehouse";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -24,6 +28,10 @@
     };
     homebrew-can1357 = {
       url = "github:can1357/homebrew-tap";
+      flake = false;
+    };
+    homebrew-rtk-ai = {
+      url = "github:rtk-ai/homebrew-tap";
       flake = false;
     };
   };

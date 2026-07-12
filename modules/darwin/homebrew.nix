@@ -3,6 +3,7 @@
   homebrew-core,
   homebrew-cask,
   homebrew-can1357,
+  homebrew-rtk-ai,
   config,
   ...
 }: {
@@ -16,6 +17,7 @@
       "homebrew/homebrew-core" = homebrew-core;
       "homebrew/homebrew-cask" = homebrew-cask;
       "can1357/homebrew-tap" = homebrew-can1357;
+      "rtk-ai/homebrew-tap" = homebrew-rtk-ai;
     };
 
     mutableTaps = false;
@@ -43,6 +45,10 @@
       "llmfit"
 
       "omp"
+
+      "herdr"
+
+      "rtk-ai/tap/rtk"
     ];
     casks = [
       "zen"
@@ -89,6 +95,7 @@
       "citrix-workspace"
 
       "logseq"
+      "opensuperwhisper"
     ];
   };
 }
