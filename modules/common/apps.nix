@@ -1,8 +1,4 @@
-{
-  pkgs,
-  treehouse,
-  ...
-}: {
+{pkgs, ...}: {
   nixpkgs.config.allowUnfree = true;
 
   environment.shells = with pkgs; [
@@ -32,14 +28,10 @@
     temporal-cli
 
     github-copilot-cli
-    colima
-    docker
     uv
 
     bun
 
     typescript-language-server
-
-    treehouse.packages.${pkgs.system}.default
   ];
 }

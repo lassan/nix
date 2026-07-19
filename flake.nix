@@ -14,10 +14,6 @@
       url = "github:max-sixty/worktrunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    treehouse = {
-      url = "github:kunchenguid/treehouse";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -58,11 +54,22 @@
         homeDirectory = "/Users/hassan";
         modules = [./hosts/macbook];
       };
+      nixbox = {
+        platform = "nixos";
+        system = "x86_64-linux";
+        hostname = "nixbox";
+        username = "hassan";
+        fullname = "Hassan Munir";
+        useremail = "hassanmunir@live.com";
+        homeDirectory = "/home/hassan";
+        modules = [./hosts/nixbox];
+      };
     };
 
     hostSystems = lib.unique (map (host: host.system) (builtins.attrValues hosts));
 
     darwinHosts = lib.filterAttrs (_: host: host.platform == "darwin") hosts;
+    nixosHosts = lib.filterAttrs (_: host: host.platform == "nixos") hosts;
 
     mkSpecialArgs = host:
       inputs
@@ -97,14 +104,44 @@
               home-manager.users.${host.username} = import ./home;
             }
 
-            # homebrew
+            # homebrew (darwin-only)
             nix-homebrew.darwinModules.nix-homebrew
           ]
           ++ host.modules;
       };
+
+    mkNixosSystem = host: let
+      specialArgs = mkSpecialArgs host;
+    in
+      lib.nixosSystem {
+        inherit specialArgs;
+
+        modules =
+          [
+            ({...}: {
+              nixpkgs.hostPlatform = host.system;
+              environment.variables.EDITOR = "vim";
+            })
+            ./modules/nix-core.nix
+            ./modules/common/apps.nix
+            ./modules/common/host.nix
+
+            # home manager
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.sharedModules = [worktrunk.homeModules.default];
+              home-manager.users.${host.username} = import ./home;
+            }
+          ]
+          ++ host.modules;
+      };
   in {
-    # Build Darwin hosts using:
     darwinConfigurations = lib.mapAttrs (_: mkDarwinSystem) darwinHosts;
+    nixosConfigurations = lib.mapAttrs (_: mkNixosSystem) nixosHosts;
 
     formatter = lib.genAttrs hostSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
   };

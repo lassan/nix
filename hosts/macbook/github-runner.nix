@@ -119,7 +119,7 @@ in {
     # (yq-go = mikefarah yq; its GitHub action is a container action and
     # cannot run on darwin) by promote.yml. A missing tool can fail silently
     # inside $(...) loops.
-    extraPackages = with pkgs; [docker gnused unzip jq kubectl gh yq-go];
+    extraPackages = with pkgs; [docker gnused unzip jq kubectl gh yq-go gnutar];
     extraEnvironment = {
       DOCKER_HOST = "unix://${homeDirectory}/.colima/default/docker.sock";
     };

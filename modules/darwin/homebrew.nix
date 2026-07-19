@@ -44,14 +44,13 @@
       "pulumi"
       "llmfit"
 
-      "omp"
+      # "omp"
 
       "herdr"
 
       "rtk-ai/tap/rtk"
     ];
     casks = [
-      "zen"
       "rectangle"
       "raycast"
       "tailscale-app"
@@ -96,6 +95,8 @@
 
       "logseq"
       "opensuperwhisper"
+
+      "codex"
     ];
   };
 }
