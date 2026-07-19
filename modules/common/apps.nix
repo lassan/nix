@@ -1,5 +1,15 @@
-{pkgs, ...}: {
+{
+  hunk,
+  pkgs,
+  ...
+}: {
   nixpkgs.config.allowUnfree = true;
+
+  nixpkgs.overlays = [
+    (final: _: {
+      tokensave = final.callPackage ../../packages/tokensave.nix {};
+    })
+  ];
 
   environment.shells = with pkgs; [
     zsh
@@ -26,6 +36,9 @@
     flyctl
 
     temporal-cli
+    tokensave
+
+    hunk.packages.${pkgs.system}.default
 
     github-copilot-cli
     uv

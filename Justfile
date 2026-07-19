@@ -16,8 +16,11 @@ darwin-rebuild host="macbook":
 nixos-rebuild host:
     sudo nixos-rebuild switch --flake .#{{host}}
 
-update:
+update: update-packages
     nix flake update
+
+update-packages:
+    ./scripts/update-packages
 
 clean:
     sudo nix-collect-garbage -d

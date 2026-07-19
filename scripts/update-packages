@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repository_root="$(cd "${script_dir}/.." && pwd)"
+packages_dir="${repository_root}/packages"
+
+prefetch_release() {
+  local url="$1"
+  local legacy_hash
+
+  legacy_hash="$(nix-prefetch-url "$url")"
+  nix hash convert --hash-algo sha256 --to sri "$legacy_hash"
+}
+
+package_metadata() {
+  UPDATE_PACKAGE_FILE="$1" UPDATE_REPOSITORY_ROOT="$repository_root" \
+    nix eval --json --impure --expr '
+      let
+        flake = builtins.getFlake "git+file://${builtins.getEnv "UPDATE_REPOSITORY_ROOT"}";
+        packageFile = builtins.toPath (builtins.getEnv "UPDATE_PACKAGE_FILE");
+        nixpkgs = flake.inputs.nixpkgs;
+        currentPackage = nixpkgs.legacyPackages.${builtins.currentSystem}.callPackage packageFile {};
+        packageFor = system: nixpkgs.legacyPackages.${system}.callPackage packageFile {};
+      in {
+        inherit (currentPackage) pname version;
+        homepage = currentPackage.meta.homepage or null;
+        sources = map (system: let package = packageFor system; in {
+          inherit system;
+          url = package.src.url;
+          hash = package.src.outputHash;
+        }) currentPackage.meta.platforms;
+      }
+    '
+}
+
+update_package() {
+  local package_file="$1"
+  local metadata pname current_version homepage repository latest_tag latest_version
+  local replacements_file source system old_url old_hash new_url new_hash
+
+  metadata="$(package_metadata "$package_file")"
+  pname="$(jq --exit-status --raw-output .pname <<<"$metadata")"
+  current_version="$(jq --exit-status --raw-output .version <<<"$metadata")"
+  homepage="$(jq --exit-status --raw-output .homepage <<<"$metadata")"
+
+  case "$homepage" in
+    https://github.com/*) repository="${homepage#https://github.com/}" ;;
+    *)
+      echo "${pname}: meta.homepage is not a GitHub repository: ${homepage}" >&2
+      return 1
+      ;;
+  esac
+  repository="${repository%.git}"
+  repository="${repository%/}"
+
+  latest_tag="$(curl --fail --silent --show-error --location \
+    "https://api.github.com/repos/${repository}/releases/latest" | jq --exit-status --raw-output .tag_name)"
+  latest_version="${latest_tag#v}"
+
+  if [[ "$current_version" == "$latest_version" ]]; then
+    echo "${pname} is already up to date (${current_version})"
+    return
+  fi
+
+  echo "Updating ${pname} ${current_version} -> ${latest_version}"
+  replacements_file="$(mktemp)"
+  trap 'rm -f "$replacements_file"' RETURN
+
+  while IFS= read -r source; do
+    system="$(jq --exit-status --raw-output .system <<<"$source")"
+    old_url="$(jq --exit-status --raw-output .url <<<"$source")"
+    old_hash="$(jq --exit-status --raw-output .hash <<<"$source")"
+    new_url="${old_url//$current_version/$latest_version}"
+
+    if [[ "$new_url" == "$old_url" ]]; then
+      echo "${pname}: ${system} source URL does not contain version ${current_version}" >&2
+      return 1
+    fi
+
+    echo "Prefetching ${system}: ${new_url}"
+    new_hash="$(prefetch_release "$new_url")"
+    printf '%s\t%s\n' "$old_hash" "$new_hash" >>"$replacements_file"
+  done < <(jq --compact-output '.sources[]' <<<"$metadata")
+
+  OLD_VERSION="$current_version" NEW_VERSION="$latest_version" perl -0pi -e '
+    s/version = "\Q$ENV{OLD_VERSION}\E";/version = "$ENV{NEW_VERSION}";/;
+  ' "$package_file"
+
+  while IFS=$'\t' read -r old_hash new_hash; do
+    OLD_HASH="$old_hash" NEW_HASH="$new_hash" perl -0pi -e '
+      s/\Q$ENV{OLD_HASH}\E/$ENV{NEW_HASH}/g;
+    ' "$package_file"
+  done <"$replacements_file"
+
+  trap - RETURN
+  rm -f "$replacements_file"
+}
+
+found_package=false
+for package_file in "$packages_dir"/*.nix; do
+  [[ -e "$package_file" ]] || continue
+  found_package=true
+  update_package "$package_file"
+done
+
+if [[ "$found_package" == false ]]; then
+  echo "No package definitions found in ${packages_dir}"
+fi

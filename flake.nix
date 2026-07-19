@@ -14,6 +14,9 @@
       url = "github:max-sixty/worktrunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hunk = {
+      url = "github:modem-dev/hunk";
+    };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
