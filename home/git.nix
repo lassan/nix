@@ -35,7 +35,12 @@
         push.default = "current";
 
         core = {
-          autocrlf = true;
+          # `true` is the Windows setting: it rewrites LF blobs to CRLF in the
+          # working tree, which corrupts the shebang of any checked-out shell
+          # script (`env: bash\r: No such file or directory`). On darwin/linux
+          # `input` is the correct value — normalize to LF on commit, leave the
+          # working tree alone on checkout.
+          autocrlf = "input";
           longpaths = true;
           fsmonitor = true;
         };

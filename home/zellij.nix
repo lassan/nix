@@ -1,14 +1,73 @@
-{...}: {
+{
+  config,
+  pkgs,
+  zj-radar,
+  ...
+}: let
+  # Link the plugin to a stable path instead of pointing zellij straight at the
+  # nix store: zellij keys plugin permissions on the location string, so a store
+  # path would re-prompt on every update.
+  radarPath = "${config.xdg.configHome}/zellij/plugins/zj_radar.wasm";
+in {
+  xdg.configFile."zellij/plugins/zj_radar.wasm".source = "${zj-radar.packages.${pkgs.system}.default}/bin/zj_radar.wasm";
+
   programs.zellij = {
     enable = true;
-    settings = {
-      enableZshIntegration = true;
-      attachExistingSession = true;
-    };
+
+    # Shell integration is deliberately left off: shell.nix does the auto-attach
+    # itself, gated on kitty/ghostty and with a stable session name, which the
+    # generated `zellij setup --generate-auto-start zsh` snippet would duplicate.
+
+    # Zellij's built-in default layout, with the zj-radar agent sidebar added to
+    # the left of every tab. Defining a `default` layout replaces the built-in
+    # one wholesale, so the `zellij:status-bar` pane has to be repeated here or
+    # it disappears too.
+    #
+    # `new_tab_template` is NOT redundant with `default_tab_template` here, and
+    # dropping it makes `zellij` exit instantly with "Bye from Zellij!". Once
+    # `children` is nested inside the vertical split, the opening tab resolves to
+    # plugin panes only, with no terminal pane for zellij to host, so the session
+    # ends the moment it starts. The template below is what gives that first tab
+    # a real terminal (`pane focus=true`). Bisected: identical layout minus this
+    # block dies, with it lives.
+    layouts.default = ''
+      layout {
+          default_tab_template {
+              pane split_direction="vertical" {
+                  pane size=32 borderless=false {
+                      plugin location="radar"
+                  }
+                  children
+              }
+              pane size=1 borderless=true {
+                  plugin location="zellij:status-bar"
+              }
+          }
+          new_tab_template {
+              pane split_direction="vertical" {
+                  pane size=32 borderless=false {
+                      plugin location="radar"
+                  }
+                  pane focus=true
+              }
+              pane size=1 borderless=true {
+                  plugin location="zellij:status-bar"
+              }
+          }
+      }
+    '';
 
     extraConfig = ''
 
           esc_delay 25
+
+          // zj-radar is aliased here rather than referenced by path in the layout
+          // so its config block applies everywhere it is launched.
+          plugins {
+              radar location="file:${radarPath}" {
+                  naming "managed"
+              }
+          }
 
           theme "onedark"
 
@@ -170,6 +229,13 @@
           }
           shared_except "locked" {
               bind "Ctrl g" { SwitchToMode "locked"; }
+              // Jump between the agents zj-radar has flagged as needing attention.
+              bind "Alt a" {
+                  MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-next"; }
+              }
+              bind "Alt Shift a" {
+                  MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-prev"; }
+              }
               bind "Alt p" { TogglePaneInGroup; }
               bind "Alt Shift p" { ToggleGroupMarking; }
               bind "Ctrl q" { Quit; }

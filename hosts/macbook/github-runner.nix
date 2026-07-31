@@ -89,7 +89,7 @@ in {
     replace = true;
     ephemeral = false;
     noDefaultLabels = false;
-    nodeRuntimes = ["node20" "node24"];
+    nodeRuntimes = ["node24"];
     # The runner PATH is nix-minimal: any CLI a workflow script calls must be
     # listed here. jq/kubectl are used by main.yml's release job, gh and yq
     # (yq-go = mikefarah yq; its GitHub action is a container action and
@@ -113,7 +113,7 @@ in {
     replace = true;
     ephemeral = false;
     noDefaultLabels = false;
-    nodeRuntimes = ["node20" "node24"];
+    nodeRuntimes = ["node24"];
     # The runner PATH is nix-minimal: any CLI a workflow script calls must be
     # listed here. jq/kubectl are used by main.yml's release job, gh and yq
     # (yq-go = mikefarah yq; its GitHub action is a container action and

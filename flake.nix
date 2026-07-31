@@ -5,7 +5,18 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew";
+      inputs.brew-src.follows = "brew-src";
+    };
+    # nix-homebrew still pins brew 6.0.12, but homebrew-cask has started using
+    # the `command_wrapper` cask stanza, which brew only understands from
+    # 6.0.13. Drop this input (and the nix-homebrew.package override in
+    # modules/darwin/homebrew.nix) once upstream bumps its own brew-src.
+    brew-src = {
+      url = "github:Homebrew/brew/6.0.13";
+      flake = false;
+    };
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,6 +27,9 @@
     };
     hunk = {
       url = "github:modem-dev/hunk";
+    };
+    zj-radar = {
+      url = "github:marktoda/zj-radar";
     };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";

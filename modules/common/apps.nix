@@ -1,6 +1,7 @@
 {
   hunk,
   pkgs,
+  zj-radar,
   ...
 }: {
   nixpkgs.config.allowUnfree = true;
@@ -40,11 +41,20 @@
 
     hunk.packages.${pkgs.system}.default
 
+    # Not needed at runtime by the zellij sidebar (home/zellij.nix wires that
+    # declaratively); this is the `zj-radar setup --check` doctor and the
+    # `zj-radar notify` producer shim.
+    zj-radar.packages.${pkgs.system}.zj-radar-cli
+
     github-copilot-cli
     uv
+
+    bitwarden-cli
 
     bun
 
     typescript-language-server
+
+    zed-editor
   ];
 }

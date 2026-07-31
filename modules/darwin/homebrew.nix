@@ -1,17 +1,30 @@
 {
   username,
+  brew-src,
   homebrew-core,
   homebrew-cask,
   homebrew-can1357,
   homebrew-rtk-ai,
   config,
   ...
-}: {
+}: let
+  # nix-homebrew derives this from its own bundled lock, which still says
+  # 6.0.12, so overriding brew-src alone would stamp the wrong HOMEBREW_VERSION.
+  # Read the tag we actually pinned in flake.nix instead.
+  brewVersion = (builtins.fromJSON (builtins.readFile ../../flake.lock)).nodes.brew-src.original.ref;
+in {
   nix-homebrew = {
     enable = true;
     enableRosetta = true;
 
     user = username;
+
+    package =
+      brew-src
+      // {
+        name = "brew-${brewVersion}";
+        version = brewVersion;
+      };
 
     taps = {
       "homebrew/homebrew-core" = homebrew-core;
@@ -87,7 +100,7 @@
       "stats"
 
       "dash"
-      # "lookaway"
+      "lookaway"
 
       "ollama-app"
 
@@ -97,6 +110,8 @@
       "opensuperwhisper"
 
       "codex"
+
+      "gitbutler"
     ];
   };
 }
