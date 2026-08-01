@@ -7,7 +7,7 @@
     # utils
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
-    fzf # A command-line fuzzy finder
+    # fzf comes from programs.fzf in fzf.nix
 
     # misc
     zoxide

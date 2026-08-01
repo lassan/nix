@@ -1,0 +1,82 @@
+{pkgs, ...}: let
+  # Directories get a shallow tree, text files get syntax highlighting, and
+  # anything else falls back to a one-line type description instead of dumping
+  # binary into the pane.
+  fzfPreview = pkgs.writeShellScript "fzf-preview" ''
+    target="$1"
+    if [ -d "$target" ]; then
+      ${pkgs.eza}/bin/eza --tree --level=2 --icons=always --color=always \
+        --group-directories-first "$target"
+    elif [ -f "$target" ]; then
+      case "$(${pkgs.file}/bin/file --brief --mime-type "$target")" in
+        text/* | inode/x-empty | application/json | application/javascript | application/xml)
+          ${pkgs.bat}/bin/bat --style=numbers --color=always --line-range=:500 "$target"
+          ;;
+        *)
+          ${pkgs.file}/bin/file --brief "$target"
+          ;;
+      esac
+    else
+      echo "$target"
+    fi
+  '';
+
+  fdFiles = "${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git";
+  fdDirs = "${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git";
+in {
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+
+    defaultCommand = fdFiles;
+
+    defaultOptions = [
+      "--height 60%"
+      "--layout reverse"
+      "--border rounded"
+      "--info inline"
+      "--cycle"
+      "--preview-window right:60%:border-left"
+      "--bind ctrl-/:toggle-preview"
+      "--bind ctrl-u:preview-half-page-up"
+      "--bind ctrl-d:preview-half-page-down"
+    ];
+
+    # Ctrl-T: paste a file path into the current command line.
+    fileWidget = {
+      command = fdFiles;
+      options = ["--preview '${fzfPreview} {}'"];
+    };
+
+    # Alt-C: cd into a directory.
+    changeDirWidget = {
+      command = fdDirs;
+      options = ["--preview '${fzfPreview} {}'"];
+    };
+
+    # Empty string is the supported way to yield Ctrl-R to atuin. Home Manager
+    # can detect this clash on its own, but only when
+    # programs.atuin.enableZshIntegration is true -- shell.nix loads atuin from
+    # a zsh-vi-mode hook instead, so the automatic warning never fires and this
+    # has to be set by hand.
+    historyWidget.command = "";
+  };
+
+  # The `**<TAB>` completion trigger reads its own option vars rather than the
+  # widget ones above, so it needs the preview wired separately. Scoping it to
+  # the PATH/DIR variants rather than FZF_COMPLETION_OPTS keeps the preview off
+  # completions whose candidates aren't paths, like `export **<TAB>`.
+  # Layout and keybinds still come from FZF_DEFAULT_OPTS, which fzf's
+  # __fzf_defaults folds in.
+  home.sessionVariables = {
+    FZF_COMPLETION_PATH_OPTS = "--preview '${fzfPreview} {}'";
+    FZF_COMPLETION_DIR_OPTS = "--preview '${fzfPreview} {}'";
+  };
+
+  # nix-search-tv outlived the television setup it used to feed; drive it from
+  # fzf instead. `--scheme history` biases matching toward the tail of the
+  # string, which suits dotted attribute paths.
+  programs.nix-search-tv.enable = true;
+
+  programs.zsh.shellAliases.ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
+}

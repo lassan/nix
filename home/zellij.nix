@@ -4,9 +4,8 @@
   zj-radar,
   ...
 }: let
-  # Link the plugin to a stable path instead of pointing zellij straight at the
-  # nix store: zellij keys plugin permissions on the location string, so a store
-  # path would re-prompt on every update.
+  # Stable path, not the store path: zellij keys plugin permissions on the
+  # location string, so a store path re-prompts on every update.
   radarPath = "${config.xdg.configHome}/zellij/plugins/zj_radar.wasm";
 in {
   xdg.configFile."zellij/plugins/zj_radar.wasm".source = "${zj-radar.packages.${pkgs.system}.default}/bin/zj_radar.wasm";
@@ -14,22 +13,16 @@ in {
   programs.zellij = {
     enable = true;
 
-    # Shell integration is deliberately left off: shell.nix does the auto-attach
-    # itself, gated on kitty/ghostty and with a stable session name, which the
-    # generated `zellij setup --generate-auto-start zsh` snippet would duplicate.
+    # Shell integration off: shell.nix does the auto-attach itself.
 
-    # Zellij's built-in default layout, with the zj-radar agent sidebar added to
-    # the left of every tab. Defining a `default` layout replaces the built-in
-    # one wholesale, so the `zellij:status-bar` pane has to be repeated here or
-    # it disappears too.
-    #
-    # `new_tab_template` is NOT redundant with `default_tab_template` here, and
-    # dropping it makes `zellij` exit instantly with "Bye from Zellij!". Once
-    # `children` is nested inside the vertical split, the opening tab resolves to
-    # plugin panes only, with no terminal pane for zellij to host, so the session
-    # ends the moment it starts. The template below is what gives that first tab
-    # a real terminal (`pane focus=true`). Bisected: identical layout minus this
-    # block dies, with it lives.
+    # A custom `default` layout replaces zellij's built-in wholesale, inheriting
+    # nothing — hence the status-bar pane and the swap layouts (verbatim from
+    # `zellij setup --dump-swap-layout default`, `ui` template swapped for ours)
+    # are restated here. Without them `Alt [` / `Alt ]` are silent no-ops.
+    # Without `new_tab_template`, zellij exits instantly with "Bye from Zellij!":
+    # the first tab resolves to plugin panes only, with no terminal to host.
+    # `ui` must duplicate `default_tab_template` — swap layouts can only
+    # reference a named template. Edit both.
     layouts.default = ''
       layout {
           default_tab_template {
@@ -54,6 +47,109 @@ in {
                   plugin location="zellij:status-bar"
               }
           }
+
+          tab_template name="ui" {
+              pane split_direction="vertical" {
+                  pane size=32 borderless=false {
+                      plugin location="radar"
+                  }
+                  children
+              }
+              pane size=1 borderless=true {
+                  plugin location="zellij:status-bar"
+              }
+          }
+
+          swap_tiled_layout name="vertical" {
+              ui max_panes=5 {
+                  pane split_direction="vertical" {
+                      pane
+                      pane { children; }
+                  }
+              }
+              ui max_panes=8 {
+                  pane split_direction="vertical" {
+                      pane { children; }
+                      pane { pane; pane; pane; pane; }
+                  }
+              }
+              ui max_panes=12 {
+                  pane split_direction="vertical" {
+                      pane { children; }
+                      pane { pane; pane; pane; pane; }
+                      pane { pane; pane; pane; pane; }
+                  }
+              }
+          }
+
+          swap_tiled_layout name="horizontal" {
+              ui max_panes=4 {
+                  pane
+                  pane
+              }
+              ui max_panes=8 {
+                  pane {
+                      pane split_direction="vertical" { children; }
+                      pane split_direction="vertical" { pane; pane; pane; pane; }
+                  }
+              }
+              ui max_panes=12 {
+                  pane {
+                      pane split_direction="vertical" { children; }
+                      pane split_direction="vertical" { pane; pane; pane; pane; }
+                      pane split_direction="vertical" { pane; pane; pane; pane; }
+                  }
+              }
+          }
+
+          swap_tiled_layout name="stacked" {
+              ui min_panes=5 {
+                  pane split_direction="vertical" {
+                      pane
+                      pane stacked=true { children; }
+                  }
+              }
+          }
+
+          swap_floating_layout name="staggered" {
+              floating_panes
+          }
+
+          swap_floating_layout name="enlarged" {
+              floating_panes max_panes=10 {
+                  pane { x "5%"; y 1; width "90%"; height "90%"; }
+                  pane { x "5%"; y 2; width "90%"; height "90%"; }
+                  pane { x "5%"; y 3; width "90%"; height "90%"; }
+                  pane { x "5%"; y 4; width "90%"; height "90%"; }
+                  pane { x "5%"; y 5; width "90%"; height "90%"; }
+                  pane { x "5%"; y 6; width "90%"; height "90%"; }
+                  pane { x "5%"; y 7; width "90%"; height "90%"; }
+                  pane { x "5%"; y 8; width "90%"; height "90%"; }
+                  pane { x "5%"; y 9; width "90%"; height "90%"; }
+                  pane { x 10; y 10; width "90%"; height "90%"; }
+              }
+          }
+
+          swap_floating_layout name="spread" {
+              floating_panes max_panes=1 {
+                  pane {y "50%"; x "50%"; }
+              }
+              floating_panes max_panes=2 {
+                  pane { x "1%"; y "25%"; width "45%"; }
+                  pane { x "50%"; y "25%"; width "45%"; }
+              }
+              floating_panes max_panes=3 {
+                  pane { y "55%"; width "45%"; height "45%"; }
+                  pane { x "1%"; y "1%"; width "45%"; }
+                  pane { x "50%"; y "1%"; width "45%"; }
+              }
+              floating_panes max_panes=4 {
+                  pane { x "1%"; y "55%"; width "45%"; height "45%"; }
+                  pane { x "50%"; y "55%"; width "45%"; height "45%"; }
+                  pane { x "1%"; y "1%"; width "45%"; height "45%"; }
+                  pane { x "50%"; y "1%"; width "45%"; height "45%"; }
+              }
+          }
       }
     '';
 
@@ -61,11 +157,13 @@ in {
 
           esc_delay 25
 
-          // zj-radar is aliased here rather than referenced by path in the layout
-          // so its config block applies everywhere it is launched.
+          // Aliased rather than pathed in the layout so this config block
+          // applies everywhere the plugin is launched.
           plugins {
               radar location="file:${radarPath}" {
                   naming "managed"
+                  glyphs "nerd"
+                  header false
               }
           }
 
@@ -229,7 +327,6 @@ in {
           }
           shared_except "locked" {
               bind "Ctrl g" { SwitchToMode "locked"; }
-              // Jump between the agents zj-radar has flagged as needing attention.
               bind "Alt a" {
                   MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-next"; }
               }

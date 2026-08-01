@@ -17,7 +17,9 @@
       eval "$(zoxide init zsh)"
       eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(temporal completion zsh)"
-      eval "$(zellij setup --generate-completion zsh)"
+      # zellij's completion script ends with an unguarded `_zellij "$@"`, which
+      # errors when eval'd outside a completion context. Register it properly.
+      eval "$(zellij setup --generate-completion zsh | sed 's/^_zellij "\$@"$/compdef _zellij zellij/')"
 
       source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
@@ -31,6 +33,10 @@
           'bindkey -M viins "\eb" backward-word'
           'bindkey -M viins "\e[1;3C" forward-word'
           'bindkey -M viins "\e[1;3D" backward-word'
+          # fzf binds its file widget to Ctrl-T, but zellij claims that for tab
+          # mode (see zellij.nix) so it never reaches zsh. Alt-T is unclaimed.
+          'bindkey -M viins "\et" fzf-file-widget'
+          'bindkey -M vicmd "\et" fzf-file-widget'
         )
 
       if [[ -z "$ZELLIJ_SESSION_NAME" && ( "$TERM" == *kitty* || "$TERM" == *ghostty* ) ]]; then
@@ -38,17 +44,9 @@
       fi
     '';
 
-    plugins = [
-      {
-        name = "zsh-vi-mode";
-        src = pkgs.zsh-vi-mode;
-        file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
-      }
-      {
-        name = "zsh-autosuggestions";
-        src = pkgs.zsh-autosuggestions;
-      }
-    ];
+    # Both plugins are loaded from initContent instead: zsh-vi-mode needs to be
+    # sourced before its zvm_after_init_commands hooks, and zsh-autosuggestions
+    # has to load from that hook so zvm doesn't clobber its keybindings.
 
     shellAliases = {
       ls = "eza";

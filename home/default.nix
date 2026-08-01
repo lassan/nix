@@ -14,8 +14,9 @@
     ./firefox.nix
     ./zellij.nix
     ./starship.nix
-    ./television.nix
+    ./fzf.nix
     ./worktrunk.nix
+    ./yazi.nix
   ];
 
   # Home Manager needs a bit of information about you and the
