@@ -21,6 +21,10 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     worktrunk = {
       url = "github:max-sixty/worktrunk";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,6 +60,7 @@
     nix-homebrew,
     home-manager,
     worktrunk,
+    treefmt-nix,
     ...
   }: let
     lib = nixpkgs.lib;
@@ -84,6 +89,10 @@
     };
 
     hostSystems = lib.unique (map (host: host.system) (builtins.attrValues hosts));
+
+    forEachSystem = f: lib.genAttrs hostSystems (system: f nixpkgs.legacyPackages.${system});
+
+    treefmtEval = forEachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
 
     darwinHosts = lib.filterAttrs (_: host: host.platform == "darwin") hosts;
     nixosHosts = lib.filterAttrs (_: host: host.platform == "nixos") hosts;
@@ -160,6 +169,29 @@
     darwinConfigurations = lib.mapAttrs (_: mkDarwinSystem) darwinHosts;
     nixosConfigurations = lib.mapAttrs (_: mkNixosSystem) nixosHosts;
 
-    formatter = lib.genAttrs hostSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+    # `nix fmt` — the treefmt wrapper, which fans out to alejandra/prettier/
+    # shfmt/just per `treefmt.nix` instead of only covering *.nix.
+    formatter = forEachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+
+    # Makes `nix flake check` (and so `just check`) fail on unformatted files,
+    # which is the backstop for commits that bypassed the pre-commit hook.
+    checks = forEachSystem (pkgs: {
+      formatting = treefmtEval.${pkgs.system}.config.build.check self;
+    });
+
+    devShells = forEachSystem (pkgs: {
+      default = pkgs.mkShell {
+        packages = [treefmtEval.${pkgs.system}.config.build.wrapper];
+        # Hook installation has to be a runtime side effect: git deliberately
+        # refuses to read `core.hooksPath` from tracked files, so nothing in
+        # this repo can enable `.githooks/` declaratively. Entering the shell
+        # (or `just hooks`) is the opt-in.
+        shellHook = ''
+          if [ -d .git ]; then
+            git config core.hooksPath .githooks
+          fi
+        '';
+      };
+    });
   };
 }

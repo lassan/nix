@@ -73,6 +73,33 @@ in {
     FZF_COMPLETION_DIR_OPTS = "--preview '${fzfPreview} {}'";
   };
 
+  # fzf-tab puts every `<TAB>` through fzf, reusing the preview above -- the
+  # widgets and the `**` trigger only ever covered three entry points.
+  #
+  # The plugin itself is sourced from shell.nix, which owns plugin load order;
+  # it binds `^I` and so has to come after zsh-vi-mode. Only its zstyles are
+  # here, next to the preview script they reference -- zsh reads zstyles at
+  # completion time, so this block can land anywhere.
+  programs.zsh.initContent = ''
+    # fzf-tab can't drive the UI while zsh's own menu selection is live.
+    zstyle ':completion:*' menu no
+    # fzf-tab renders its group headers from these descriptions, so the format
+    # has to be set for grouping (and F1/F2 group switching) to work at all.
+    zstyle ':completion:*:descriptions' format '[%d]'
+
+    # -ftb-preview.tpl only exports $realpath for candidates that are actually
+    # paths, which keeps the preview off things like `export <TAB>` -- the same
+    # scoping the FZF_COMPLETION_*_OPTS above were written for. Non-path
+    # candidates fall back to zsh's own description, which is worth reading for
+    # flag completions.
+    zstyle ':fzf-tab:complete:*:*' fzf-preview \
+      '[[ -n $realpath ]] && ${fzfPreview} "$realpath" || print -r -- "''${desc:-$word}"'
+
+    # fzf-tab blanks FZF_DEFAULT_OPTS unless asked not to; opt in so completion
+    # inherits the border/preview-window/ctrl-/ setup from defaultOptions.
+    zstyle ':fzf-tab:*' use-fzf-default-opts yes
+  '';
+
   # nix-search-tv outlived the television setup it used to feed; drive it from
   # fzf instead. `--scheme history` biases matching toward the tail of the
   # string, which suits dotted attribute paths.

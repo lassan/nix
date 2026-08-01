@@ -1,7 +1,45 @@
-{...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: let
+  # Mirrors the sources fzf.nix hands FZF_DEFAULT_COMMAND, plus a directory-only
+  # variant, so the toggle below just swaps fzf's candidate list between them.
+  fdFiles = "${pkgs.fd}/bin/fd --type f --hidden --follow --exclude .git";
+  fdDirs = "${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git";
+
+  # The inner quotes are load-bearing: fzf word-splits FZF_DEFAULT_OPTS the way
+  # a shell would, so an unquoted reload() containing spaces would be torn into
+  # separate arguments.
+  extraFzfOpts = "--bind 'alt-d:reload(${fdDirs})' --bind 'alt-f:reload(${fdFiles})'";
+in {
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
+
+    # Yazi's bundled fzf plugin shells out to a bare `Command("fzf")` with no
+    # --bind of its own, so the only way to reach fzf's `reload` action is
+    # through the environment it inherits. Wrapping yazi keeps that scoped:
+    # putting the same binds in fzf.nix's defaultOptions would also inject them
+    # into fzf-tab completions and `ns`, where swapping the candidate list for
+    # `fd` output is actively wrong.
+    #
+    # Alt-d / Alt-f rather than Ctrl-d / Ctrl-f: fzf.nix already spends Ctrl-d
+    # on preview-half-page-down, and zellij claims most Ctrl keys before they
+    # ever reach the pane. Neither Alt-d nor Alt-f is bound in zellij.
+    package = pkgs.symlinkJoin {
+      name = "yazi-fzf-toggle";
+      paths = [pkgs.yazi];
+      nativeBuildInputs = [pkgs.makeWrapper];
+      # --run rather than --suffix: makeWrapper's --suffix word-splits its value
+      # and skips any token already present, which both shreds the reload()
+      # commands and drops the second --bind (FZF_DEFAULT_OPTS already carries
+      # one from fzf.nix). Appending by hand keeps those defaults intact.
+      postBuild = ''
+        wrapProgram $out/bin/yazi \
+          --run ${lib.escapeShellArg ''export FZF_DEFAULT_OPTS="''${FZF_DEFAULT_OPTS-} ${extraFzfOpts}"''}
+      '';
+    };
 
     # `y` instead of `yazi`, so quitting with `q` cds the shell to the last
     # directory you were browsing.

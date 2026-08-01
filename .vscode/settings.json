@@ -5,16 +5,16 @@
   "nix.serverSettings": {
     "nixd": {
       "formatting": {
-        "command": ["alejandra"],
+        "command": ["alejandra"]
       },
       "options": {
         "home-manager": {
-          "expr": "((builtins.getFlake \"git+file://${workspaceFolder}\").darwinConfigurations.macbook.options.home-manager.users.type.getSubOptions []).home",
+          "expr": "((builtins.getFlake \"git+file://${workspaceFolder}\").darwinConfigurations.macbook.options.home-manager.users.type.getSubOptions []).home"
         },
         "nix-darwin": {
-          "expr": "(builtins.getFlake \"git+file://${workspaceFolder}\").darwinConfigurations.macbook.options",
-        },
-      },
+          "expr": "(builtins.getFlake \"git+file://${workspaceFolder}\").darwinConfigurations.macbook.options"
+        }
+      }
     }
   },
   "workbench.colorCustomizations": {

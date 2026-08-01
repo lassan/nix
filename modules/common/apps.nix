@@ -23,6 +23,7 @@
     # nix
     nixd
     alejandra
+    nh # darwin-rebuild/nixos-rebuild wrapper: package diff per generation, GC with a retention policy
 
     # dev tools
     zellij

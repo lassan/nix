@@ -27,7 +27,7 @@ in {
       layout {
           default_tab_template {
               pane split_direction="vertical" {
-                  pane size=32 borderless=false {
+                  pane size=32 borderless=true {
                       plugin location="radar"
                   }
                   children
@@ -38,7 +38,7 @@ in {
           }
           new_tab_template {
               pane split_direction="vertical" {
-                  pane size=32 borderless=false {
+                  pane size=32 borderless=true {
                       plugin location="radar"
                   }
                   pane focus=true
@@ -327,6 +327,30 @@ in {
           }
           shared_except "locked" {
               bind "Ctrl g" { SwitchToMode "locked"; }
+              // The other half of killing the `git status` habit: gitui (421
+              // invocations) as a keypress rather than a command.
+              //
+              // A Run pane inherits the *current* cwd of the focused pane —
+              // including after a `cd`, verified against a real pty — so this
+              // opens on the repo you are looking at, which is what makes it
+              // usable across worktrunk worktrees.
+              //
+              // close_on_exit means `q` in gitui leaves nothing behind, so
+              // repeated presses can't stack up floating panes. The tradeoff:
+              // outside a git repo gitui exits immediately with an error and
+              // the pane just flashes. Reads as "nothing happened", which is
+              // the honest outcome anyway.
+              bind "Alt g" {
+                  Run "gitui" {
+                      floating true
+                      name "git"
+                      close_on_exit true
+                      x "5%"
+                      y "5%"
+                      width "90%"
+                      height "90%"
+                  }
+              }
               bind "Alt a" {
                   MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-next"; }
               }

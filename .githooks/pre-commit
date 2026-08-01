@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Format gate for this repo. Enabled by `just hooks` or by entering the dev
+# shell, both of which point core.hooksPath here.
+#
+# treefmt always writes; --fail-on-change reports afterwards rather than
+# running dry. So this hook does reformat the working tree — what it will not
+# do is `git add` the result. treefmt operates on the working tree, not the
+# index, so re-staging automatically would sweep in the unstaged half of a
+# partially staged file. Leaving the index alone keeps that your call.
+set -euo pipefail
+
+# macOS ships bash 3.2, so no `mapfile`. NUL-delimited to survive spaces.
+staged=()
+while IFS= read -r -d '' file; do
+  staged+=("$file")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if [ ${#staged[@]} -eq 0 ]; then
+  exit 0
+fi
+
+if ! command -v nix >/dev/null 2>&1; then
+  echo "pre-commit: nix not on PATH, skipping format check" >&2
+  exit 0
+fi
+
+# `nix fmt` resolves to the treefmt wrapper in flake.nix. --ci implies
+# --no-cache and --fail-on-change, and turns a missing formatter into an error
+# rather than a skipped file.
+if ! nix fmt -- --ci "${staged[@]}"; then
+  echo >&2
+  echo "pre-commit: staged files were reformatted. Review, re-stage, commit again." >&2
+  exit 1
+fi
