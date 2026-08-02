@@ -15,6 +15,7 @@
       vim-sleuth
       vim-fugitive
       fzf-vim
+      vim-monokai
     ];
 
     extraConfig = ''
@@ -35,7 +36,7 @@
       if has('termguicolors')
         set termguicolors
       endif
-      colorscheme habamax
+      colorscheme monokai
 
       let mapleader = ' '
       nnoremap <leader>f :Files<CR>

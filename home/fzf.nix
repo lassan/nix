@@ -44,6 +44,7 @@ in {
       "--border rounded"
       "--info inline"
       "--cycle"
+      "--preview '${fzfPreview} {}'"
       "--preview-window ${previewWindow}"
       "--bind ctrl-/:toggle-preview"
       "--bind ctrl-u:preview-half-page-up"
@@ -68,6 +69,11 @@ in {
     # a zsh-vi-mode hook instead, so the automatic warning never fires and this
     # has to be set by hand.
     historyWidget.command = "";
+  };
+
+  programs.bat = {
+    enable = true;
+    config.theme = "Monokai Extended";
   };
 
   # The `**<TAB>` completion trigger reads its own option vars rather than the

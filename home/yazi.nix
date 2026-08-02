@@ -78,7 +78,7 @@ in {
         }
       ];
 
-      openers.edit = [
+      opener.edit = [
         {
           run = ''${pkgs.vim}/bin/vim "$@"'';
           block = true;
@@ -90,7 +90,7 @@ in {
       mgr.prepend_keymap = [
         {
           on = ["e"];
-          run = ''open --with "edit"'';
+          run = "open --with=edit";
           desc = "Edit selected files";
         }
         {
