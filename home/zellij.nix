@@ -7,6 +7,9 @@
   # Stable path, not the store path: zellij keys plugin permissions on the
   # location string, so a store path re-prompts on every update.
   radarPath = "${config.xdg.configHome}/zellij/plugins/zj_radar.wasm";
+  scrollbackEditor = pkgs.writeShellScript "vim-scrollback" ''
+    exec ${pkgs.vim}/bin/vim -R "$@"
+  '';
 in {
   xdg.configFile."zellij/plugins/zj_radar.wasm".source = "${zj-radar.packages.${pkgs.system}.default}/bin/zj_radar.wasm";
 
@@ -168,6 +171,7 @@ in {
           }
 
           theme "onedark"
+          scrollback_editor "${scrollbackEditor}"
 
           keybinds clear-defaults=true {
           normal {

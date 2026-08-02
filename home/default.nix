@@ -6,6 +6,7 @@
   imports = [
     ./shell.nix
     ./core.nix
+    ./vim.nix
     ./git.nix
     ./gitui.nix
     ./kitty.nix

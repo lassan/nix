@@ -44,6 +44,7 @@ in {
     # `y` instead of `yazi`, so quitting with `q` cds the shell to the last
     # directory you were browsing.
     shellWrapperName = "y";
+    plugins.piper = pkgs.yaziPlugins.piper;
 
     # No extraPackages needed: the nixpkgs yazi wrapper already puts ffmpeg,
     # 7zz, poppler-utils, imagemagick, resvg, chafa, fd, rg, fzf, jq and
@@ -69,10 +70,29 @@ in {
         max_width = 1000;
         max_height = 1000;
       };
+
+      plugin.prepend_previewers = [
+        {
+          url = "*.md";
+          run = ''piper -- CLICOLOR_FORCE=1 ${pkgs.glow}/bin/glow -w=$w -s=dark "$1"'';
+        }
+      ];
+
+      openers.edit = [
+        {
+          run = ''${pkgs.vim}/bin/vim "$@"'';
+          block = true;
+        }
+      ];
     };
 
     keymap = {
       mgr.prepend_keymap = [
+        {
+          on = ["e"];
+          run = ''open --with "edit"'';
+          desc = "Edit selected files";
+        }
         {
           on = ["g" "r"];
           run = ''shell -- ya emit cd "$(git rev-parse --show-toplevel)"'';

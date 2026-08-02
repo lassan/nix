@@ -8,14 +8,18 @@
       ${pkgs.eza}/bin/eza --tree --level=2 --icons=always --color=always \
         --group-directories-first "$target"
     elif [ -f "$target" ]; then
-      case "$(${pkgs.file}/bin/file --brief --mime-type "$target")" in
-        text/* | inode/x-empty | application/json | application/javascript | application/xml)
-          ${pkgs.bat}/bin/bat --style=numbers --color=always --line-range=:500 "$target"
-          ;;
-        *)
-          ${pkgs.file}/bin/file --brief "$target"
-          ;;
-      esac
+      if [ "''${target##*.}" = md ]; then
+        CLICOLOR_FORCE=1 ${pkgs.glow}/bin/glow -w="$FZF_PREVIEW_COLUMNS" -s=dark "$target"
+      else
+        case "$(${pkgs.file}/bin/file --brief --mime-type "$target")" in
+          text/* | inode/x-empty | application/json | application/javascript | application/xml)
+            ${pkgs.bat}/bin/bat --style=numbers --color=always --line-range=:500 "$target"
+            ;;
+          *)
+            ${pkgs.file}/bin/file --brief "$target"
+            ;;
+        esac
+      fi
     else
       echo "$target"
     fi
