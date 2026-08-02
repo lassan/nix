@@ -36,10 +36,6 @@
         "@react-devtools" = forced "react-devtools";
         "gdpr@cavi.au.dk" = forced "consent-o-matic";
         "{3c078156-979c-498b-8990-85f7987dd929}" = forced "sidebery";
-
-        # Privacy Badger — installed but disabled in the old profile.
-        # Uncomment to force-install it again.
-        # "jid1-MnnxcxisBPnSXQ@jetpack" = forced "privacy-badger17";
       };
     };
 
@@ -47,39 +43,33 @@
       id = 0;
       isDefault = true;
 
-      # Preferences (written to user.js), encoded from the customised prefs.js.
       settings = {
-        # Layout: vertical tabs + revamped sidebar, bookmarks toolbar always shown.
         "sidebar.revamp" = true;
         "sidebar.verticalTabs" = true;
         "browser.toolbars.bookmarks.visibility" = "always";
 
-        # Container tabs enabled.
         "privacy.userContext.enabled" = true;
         "privacy.userContext.ui.enabled" = true;
 
-        # Passwords handled by Bitwarden — don't let Firefox save/manage them.
+        # Passwords live in Bitwarden.
         "signon.rememberSignons" = false;
         "signon.management.page.breach-alerts.enabled" = false;
 
-        # New Tab page: strip out sponsored content, stories and top sites.
         "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
         "browser.newtabpage.activity-stream.feeds.topsites" = false;
         "browser.newtabpage.activity-stream.showSponsored" = false;
         "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
         "browser.newtabpage.activity-stream.showSponsoredCheckboxes" = false;
 
-        # Search / locale.
         "browser.search.region" = "GB";
         "browser.urlbar.placeholderName" = "Google";
         "browser.urlbar.suggest.trending" = false;
         "intl.regional_prefs.use_os_locales" = true;
 
-        # Privacy.
         "browser.contentblocking.category" = "standard";
         "privacy.clearOnShutdown_v2.formdata" = true;
 
-        # Toolbar / sidebar widget layout (captured from the current profile).
+        # Captured verbatim from a customised profile; not hand-editable.
         "browser.uiCustomization.state" = ''{"placements":{"widget-overflow-fixed-list":[],"unified-extensions-area":["_3c078156-979c-498b-8990-85f7987dd929_-browser-action","sponsorblocker_ajay_app-browser-action","_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action","jid1-mnnxcxisbpnsxq_jetpack-browser-action","atbc_easonwong-browser-action","_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action","_react-devtools-browser-action","gdpr_cavi_au_dk-browser-action"],"nav-bar":["sidebar-button","back-button","forward-button","stop-reload-button","customizableui-special-spring1","vertical-spacer","urlbar-container","customizableui-special-spring2","downloads-button","fxa-toolbar-menu-button","reset-pbm-toolbar-button","unified-extensions-button","firefox-view-button","alltabs-button"],"TabsToolbar":[],"vertical-tabs":["tabbrowser-tabs"],"PersonalToolbar":["personal-bookmarks"]},"seen":["reset-pbm-toolbar-button","developer-button","screenshot-button","atbc_easonwong-browser-action","jid1-mnnxcxisbpnsxq_jetpack-browser-action","_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action","_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action","sponsorblocker_ajay_app-browser-action","_react-devtools-browser-action","gdpr_cavi_au_dk-browser-action","_3c078156-979c-498b-8990-85f7987dd929_-browser-action"],"dirtyAreaCache":["nav-bar","vertical-tabs","PersonalToolbar","TabsToolbar","unified-extensions-area"],"currentVersion":24,"newElementCount":2}'';
       };
     };

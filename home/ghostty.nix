@@ -6,7 +6,6 @@
     # still generates the config at ~/.config/ghostty/config.
     package = null;
     enableZshIntegration = true;
-    # clearDefaultKeybinds = true;
     settings = {
       macos-option-as-alt = "left";
 

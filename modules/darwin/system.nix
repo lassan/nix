@@ -1,13 +1,4 @@
-{self, ...}:
-###################################################################################
-#
-#  macOS's System configuration
-#
-#  All the configuration options are documented here:
-#    https://daiderd.com/nix-darwin/manual/index.html#sec-options
-#
-###################################################################################
-{
+{self, ...}: {
   system = {
     stateVersion = 6;
 
@@ -24,9 +15,9 @@
       };
 
       NSGlobalDomain = {
-        AppleInterfaceStyle = "Dark"; # dark mode
+        AppleInterfaceStyle = "Dark";
         AppleKeyboardUIMode = 3; # Mode 3 enables full keyboard control.
-        ApplePressAndHoldEnabled = false; # enable press and hold
+        ApplePressAndHoldEnabled = false; # false is what enables key repeat
 
         InitialKeyRepeat = 15; # normal minimum is 15 (225 ms), maximum is 120 (1800 ms)
         KeyRepeat = 2; # normal minimum is 2 (30 ms), maximum is 120 (1800 ms)
@@ -38,13 +29,12 @@
 
       CustomUserPreferences = {
         "com.apple.desktopservices" = {
-          # Avoid creating .DS_Store files on network or USB volumes
           DSDontWriteNetworkStores = true;
           DSDontWriteUSBStores = true;
         };
 
         "com.microsoft.VSCode" = {
-          ApplePressAndHoldEnabled = false; # disable press and hold for VS Code to enable key repeat
+          ApplePressAndHoldEnabled = false; # false is what enables key repeat
         };
 
         "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
@@ -52,6 +42,5 @@
     };
   };
 
-  # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
 }

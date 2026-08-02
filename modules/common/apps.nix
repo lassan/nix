@@ -20,12 +20,10 @@
     git
     vim
 
-    # nix
     nixd
     alejandra
-    nh # darwin-rebuild/nixos-rebuild wrapper: package diff per generation, GC with a retention policy
+    nh
 
-    # dev tools
     zellij
     fnm
     gh

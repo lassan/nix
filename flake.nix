@@ -111,7 +111,6 @@
         modules =
           [
             ({...}: {
-              # The platform the configuration will be used on.
               nixpkgs.hostPlatform = host.system;
               environment.variables.EDITOR = "vim";
             })
@@ -119,7 +118,6 @@
             ./modules/common/apps.nix
             ./modules/common/host.nix
 
-            # home manager
             home-manager.darwinModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -130,7 +128,6 @@
               home-manager.users.${host.username} = import ./home;
             }
 
-            # homebrew (darwin-only)
             nix-homebrew.darwinModules.nix-homebrew
           ]
           ++ host.modules;
@@ -152,7 +149,6 @@
             ./modules/common/apps.nix
             ./modules/common/host.nix
 
-            # home manager
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

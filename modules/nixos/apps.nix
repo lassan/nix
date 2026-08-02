@@ -1,9 +1,7 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    # terminal
     ghostty
 
-    # hyprland desktop
     hyprpaper
     hyprlock
     wofi
@@ -15,7 +13,6 @@
     networkmanagerapplet
     playerctl
 
-    # apps (mirroring homebrew casks/brews where available)
     vscode-fhs
     zen-browser
     tailscale
@@ -32,7 +29,6 @@
     logseq
     onedrive
 
-    # cli tools
     doctl
     pulumi
   ];

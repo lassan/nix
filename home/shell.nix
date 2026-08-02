@@ -9,13 +9,9 @@
     enable = true;
     enableCompletion = true;
 
-    # Atuin owns Ctrl-R, but it doesn't back zsh's own history list -- up-arrow,
-    # `!!`, `!$`, `^foo^bar` and `fc` all still read $HISTFILE. These settings
-    # are for that half.
-    #
-    # ignoreSpace is the one that earns its place regardless: prefixing a
-    # command with a space keeps it out of the file entirely, which is the
-    # escape hatch when a token ends up on the command line.
+    # Atuin owns Ctrl-R but doesn't back zsh's own history -- up-arrow, `!!`,
+    # `!$` and `fc` all still read $HISTFILE. ignoreSpace is the escape hatch
+    # for keeping a command with a token on it out of the file entirely.
     history = {
       size = 100000;
       save = 100000;
@@ -42,31 +38,12 @@
       # errors when eval'd outside a completion context. Register it properly.
       eval "$(zellij setup --generate-completion zsh | sed 's/^_zellij "\$@"$/compdef _zellij zellij/')"
 
-      # Carapace ships completion specs for ~650 commands and compdefs all of
-      # them unconditionally -- including every command that already has an
-      # owner. Two kinds of owner, and carapace is the worse choice for both:
-      #
-      #   - zsh's own bundled completers. `_git` knows your branches, `_make`
-      #     parses the Makefile, `_tar` lists the archive, `_sudo` completes
-      #     the command *after* it. None of that survives a static spec. And
-      #     carapace's coreutils specs are generated from GNU man pages, so on
-      #     darwin they offer flags BSD `ls`/`cp`/`date`/`sed` don't have.
-      #   - completers the tool itself installs into site-functions. docker,
-      #     gh, just, nix, flyctl, bun, rg, fd and ~15 others land here via
-      #     nixpkgs, versioned with the binary they complete -- three of them
-      #     (gh, flyctl, docker) were on the list of things carapace was
-      #     supposed to fix here, and already had first-party coverage.
-      #     Carapace's specs are a snapshot baked into its own release.
-      #
-      # So carapace fills gaps and never displaces: snapshot what compinit
-      # found (plus the two compdefs above), source carapace, then hand back
-      # every command that already had an owner. Doing it by diff rather than
-      # by CARAPACE_EXCLUDES means the list can't rot -- install a tool that
-      # brings its own completer and carapace steps aside on the next rebuild.
-      #
-      # 213 of the 646 get handed back. What's left is the 433 CLIs nothing
-      # else covered: kubectl, pulumi, doctl, terraform, glab, aws, helm, k9s,
-      # jj, pnpm, restic, op, task, vercel, turbo, deno, trivy.
+      # Carapace compdefs all of its ~650 static specs unconditionally, displacing
+      # both zsh's bundled completers (`_git` knows your branches, a spec doesn't)
+      # and the ones tools ship into site-functions. So it fills gaps and never
+      # displaces: snapshot what compinit found, source carapace, hand back every
+      # command that already had an owner. Diffing rather than CARAPACE_EXCLUDES
+      # means the list can't rot as tools gain their own completers.
       typeset -A _comps_before
       _comps_before=("''${(@kv)_comps}")
       source <(${lib.getExe config.programs.carapace.package} _carapace zsh)
@@ -75,28 +52,18 @@
       done
       unset _comps_before _c
 
-      # By default zsh-vi-mode appends zvm_init to precmd_functions, so it
-      # initializes at the first prompt -- i.e. after everything else in this
-      # file -- and overwrites their keybindings on the way past. Working around
-      # that meant funnelling every plugin and bindkey through zvm's
-      # zvm_after_init_commands / zvm_after_lazy_keybindings_commands hooks,
-      # which coupled unrelated config to zvm and hid a real bug: the lazy hook
-      # only fires on the first entry into normal mode, so Alt-t and friends
-      # were undefined-key until you happened to press Escape.
-      #
-      # ZVM_INIT_MODE=sourcing runs zvm_init at source time instead. Everything
-      # below is then plain zsh startup -- source a plugin, bind a key, in the
-      # order written -- and nothing needs to know zvm exists. The only rule
-      # left is the ordinary one: load after the thing you intend to override.
+      # zsh-vi-mode otherwise appends zvm_init to precmd_functions and initializes
+      # after this whole file, overwriting its keybindings on the way past.
+      # Sourcing mode runs zvm_init here, so everything below is plain zsh startup
+      # in the order written: load after the thing you intend to override.
       ZVM_INIT_MODE=sourcing
       source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
       eval "$(atuin init zsh)"
       source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-      # Loaded here rather than in fzf.nix so it lands after zvm; only its
-      # zstyles live there, and those are read at completion time so their
-      # position doesn't matter.
+      # Here rather than fzf.nix so it lands after zvm; its zstyles live there and
+      # are read at completion time, so their position doesn't matter.
       source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
 
       # Alt-f goes to fzf below, so forward-word lives on Alt-Right only. Its
@@ -105,10 +72,8 @@
       bindkey -M viins "\e[1;3C" forward-word
       bindkey -M viins "\e[1;3D" backward-word
 
-      # fzf binds its file widget to Ctrl-T, but zellij claims that for tab mode
-      # (see zellij.nix) so it never reaches zsh. Alt-f is free there too --
-      # zellij binds Alt-Shift-f (ToggleFloatingPanes), which is a separate
-      # chord and does not swallow this one.
+      # zellij claims Ctrl-T for tab mode (see zellij.nix), so fzf's own binding
+      # never reaches zsh. Alt-f is free there; Alt-Shift-f is a separate chord.
       bindkey -M viins "\ef" fzf-file-widget
       bindkey -M vicmd "\ef" fzf-file-widget
 
@@ -132,11 +97,9 @@
     };
   };
 
-  # Integration is off because the generated `source <(...)` would land in
-  # initContent at an order Home Manager picks, and this one has to run after
-  # the compdefs above -- see the block in initContent. `enable` is still what
-  # puts the binary on PATH, which the completer function needs at runtime: it
-  # shells out to bare `carapace` on every TAB.
+  # Integration off: the generated `source <(...)` would land at an order Home
+  # Manager picks, and it has to run after the compdefs in initContent. `enable`
+  # still puts the binary on PATH, which the completer shells out to on every TAB.
   programs.carapace = {
     enable = true;
     enableZshIntegration = false;
@@ -148,18 +111,14 @@
     forceOverwriteSettings = true;
   };
 
-  # Was previously inherited rather than chosen -- nothing here set it. This is
-  # what `git commit`, `git rebase -i`, zellij's EditScrollback and yazi all
-  # open, so it should be deliberate. VISUAL was empty; keep the two in sync so
-  # tools that prefer VISUAL don't diverge.
+  # `git commit`, `git rebase -i`, zellij's EditScrollback and yazi all open
+  # this. Keep VISUAL in sync so tools that prefer it don't diverge.
   home.sessionVariables = {
     EDITOR = "vim";
     VISUAL = "vim";
 
-    # Lets `nh darwin switch` (and `nh clean`) run from any directory instead of
-    # only from the flake root. The hostname is left to nh's own detection --
-    # `hostname` is already "macbook", which matches the darwinConfigurations
-    # attr, so there's nothing to disambiguate with -H.
+    # Lets `nh darwin switch` run from any directory, not just the flake root.
+    # No -H needed: `hostname` already matches the darwinConfigurations attr.
     NH_FLAKE = "${homeDirectory}/.config/nix";
   };
 }

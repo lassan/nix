@@ -27,7 +27,7 @@ in {
       layout {
           default_tab_template {
               pane split_direction="vertical" {
-                  pane size=32 borderless=true {
+                  pane size=32 borderless=false {
                       plugin location="radar"
                   }
                   children
@@ -38,7 +38,7 @@ in {
           }
           new_tab_template {
               pane split_direction="vertical" {
-                  pane size=32 borderless=true {
+                  pane size=32 borderless=false {
                       plugin location="radar"
                   }
                   pane focus=true

@@ -45,10 +45,9 @@
           fsmonitor = true;
         };
 
-        log.date = "iso"; # use iso format for date
+        log.date = "iso";
 
         alias = {
-          # common aliases
           br = "branch";
           co = "checkout";
           st = "status";

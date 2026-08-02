@@ -53,11 +53,9 @@ in {
 
     brews = [
       "asimov"
-      "doctl" #digital ocean cli
+      "doctl"
       "pulumi"
       "llmfit"
-
-      # "omp"
 
       "herdr"
 
@@ -76,8 +74,6 @@ in {
 
       "bazecor"
 
-      # dev tool
-      # "ghostty"
       "bruno"
       "claude"
       "claude-code@latest"
