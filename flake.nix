@@ -25,6 +25,10 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     worktrunk = {
       url = "github:max-sixty/worktrunk";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,10 +47,6 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
-    homebrew-can1357 = {
-      url = "github:can1357/homebrew-tap";
-      flake = false;
-    };
     homebrew-rtk-ai = {
       url = "github:rtk-ai/homebrew-tap";
       flake = false;
@@ -63,7 +63,7 @@
     treefmt-nix,
     ...
   }: let
-    lib = nixpkgs.lib;
+    inherit (nixpkgs) lib;
 
     hosts = {
       macbook = {
@@ -117,6 +117,7 @@
             ./modules/nix-core.nix
             ./modules/common/apps.nix
             ./modules/common/host.nix
+            ./modules/common/secrets.nix
 
             home-manager.darwinModules.home-manager
             {
@@ -148,6 +149,7 @@
             ./modules/nix-core.nix
             ./modules/common/apps.nix
             ./modules/common/host.nix
+            ./modules/common/secrets.nix
 
             home-manager.nixosModules.home-manager
             {

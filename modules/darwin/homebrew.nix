@@ -3,7 +3,6 @@
   brew-src,
   homebrew-core,
   homebrew-cask,
-  homebrew-can1357,
   homebrew-rtk-ai,
   config,
   ...
@@ -29,7 +28,6 @@ in {
     taps = {
       "homebrew/homebrew-core" = homebrew-core;
       "homebrew/homebrew-cask" = homebrew-cask;
-      "can1357/homebrew-tap" = homebrew-can1357;
       "rtk-ai/homebrew-tap" = homebrew-rtk-ai;
     };
 
@@ -55,9 +53,7 @@ in {
       "asimov"
       "doctl"
       "pulumi"
-      "llmfit"
-
-      "herdr"
+      # "llmfit"
 
       "rtk-ai/tap/rtk"
     ];
@@ -66,7 +62,6 @@ in {
       "raycast"
       "tailscale-app"
       "spotify"
-      "bitwarden"
 
       "slack"
       "discord"
@@ -79,12 +74,12 @@ in {
       "claude-code@latest"
       "linear"
       "webstorm"
-      "cyberduck"
 
       "dockdoor"
       "reader"
 
       "shortcat"
+      "bitwarden"
 
       "microsoft-outlook"
       "microsoft-excel"
@@ -95,12 +90,9 @@ in {
       "jordanbaird-ice"
       "stats"
 
-      "dash"
       "lookaway"
 
       "ollama-app"
-
-      "citrix-workspace"
 
       "logseq"
       "opensuperwhisper"
@@ -108,6 +100,7 @@ in {
       "codex"
 
       "gitbutler"
+      "wallspace"
     ];
   };
 }

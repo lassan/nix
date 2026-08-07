@@ -32,7 +32,6 @@
       esac
 
       eval "$(zoxide init zsh)"
-      eval "$(fnm env --use-on-cd --shell zsh)"
       eval "$(temporal completion zsh)"
       # zellij's completion script ends with an unguarded `_zellij "$@"`, which
       # errors when eval'd outside a completion context. Register it properly.
@@ -80,7 +79,7 @@
       # Last: it wraps the widgets everything above has finished defining.
       source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 
-      if [[ -z "$ZELLIJ_SESSION_NAME" && ( "$TERM" == *kitty* || "$TERM" == *ghostty* ) ]]; then
+      if [[ -z "$ZELLIJ_SESSION_NAME" && "$TERM" == *ghostty* ]]; then
         zellij attach -c $USER@$(hostname)
       fi
     '';
@@ -120,5 +119,9 @@
     # Lets `nh darwin switch` run from any directory, not just the flake root.
     # No -H needed: `hostname` already matches the darwinConfigurations attr.
     NH_FLAKE = "${homeDirectory}/.config/nix";
+
+    # sops defaults this to ~/Library/Application Support on darwin and
+    # $XDG_CONFIG_HOME on Linux; pinning it keeps one path on both.
+    SOPS_AGE_KEY_FILE = "${homeDirectory}/.config/sops/age/keys.txt";
   };
 }

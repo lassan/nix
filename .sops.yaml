@@ -1,0 +1,9 @@
+keys:
+  - &hassan age1r4995ayl3lp26fqs3epevvweqjjt94mf4m4w2uy24yc8faqfsudqerngna
+  - &macbook age16f29suy2yy7q6tqn8d5jvpmmvn34pa67c6d9jctasgnrnwvn7east4009s
+creation_rules:
+  - path_regex: secrets/[^/]+$
+    key_groups:
+      - age:
+          - *hassan
+          - *macbook

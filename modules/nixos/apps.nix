@@ -14,13 +14,12 @@
     playerctl
 
     vscode-fhs
-    zen-browser
     tailscale
     spotify
-    bitwarden
+    bitwarden-desktop
     slack
     discord
-    whatsapp-for-linux
+    karere
     bazecor
     bruno
     claude-code

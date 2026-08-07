@@ -1,16 +1,25 @@
 default:
     @just --list
 
-rebuild:
-    nh darwin switch . -- --impure
+# Switch this host, a named host, or deploy to one over SSH
+deploy host="" ip="":
+    @if [ -n "{{ ip }}" ]; then \
+      nixos-rebuild switch --flake ".#{{ host }}" \
+        --target-host "hassan@{{ ip }}" --build-host "hassan@{{ ip }}" \
+        --sudo --no-reexec; \
+    elif [ -z "{{ host }}" ] && [ "$(uname)" = "Darwin" ]; then \
+      nh darwin switch .; \
+    elif [ -z "{{ host }}" ]; then \
+      nh os switch .; \
+    elif [ "$(uname)" = "Darwin" ]; then \
+      nh darwin switch . -H "{{ host }}"; \
+    else \
+      nh os switch . -H "{{ host }}"; \
+    fi
 
-# `nix flake check` covers formatting too, via checks.<system>.formatting — but
-# it currently dies first on nixosConfigurations.nixbox (no root fileSystems),
-# so fmt-check runs up front where it can actually be seen.
-
-# Format check, then nix flake check
-check: fmt-check
-    nix flake check
+# Format check, lint, then nix flake check
+check: fmt-check lint
+    nix flake check --all-systems --no-build
 
 # Format everything (alejandra, shfmt, prettier, just)
 fmt:
@@ -22,6 +31,22 @@ fmt:
 fmt-check:
     nix fmt -- --ci
 
+# Report nix antipatterns
+lint:
+    statix check .
+
+# Edit the encrypted secrets file
+sops-edit:
+    sops secrets/secrets.yaml
+
+# Re-encrypt every secret to the current .sops.yaml recipients
+sops-update:
+    for file in secrets/*; do sops updatekeys "$file"; done
+
+# Rotate the data key on every secret
+sops-rotate:
+    for file in secrets/*; do sops --rotate --in-place "$file"; done
+
 # Git will not take core.hooksPath from a tracked file, so this cannot be
 # declarative. `nix develop` does the same thing on shell entry.
 
@@ -29,12 +54,6 @@ fmt-check:
 hooks:
     git config core.hooksPath .githooks
     @echo "core.hooksPath -> .githooks"
-
-darwin-rebuild host="macbook":
-    nh darwin switch . -H {{ host }} -- --impure
-
-nixos-rebuild host:
-    nh os switch . -H {{ host }}
 
 update: update-packages
     nix flake update

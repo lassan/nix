@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: nix
+    directory: /
+    schedule:
+      interval: weekly
+    # One PR for the whole lock file: the inputs share a nixpkgs via `follows`,
+    # so bumping them separately produces PRs that cannot merge independently.
+    groups:
+      nix:
+        patterns: ["*"]

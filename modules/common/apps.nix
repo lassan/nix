@@ -22,10 +22,13 @@
 
     nixd
     alejandra
+    statix
     nh
 
+    sops
+    ssh-to-age
+
     zellij
-    fnm
     gh
     zoxide
     atuin
@@ -33,7 +36,6 @@
     bat
     just
     just-lsp
-    flyctl
 
     temporal-cli
     tokensave
@@ -45,12 +47,9 @@
     # `zj-radar notify` producer shim.
     zj-radar.packages.${pkgs.system}.zj-radar-cli
 
-    github-copilot-cli
     uv
 
-    bitwarden-cli
-
-    bun
+    # bitwarden-cli
 
     typescript-language-server
 

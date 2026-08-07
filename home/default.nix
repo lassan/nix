@@ -7,9 +7,9 @@
     ./shell.nix
     ./core.nix
     ./vim.nix
+    ./ssh.nix
     ./git.nix
     ./gitui.nix
-    ./kitty.nix
     ./ghostty.nix
     ./firefox.nix
     ./zellij.nix
@@ -20,8 +20,7 @@
   ];
 
   home = {
-    username = username;
-    homeDirectory = homeDirectory;
+    inherit username homeDirectory;
 
     stateVersion = "25.11";
   };

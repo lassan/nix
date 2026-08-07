@@ -6,7 +6,6 @@
   programs = {
     alejandra.enable = true; # *.nix — same formatter flake.nix already exposed
     just.enable = true; # Justfile
-    prettier.enable = true; # *.md, *.json, *.yaml/*.yml
 
     shfmt = {
       enable = true; # *.sh, *.bash, *.envrc, plus the includes below
@@ -18,13 +17,6 @@
       # careless. A formatter should not have opinions this far in.
       simplify = false;
     };
-
-    # Without explicit settings treefmt-nix passes no `--config`, and prettier
-    # then walks up past the repo looking for a `.prettierrc` to obey. Pinning
-    # proseWrap here both writes a config file (ending that search) and keeps
-    # the hand-wrapped ~76-column prose in `docs/` from being reflowed —
-    # prettier still normalizes tables, list markers and emphasis.
-    prettier.settings.proseWrap = "preserve";
   };
 
   settings = {

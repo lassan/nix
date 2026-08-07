@@ -7,7 +7,6 @@
     jq
 
     zoxide
-    fnm
     gitui
     glow
 
