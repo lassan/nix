@@ -1,9 +1,11 @@
-{
+_: {
   imports = [
-    ../../modules/darwin/system.nix
-    ../../modules/darwin/apps.nix
-    ../../modules/darwin/host-user.nix
-    ../../modules/darwin/homebrew.nix
+    ../../modules/darwin
+
     ./github-runner.nix
   ];
+
+  networking.hostName = "macbook";
+
+  nixpkgs.hostPlatform = "aarch64-darwin";
 }

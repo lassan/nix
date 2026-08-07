@@ -1,6 +1,2 @@
-# repeated_keys: this repo deliberately writes flat paths (hardware.bluetooth.enable
-# next to hardware.bluetooth.powerOnBoot) because each line then greps as the option
-# it sets. empty_pattern: `{...}:` documents that a module takes the standard module
-# arguments and ignores them, which `_:` does not.
-disabled = ["repeated_keys", "empty_pattern"]
+disabled = []
 ignore = [".direnv"]

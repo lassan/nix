@@ -1,13 +1,10 @@
 {
   lib,
-  useremail,
-  fullname,
+  vars,
   ...
 }: {
-  # `programs.git` will generate the config file: ~/.config/git/config
-  # to make git use this config file, `~/.gitconfig` should not exist!
-  #
-  #    https://git-scm.com/docs/git-config#Documentation/git-config.txt---global
+  # git only reads the generated ~/.config/git/config when ~/.gitconfig is
+  # absent. https://git-scm.com/docs/git-config#Documentation/git-config.txt---global
   home.activation.removeExistingGitconfig = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
     rm -f ~/.gitconfig
   '';
@@ -24,8 +21,8 @@
 
       settings = {
         rerere.enabled = true;
-        user.email = useremail;
-        user.name = fullname;
+        user.email = vars.userEmail;
+        user.name = vars.fullName;
 
         init.defaultBranch = "main";
 
@@ -35,11 +32,9 @@
         push.default = "current";
 
         core = {
-          # `true` is the Windows setting: it rewrites LF blobs to CRLF in the
-          # working tree, which corrupts the shebang of any checked-out shell
-          # script (`env: bash\r: No such file or directory`). On darwin/linux
-          # `input` is the correct value — normalize to LF on commit, leave the
-          # working tree alone on checkout.
+          # `true` is the Windows setting: it rewrites LF to CRLF in the working
+          # tree, corrupting the shebang of any checked-out shell script
+          # (`env: bash\r: No such file or directory`).
           autocrlf = "input";
           longpaths = true;
           fsmonitor = true;

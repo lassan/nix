@@ -1,6 +1,6 @@
 {
-  username,
-  homeDirectory,
+  pkgs,
+  vars,
   ...
 }: {
   imports = [
@@ -20,7 +20,11 @@
   ];
 
   home = {
-    inherit username homeDirectory;
+    username = vars.userName;
+    homeDirectory =
+      if pkgs.stdenv.isDarwin
+      then "/Users/${vars.userName}"
+      else "/home/${vars.userName}";
 
     stateVersion = "25.11";
   };

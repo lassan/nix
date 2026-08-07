@@ -21,11 +21,9 @@ deploy host="" ip="":
 check: fmt-check lint
     nix flake check --all-systems --no-build
 
-# Format everything (alejandra, shfmt, prettier, just)
+# Format everything (alejandra, shfmt, just)
 fmt:
     nix fmt
-
-# --ci implies --no-cache --fail-on-change
 
 # Fail if anything is unformatted
 fmt-check:
@@ -47,10 +45,7 @@ sops-update:
 sops-rotate:
     for file in secrets/*; do sops --rotate --in-place "$file"; done
 
-# Git will not take core.hooksPath from a tracked file, so this cannot be
-# declarative. `nix develop` does the same thing on shell entry.
-
-# Enable the .githooks/ pre-commit format gate
+# Enable the .githooks/ pre-commit format gate (`nix develop` does this too)
 hooks:
     git config core.hooksPath .githooks
     @echo "core.hooksPath -> .githooks"

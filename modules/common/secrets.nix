@@ -1,22 +1,10 @@
-{
-  platform,
-  sops-nix,
-  ...
-}: {
-  imports = [
-    (
-      if platform == "darwin"
-      then sops-nix.darwinModules.sops
-      else sops-nix.nixosModules.sops
-    )
-  ];
-
+_: {
   sops = {
     defaultSopsFile = ../../secrets/secrets.yaml;
 
-    # The NixOS default derives this from services.openssh.hostKeys, which is
-    # empty while sshd is off; the darwin module hardcodes a different list.
-    # Pinning it keeps both platforms on the key that .sops.yaml encrypts to.
+    # The NixOS default derives this from services.openssh.hostKeys, empty while
+    # sshd is off, and the darwin module hardcodes a different list. Pinning it
+    # keeps both platforms on the key .sops.yaml encrypts to.
     age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
 
     # https://github.com/Mic92/sops-nix/issues/427 — the non-empty default

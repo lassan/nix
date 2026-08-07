@@ -1,24 +1,19 @@
-{...}: {
-  # Firefox, installed and configured entirely through Home Manager's
-  # `programs.firefox`, following the NixOS wiki:
-  #   https://wiki.nixos.org/wiki/Firefox
-  #
-  # `policies` is baked into the package's distribution/policies.json by the
-  # module (the macOS-trusted location); `profiles.<name>.settings` becomes the
-  # profile's user.js. The binary is copied to ~/Applications/Home Manager Apps.
+_: {
+  # `policies` is baked into the package's distribution/policies.json, the
+  # macOS-trusted location, and `profiles.<name>.settings` becomes the profile's
+  # user.js. https://wiki.nixos.org/wiki/Firefox
   programs.firefox = {
     enable = true;
 
     policies = {
-      # macOS-only requirement: unlike Linux/Windows, Firefox does not turn the
-      # enterprise-policies engine on just because policies exist — without this
-      # about:policies reads "inactive" and ExtensionSettings is never applied.
+      # macOS-only: Firefox does not enable the enterprise-policies engine just
+      # because policies exist, so without this about:policies reads "inactive"
+      # and ExtensionSettings never applies.
       EnterprisePoliciesEnabled = true;
 
       ExtensionSettings = let
-        # Resolve an add-on's current latest .xpi from its AMO slug. With
-        # `updates_disabled = true` the version installed at first launch is
-        # then pinned (no auto-updates).
+        # `updates_disabled` pins whichever version first launch resolves from
+        # the AMO slug.
         moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
         forced = short: {
           install_url = moz short;
@@ -26,7 +21,6 @@
           updates_disabled = true;
         };
       in {
-        # Allow installing other add-ons by hand.
         "*".installation_mode = "allowed";
 
         "ATBC@EasonWong" = forced "adaptive-tab-bar-colour";

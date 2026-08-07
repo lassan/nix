@@ -4,17 +4,15 @@
   projectRootFile = "flake.nix";
 
   programs = {
-    alejandra.enable = true; # *.nix — same formatter flake.nix already exposed
-    just.enable = true; # Justfile
+    alejandra.enable = true;
+    just.enable = true;
 
     shfmt = {
-      enable = true; # *.sh, *.bash, *.envrc, plus the includes below
-      indent_size = 2; # matches scripts/update-packages as written
-      # treefmt-nix turns `-s` on by default, which rewrites
-      # `[[ "$x" == "$y" ]]` into `[[ $x == "$y" ]]`. Dropping the quotes on
-      # the left of `==` is safe inside `[[ ]]` but it is a change to the code,
-      # not to its layout, and it makes the script read as if the quoting were
-      # careless. A formatter should not have opinions this far in.
+      enable = true;
+      indent_size = 2;
+      # treefmt-nix enables `-s` by default, which rewrites `[[ "$x" == "$y" ]]`
+      # into `[[ $x == "$y" ]]`. That is a change to the code rather than its
+      # layout, and it reads as if the quoting were careless.
       simplify = false;
     };
   };
@@ -29,12 +27,10 @@
 
     formatter.shfmt = {
       # shfmt globs by extension only, so the extensionless scripts in
-      # `scripts/` and `.githooks/` are invisible to it. Module-system list
-      # options merge by concatenation, so this appends to the shfmt module's
-      # own includes rather than replacing them.
+      # `scripts/` and `.githooks/` are invisible to it.
       includes = ["scripts/*" ".githooks/*"];
-      # Indent the body of a `case` arm. Off by default, but every script here
-      # already indents, and shfmt would otherwise flatten them all.
+      # Indent `case` arm bodies; off by default, and shfmt would flatten the
+      # scripts here that already indent them.
       options = ["-ci"];
     };
   };

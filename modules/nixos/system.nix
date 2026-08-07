@@ -1,8 +1,18 @@
-{self, ...}: {
+{
+  self,
+  vars,
+  ...
+}: {
   system = {
     stateVersion = "25.11";
 
     configurationRevision = self.rev or self.dirtyRev or null;
+  };
+
+  users.users.${vars.userName} = {
+    isNormalUser = true;
+    description = vars.userName;
+    extraGroups = ["wheel" "networkmanager" "input" "video" "audio"];
   };
 
   boot.loader = {

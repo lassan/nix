@@ -1,10 +1,26 @@
-{self, ...}: {
+{
+  config,
+  self,
+  vars,
+  ...
+}: {
+  networking.computerName = config.networking.hostName;
+
+  users.users.${vars.userName} = {
+    home = "/Users/${vars.userName}";
+    description = vars.userName;
+  };
+
   system = {
     stateVersion = 6;
+
+    primaryUser = vars.userName;
 
     configurationRevision = self.rev or self.dirtyRev or null;
 
     defaults = {
+      smb.NetBIOSName = config.networking.hostName;
+
       dock = {
         autohide = false;
         magnification = false;

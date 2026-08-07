@@ -1,16 +1,31 @@
-{pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   home.packages = with pkgs; [
     bat
-    eza
     fd
     ripgrep
     jq
-
     zoxide
-    gitui
     glow
-
     tldr
+
+    gh
+    just
+    just-lsp
+    uv
+
+    nixd
+    alejandra
+    statix
+    typescript-language-server
+
+    temporal-cli
+    tokensave
+
+    inputs.hunk.packages.${pkgs.system}.default
   ];
 
   programs = {

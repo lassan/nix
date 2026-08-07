@@ -24,17 +24,14 @@
         disabled = false;
       };
 
-      # `git status` was 19% of every command typed. The default git_status
-      # renders bare symbols (`[!?]`) — enough to know *something* changed, not
-      # enough to stop you running the command, so the counts are the point.
-      #
-      # Measured at 47ms in the 3,806-file monorepo, well inside starship's
-      # 500ms `command_timeout`, so no timeout bump is needed.
+      # The default bare symbols (`[!?]`) say something changed but not enough
+      # to skip running `git status`, which was 19% of commands typed; the
+      # counts are the point. Measured at 47ms in a 3,806-file monorepo, inside
+      # starship's 500ms `command_timeout`.
       git_status = {
-        # Literal `\[ \]` around the block: git_metrics renders immediately
-        # before this and also uses a green `+N`, so without the brackets
-        # `+489 -391 +11!1` reads as one run of numbers. Bracketed = file
-        # counts, bare = line counts.
+        # Literal `\[ \]`: git_metrics renders immediately before this and also
+        # uses a green `+N`, so unbracketed `+489 -391 +11!1` reads as one run
+        # of numbers. Bracketed is file counts, bare is line counts.
         format = "([\\[$conflicted$staged$modified$renamed$deleted$untracked$stashed$ahead_behind\\]]($style) )";
 
         conflicted = "[=$count](bold red)";
@@ -43,17 +40,15 @@
         renamed = "[»$count](bold cyan)";
         deleted = "[✘$count](bold red)";
         untracked = "[?$count](bold blue)";
-        # A bare `$` is a variable sigil to starship and silently renders the
-        # whole segment empty — the literal stash symbol has to be `\$`.
+        # A bare `$` is a variable sigil to starship and silently empties the
+        # whole segment, so the literal stash symbol has to be `\$`.
         stashed = "[\\$$count](bold purple)";
 
         ahead = "[⇡$count](bold green)";
         behind = "[⇣$count](bold red)";
         diverged = "[⇕⇡\${ahead_count}⇣\${behind_count}](bold red)";
-        # Deliberately empty rather than a `✓`: up_to_date means "in sync with
-        # upstream", not "clean", so a tick would sit next to `!35✘5?3` and
-        # read as all-clear. Empty makes "no bracket block" mean clean *and*
-        # synced, which is the unambiguous signal.
+        # Empty rather than a `✓`: up_to_date means in sync with upstream, not
+        # clean, so a tick would sit beside `!35✘5?3` and read as all-clear.
         up_to_date = "";
       };
     };

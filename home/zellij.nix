@@ -1,7 +1,7 @@
 {
   config,
+  inputs,
   pkgs,
-  zj-radar,
   ...
 }: let
   # Stable path, not the store path: zellij keys plugin permissions on the
@@ -11,21 +11,24 @@
     exec ${pkgs.vim}/bin/vim -R "$@"
   '';
 in {
-  xdg.configFile."zellij/plugins/zj_radar.wasm".source = "${zj-radar.packages.${pkgs.system}.default}/bin/zj_radar.wasm";
+  xdg.configFile."zellij/plugins/zj_radar.wasm".source = "${inputs.zj-radar.packages.${pkgs.system}.default}/bin/zj_radar.wasm";
+
+  # The sidebar itself is wired declaratively below; this is the
+  # `zj-radar setup --check` doctor and the `zj-radar notify` producer shim.
+  home.packages = [inputs.zj-radar.packages.${pkgs.system}.zj-radar-cli];
 
   programs.zellij = {
     enable = true;
 
     # Shell integration off: shell.nix does the auto-attach itself.
 
-    # A custom `default` layout replaces zellij's built-in wholesale, inheriting
-    # nothing — hence the status-bar pane and the swap layouts (verbatim from
-    # `zellij setup --dump-swap-layout default`, `ui` template swapped for ours)
-    # are restated here. Without them `Alt [` / `Alt ]` are silent no-ops.
-    # Without `new_tab_template`, zellij exits instantly with "Bye from Zellij!":
-    # the first tab resolves to plugin panes only, with no terminal to host.
-    # `ui` must duplicate `default_tab_template` — swap layouts can only
-    # reference a named template. Edit both.
+    # A custom `default` layout replaces zellij's built-in wholesale and
+    # inherits nothing, so the status-bar pane and the swap layouts are restated
+    # here verbatim from `zellij setup --dump-swap-layout default`. Without them
+    # `Alt [` / `Alt ]` are silent no-ops; without `new_tab_template` zellij
+    # exits instantly with "Bye from Zellij!" because the first tab resolves to
+    # plugin panes with no terminal to host. `ui` must duplicate
+    # `default_tab_template`, since swap layouts can only reference a named one.
     layouts.default = ''
       layout {
           default_tab_template {

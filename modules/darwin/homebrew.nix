@@ -1,34 +1,31 @@
 {
-  username,
-  brew-src,
-  homebrew-core,
-  homebrew-cask,
-  homebrew-rtk-ai,
   config,
+  inputs,
+  vars,
   ...
 }: let
-  # nix-homebrew derives this from its own bundled lock, which still says
-  # 6.0.12, so overriding brew-src alone would stamp the wrong HOMEBREW_VERSION.
-  # Read the tag we actually pinned in flake.nix instead.
+  # nix-homebrew derives this from its own bundled lock, still 6.0.12, so
+  # overriding brew-src alone stamps the wrong HOMEBREW_VERSION. Read the tag
+  # pinned in flake.nix instead.
   brewVersion = (builtins.fromJSON (builtins.readFile ../../flake.lock)).nodes.brew-src.original.ref;
 in {
   nix-homebrew = {
     enable = true;
     enableRosetta = true;
 
-    user = username;
+    user = vars.userName;
 
     package =
-      brew-src
+      inputs.brew-src
       // {
         name = "brew-${brewVersion}";
         version = brewVersion;
       };
 
     taps = {
-      "homebrew/homebrew-core" = homebrew-core;
-      "homebrew/homebrew-cask" = homebrew-cask;
-      "rtk-ai/homebrew-tap" = homebrew-rtk-ai;
+      "homebrew/homebrew-core" = inputs.homebrew-core;
+      "homebrew/homebrew-cask" = inputs.homebrew-cask;
+      "rtk-ai/homebrew-tap" = inputs.homebrew-rtk-ai;
     };
 
     mutableTaps = false;
@@ -53,7 +50,6 @@ in {
       "asimov"
       "doctl"
       "pulumi"
-      # "llmfit"
 
       "rtk-ai/tap/rtk"
     ];

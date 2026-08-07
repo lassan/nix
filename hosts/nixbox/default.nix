@@ -1,9 +1,11 @@
-{
+_: {
   imports = [
     ./hardware-configuration.nix
 
-    ../../modules/nixos/system.nix
-    ../../modules/nixos/apps.nix
-    ../../modules/nixos/host-user.nix
+    ../../modules/nixos
   ];
+
+  networking.hostName = "nixbox";
+
+  nixpkgs.hostPlatform = "x86_64-linux";
 }
