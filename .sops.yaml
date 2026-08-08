@@ -3,6 +3,8 @@ keys:
   - &macbook age16f29suy2yy7q6tqn8d5jvpmmvn34pa67c6d9jctasgnrnwvn7east4009s
   - &nixbox age1mth8xn80was5r0h0cxrl7lsl27vl054m4m3stjzqg94aq3la9vks848tv7
   - &hassan-nixbox age168yfsa30edey9xyt9k7ddv5a4xy9x0jq5nrzfl5udvs5yszqzstss2qht9
+  # Held only in Bitwarden, on no machine. Never add this to a keys.txt.
+  - &recovery age1p8jycywjm7xt55ejstu9dgwr9tvrfdz7puqwgpdd8wkyp2d499kqar0a5j
 creation_rules:
   - path_regex: secrets/[^/]+$
     key_groups:
@@ -11,3 +13,4 @@ creation_rules:
           - *macbook
           - *nixbox
           - *hassan-nixbox
+          - *recovery

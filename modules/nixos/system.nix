@@ -72,18 +72,8 @@
   security.rtkit.enable = true;
 
   # Nothing else in the session provides one, so GUI privilege prompts would
-  # silently never appear.
+  # silently never appear. The agent itself is a home-manager service.
   security.polkit.enable = true;
-  systemd.user.services.hyprpolkitagent = {
-    description = "Hyprland polkit authentication agent";
-    wantedBy = ["graphical-session.target"];
-    partOf = ["graphical-session.target"];
-    after = ["graphical-session.target"];
-    serviceConfig = {
-      ExecStart = lib.getExe' pkgs.hyprpolkitagent "hyprpolkitagent";
-      Restart = "on-failure";
-    };
-  };
 
   services = {
     openssh = {

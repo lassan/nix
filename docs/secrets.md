@@ -10,12 +10,13 @@ anything.
 
 ## Recipients
 
-| Anchor          | Derived from                    | Role                                        |
-| --------------- | ------------------------------- | ------------------------------------------- |
-| `hassan`        | `~/.ssh/id_ed25519` on macbook  | Editing secrets from macbook, recovery key  |
-| `macbook`       | `/etc/ssh/ssh_host_ed25519_key` | Decryption at activation on macbook         |
-| `nixbox`        | `/etc/ssh/ssh_host_ed25519_key` | Decryption at activation on nixbox          |
-| `hassan-nixbox` | `age-keygen` on nixbox          | Editing secrets from nixbox                 |
+| Anchor          | Derived from                    | Role                                       |
+| --------------- | ------------------------------- | ------------------------------------------ |
+| `hassan`        | `~/.ssh/id_ed25519` on macbook  | Editing secrets from macbook               |
+| `macbook`       | `/etc/ssh/ssh_host_ed25519_key` | Decryption at activation on macbook        |
+| `nixbox`        | `/etc/ssh/ssh_host_ed25519_key` | Decryption at activation on nixbox         |
+| `hassan-nixbox` | `age-keygen` on nixbox          | Editing secrets from nixbox                |
+| `recovery`      | `age-keygen`, stored in Bitwarden only | Last resort if every machine is lost |
 
 `hassan-nixbox` is a standalone identity rather than a copy of `hassan`, so
 editing from nixbox never required moving the recovery key onto a second
@@ -148,13 +149,24 @@ minimally-scoped and short-lived, and rotate on a schedule.
 
 ## Recovery
 
-If macbook is lost and `~/.ssh/id_ed25519` was not backed up, `secrets.yaml` is
-**permanently undecryptable** and every credential in it must be reissued at
-source. Back that key up to Bitwarden.
+The `recovery` identity exists for the case where every machine is gone. It was
+generated with `age-keygen`, never written to any disk, and lives only in
+Bitwarden. To use it, put its secret key in `keys.txt` on a trusted machine,
+decrypt, then rotate — see [Rotation](#rotation).
 
-Stronger: generate a dedicated recovery identity with `age-keygen`, store it
-only in Bitwarden, and add it as a third recipient. Do this while you still
-hold a working key — recipients can only be added by someone who can already
-decrypt.
+Recipients can only be added by someone who can already decrypt, so a lost key
+cannot be replaced after the fact. Everything below therefore has to stay true
+while at least one key still works:
+
+- `recovery` must be reachable without either machine. If unlocking Bitwarden
+  depends on something only on macbook, the independence is illusory.
+- `hassan` is `~/.ssh/id_ed25519` on macbook and has no passphrase; back it up
+  to Bitwarden too, since anyone holding that one file can read every secret
+  ever committed to this public repo.
+- `hassan-nixbox` is an editing convenience, not a backup — it sits on a machine
+  that dual-boots Windows.
+
+If all five recipients are lost, `secrets.yaml` is **permanently undecryptable**
+and every credential in it must be reissued at source.
 
 [sops-nix]: https://github.com/Mic92/sops-nix

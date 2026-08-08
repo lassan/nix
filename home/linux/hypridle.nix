@@ -1,4 +1,7 @@
 _: {
+  # GUI privilege prompts have nothing to display them otherwise.
+  services.hyprpolkitagent.enable = true;
+
   services.hypridle = {
     enable = true;
 
