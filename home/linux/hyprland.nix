@@ -220,6 +220,7 @@ in {
           (bind "SUPER + V" "hl.dsp.window.float({ action = \"toggle\" })")
           (bind "SUPER + P" "hl.dsp.window.pseudo({ action = \"toggle\" })")
           (bind "SUPER + F" "hl.dsp.window.fullscreen({ action = \"toggle\" })")
+          (bind "SUPER + M" "hl.dsp.window.fullscreen({ mode = \"maximized\", action = \"toggle\" })")
           (bind "SUPER + C" "hl.dsp.window.center()")
           (bind "SUPER + B" "hl.dsp.exec_cmd(\"firefox\")")
           (bind "SUPER + E" "hl.dsp.exec_cmd(\"yazi\")")
@@ -252,17 +253,16 @@ in {
         ++ workspaceBinds;
 
       window_rule = [
+        # Stacking rather than tiling: everything floats, drag with SUPER+LMB,
+        # resize with SUPER+RMB or by grabbing a border. This makes the dwindle
+        # settings above inert unless a window is un-floated with SUPER+V.
         {
-          match = {class = "^(pavucontrol|nm-connection-editor|blueman-manager)$";};
+          match = {class = ".*";};
           float = true;
-        }
-        {
-          match = {class = "^(Bitwarden)$";};
-          float = true;
+          center = true;
         }
         {
           match = {title = "^(Picture-in-Picture)$";};
-          float = true;
           pin = true;
         }
       ];
