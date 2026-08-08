@@ -10,13 +10,16 @@ anything.
 
 ## Recipients
 
-| Anchor    | Derived from                    | Role                                       |
-| --------- | ------------------------------- | ------------------------------------------ |
-| `hassan`  | `~/.ssh/id_ed25519`             | Editing secrets, and the only recovery key |
-| `macbook` | `/etc/ssh/ssh_host_ed25519_key` | Decryption at activation on macbook        |
+| Anchor          | Derived from                    | Role                                        |
+| --------------- | ------------------------------- | ------------------------------------------- |
+| `hassan`        | `~/.ssh/id_ed25519` on macbook  | Editing secrets from macbook, recovery key  |
+| `macbook`       | `/etc/ssh/ssh_host_ed25519_key` | Decryption at activation on macbook         |
+| `nixbox`        | `/etc/ssh/ssh_host_ed25519_key` | Decryption at activation on nixbox          |
+| `hassan-nixbox` | `age-keygen` on nixbox          | Editing secrets from nixbox                 |
 
-`nixbox` is not yet a recipient — it has no host key until NixOS is installed.
-See [Adding a machine](#adding-a-machine).
+`hassan-nixbox` is a standalone identity rather than a copy of `hassan`, so
+editing from nixbox never required moving the recovery key onto a second
+machine, and revoking nixbox is an edit to `.sops.yaml` plus `just sops-update`.
 
 ## How it fits together
 
@@ -42,6 +45,21 @@ chmod 600 ~/.config/sops/age/keys.txt
 
 `SOPS_AGE_KEY_FILE` points there from `home/shell.nix`. This file is
 machine-local and must never be committed.
+
+On a machine that should be able to edit secrets without holding the recovery
+key, generate a standalone identity instead and enrol its public half, as
+`hassan-nixbox` was:
+
+```sh
+mkdir -p ~/.config/sops/age
+age-keygen -o ~/.config/sops/age/keys.txt
+chmod 600 ~/.config/sops/age/keys.txt
+age-keygen -y ~/.config/sops/age/keys.txt   # the age1… to add to .sops.yaml
+```
+
+Generate it on the machine that will use it; the private half never needs to
+move, and dropping that machine is an edit to `.sops.yaml` plus
+`just sops-update`.
 
 > **The single most confusing failure mode.** There are two incompatible ways to
 > use an SSH key as an age key, and they are mutually undecryptable:
