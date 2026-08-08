@@ -11,11 +11,11 @@
     exec ${pkgs.vim}/bin/vim -R "$@"
   '';
 in {
-  xdg.configFile."zellij/plugins/zj_radar.wasm".source = "${inputs.zj-radar.packages.${pkgs.system}.default}/bin/zj_radar.wasm";
+  xdg.configFile."zellij/plugins/zj_radar.wasm".source = "${inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/zj_radar.wasm";
 
   # The sidebar itself is wired declaratively below; this is the
   # `zj-radar setup --check` doctor and the `zj-radar notify` producer shim.
-  home.packages = [inputs.zj-radar.packages.${pkgs.system}.zj-radar-cli];
+  home.packages = [inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.zj-radar-cli];
 
   programs.zellij = {
     enable = true;

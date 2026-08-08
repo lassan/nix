@@ -87,16 +87,16 @@
 
     # The treefmt wrapper rather than alejandra alone, so `nix fmt` covers the
     # shell and just files too.
-    formatter = forEachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+    formatter = forEachSystem (pkgs: treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper);
 
     # Backstop for commits that bypassed the pre-commit hook.
     checks = forEachSystem (pkgs: {
-      formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      formatting = treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.check self;
     });
 
     devShells = forEachSystem (pkgs: {
       default = pkgs.mkShell {
-        packages = [treefmtEval.${pkgs.system}.config.build.wrapper];
+        packages = [treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper];
         # Git refuses to read `core.hooksPath` from tracked files, so enabling
         # `.githooks/` cannot be declarative and has to be a runtime side effect.
         shellHook = ''
