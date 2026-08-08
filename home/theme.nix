@@ -16,6 +16,6 @@ rec {
   accent = red;
   accentAlt = purple;
 
-  # Hyprland takes colours as 0xAARRGGBB rather than #RRGGBB.
-  hypr = colour: alpha: "0x${alpha}${builtins.substring 1 6 colour}";
+  # Hyprland's web-hash colours are #RRGGBBAA, alpha last.
+  alpha = colour: a: "${colour}${a}";
 }

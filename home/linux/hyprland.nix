@@ -72,8 +72,16 @@ in {
           gaps_out = 12;
           layout = "dwindle";
           resize_on_border = true;
-          "col.active_border" = "${theme.hypr theme.accent "ee"} ${theme.hypr theme.accentAlt "ee"} 45deg";
-          "col.inactive_border" = theme.hypr theme.backgroundAlt "aa";
+          # A gradient is a table; a bare "colour colour 45deg" string is the
+          # hyprlang form and is rejected as an invalid color.
+          "col.active_border" = {
+            colors = [
+              (theme.alpha theme.accent "ee")
+              (theme.alpha theme.accentAlt "ee")
+            ];
+            angle = 45;
+          };
+          "col.inactive_border" = theme.alpha theme.backgroundAlt "aa";
         };
 
         decoration = {
@@ -95,7 +103,7 @@ in {
             enabled = true;
             range = 24;
             render_power = 3;
-            color = theme.hypr theme.backgroundAlt "aa";
+            color = theme.alpha theme.backgroundAlt "aa";
           };
         };
 
