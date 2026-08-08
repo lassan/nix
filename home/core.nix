@@ -1,8 +1,4 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     bat
     fd
@@ -24,8 +20,6 @@
 
     temporal-cli
     tokensave
-
-    inputs.hunk.packages.${pkgs.system}.default
   ];
 
   programs = {
