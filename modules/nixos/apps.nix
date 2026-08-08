@@ -1,16 +1,14 @@
 {pkgs, ...}: {
-  environment.systemPackages = with pkgs; [
-    ghostty
+  fonts.packages = [pkgs.nerd-fonts.jetbrains-mono];
 
-    hyprpaper
-    hyprlock
-    wofi
-    waybar
-    dunst
+  # systemPackages does not install a package's udev rules, and without
+  # 60-dygma.rules bazecor cannot reach the keyboard.
+  services.udev.packages = [pkgs.bazecor];
+
+  environment.systemPackages = with pkgs; [
     grim
     slurp
     wl-clipboard
-    networkmanagerapplet
     playerctl
 
     vscode-fhs
@@ -24,7 +22,6 @@
     bruno
     claude-code
     jetbrains.webstorm
-    ollama-cuda
     logseq
     onedrive
 

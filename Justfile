@@ -6,7 +6,7 @@ deploy host="" ip="":
     @if [ -n "{{ ip }}" ]; then \
       nixos-rebuild switch --flake ".#{{ host }}" \
         --target-host "hassan@{{ ip }}" --build-host "hassan@{{ ip }}" \
-        --sudo --no-reexec; \
+        --sudo --ask-elevate-password --no-reexec; \
     elif [ -z "{{ host }}" ] && [ "$(uname)" = "Darwin" ]; then \
       nh darwin switch .; \
     elif [ -z "{{ host }}" ]; then \
@@ -55,6 +55,10 @@ update: update-packages
 
 update-packages:
     ./scripts/update-packages
+
+# Re-vendor the Hyprland wiki skill from upstream
+update-hyprland-skill:
+    ./scripts/update-hyprland-skill
 
 clean:
     nh clean all --keep 5 --keep-since 7d

@@ -10,6 +10,7 @@
     inputs.sops-nix.nixosModules.sops
 
     ./apps.nix
+    ./graphics.nix
     ./system.nix
   ];
 
@@ -19,6 +20,6 @@
     backupFileExtension = "backup";
     extraSpecialArgs = {inherit inputs vars;};
     sharedModules = [inputs.worktrunk.homeModules.default];
-    users.${vars.userName}.imports = [../../home];
+    users.${vars.userName}.imports = [../../home ../../home/linux];
   };
 }

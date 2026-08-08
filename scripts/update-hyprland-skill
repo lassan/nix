@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repository_root="$(cd "${script_dir}/.." && pwd)"
+skill_dir="${repository_root}/.claude/skills/hyprland"
+upstream="https://github.com/marceloeatworld/hyprland-ai-skill.git"
+
+checkout="$(mktemp -d)"
+trap 'rm -rf "$checkout"' EXIT
+
+git clone --quiet --depth 1 "$upstream" "$checkout"
+skill_revision="$(git -C "$checkout" rev-parse --short HEAD)"
+
+# shellcheck disable=SC1091
+source "${checkout}/references/.wiki-version"
+
+rm -rf "${skill_dir}/references"
+mkdir -p "$skill_dir"
+cp "${checkout}/SKILL.md" "$skill_dir"
+cp -R "${checkout}/references" "$skill_dir"
+
+cat >"${skill_dir}/UPSTREAM.md" <<EOF
+# Upstream
+
+Vendored from <https://github.com/marceloeatworld/hyprland-ai-skill> at
+\`${skill_revision}\`, which mirrors the Hyprland wiki
+(<https://github.com/hyprwm/hyprland-wiki>) at \`${commit}\`, ${date%% *}.
+
+Only \`SKILL.md\` and \`references/\` are vendored; the upstream installer, CI
+workflows and regeneration script are not, since the update path here is
+\`just update-hyprland-skill\`.
+EOF
+
+echo "hyprland skill at ${skill_revision}, wiki ${commit} (${date%% *})"
+echo "$(find "${skill_dir}/references" -name '*.md' | wc -l | tr -d ' ') reference files"

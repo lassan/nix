@@ -23,6 +23,8 @@
     excludes = [
       ".serena/**"
       "flake.lock"
+      # Vendored upstream docs; reformatting would only fight the next sync.
+      ".claude/skills/**"
     ];
 
     formatter.shfmt = {
