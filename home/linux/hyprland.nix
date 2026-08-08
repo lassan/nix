@@ -65,6 +65,16 @@ in {
         }
       ];
 
+      # The Defy's firmware layout is US; the global gb below is for the other
+      # keyboards. Hyprland resolves binds against the global keymap regardless,
+      # so this only affects typed symbols.
+      device = [
+        {
+          name = "dygma-defy-keyboard";
+          kb_layout = "us";
+        }
+      ];
+
       config = {
         general = {
           border_size = 2;
@@ -118,8 +128,11 @@ in {
         };
 
         dwindle = {
-          pseudotile = true;
           preserve_split = true;
+
+          # Upstream recommends this on widescreens, where W > H persists even
+          # after several splits. This monitor is 3840x1600.
+          split_width_multiplier = 1.35;
         };
 
         misc = {
