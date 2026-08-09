@@ -7,5 +7,6 @@ _: {
     ./hyprlock.nix
     ./hypridle.nix
     ./hyprpaper.nix
+    ./bitwarden.nix
   ];
 }
