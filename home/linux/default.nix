@@ -1,4 +1,4 @@
-_: {
+{vars, ...}: {
   imports = [
     ./hyprland.nix
     ./waybar.nix
@@ -8,5 +8,9 @@ _: {
     ./hypridle.nix
     ./hyprpaper.nix
     ./bitwarden.nix
+    ./firefox.nix
+    ./shell.nix
   ];
+
+  home.homeDirectory = "/home/${vars.userName}";
 }

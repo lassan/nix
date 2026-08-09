@@ -1,23 +1,9 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
-  inherit (pkgs.stdenv.hostPlatform) isLinux;
-
-  xdgRoot = "${config.xdg.configHome}/mozilla/firefox";
-in {
+_: {
   # `policies` is baked into the package's distribution/policies.json, the
   # macOS-trusted location, and `profiles.<name>.settings` becomes the profile's
   # user.js. https://wiki.nixos.org/wiki/Firefox
   programs.firefox = {
     enable = true;
-
-    # home-manager flips this default to the XDG path at stateVersion 26.05;
-    # pinning it early only works on a host with no profile to relocate, since
-    # the module moves nothing itself. Darwin keeps its own default.
-    configPath = lib.mkIf isLinux (lib.removePrefix "${config.home.homeDirectory}/" xdgRoot);
 
     policies = {
       # macOS-only: Firefox does not enable the enterprise-policies engine just

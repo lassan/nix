@@ -1,8 +1,4 @@
-{
-  pkgs,
-  vars,
-  ...
-}: {
+{vars, ...}: {
   imports = [
     ./shell.nix
     ./core.nix
@@ -19,13 +15,10 @@
     ./yazi.nix
   ];
 
+  # homeDirectory is set by the platform bundle beside this one, in home/linux
+  # or home/darwin.
   home = {
     username = vars.userName;
-    homeDirectory =
-      if pkgs.stdenv.isDarwin
-      then "/Users/${vars.userName}"
-      else "/home/${vars.userName}";
-
     stateVersion = "25.11";
   };
 

@@ -91,6 +91,27 @@ Adding a secret is two steps: a new key in `just sops-edit`, and a
 `owner`/`group` if the reader is not root — the darwin defaults are
 `owner = "root"`, `group = "staff"`, `mode = "0400"`.
 
+## The login password
+
+`modules/nixos/system.nix` sets `users.mutableUsers = false` and reads the
+account hash from the `user-password` secret, so `/etc/shadow` is rebuilt from
+this repo rather than being imperative state. nix-darwin has no equivalent —
+macOS accounts are managed by Open Directory, so macbook's password stays
+outside Nix.
+
+The secret is `neededForUsers = true`, which means sops-nix decrypts it to
+`/run/secrets-for-users/` before the users are created, ahead of the normal
+activation ordering. It has to exist before the first switch that carries this
+setting, or activation fails and the account is left without a password:
+
+```sh
+nix run nixpkgs#mkpasswd -- -m sha-512    # paste the $6$… output
+just sops-edit                            # add: user-password: "$6$…"
+```
+
+`git commit` the re-encrypted file, then deploy. SSH key auth is independent of
+this, so a mistake here is still recoverable over the network.
+
 ## Adding a machine
 
 Order matters: a machine cannot decrypt a file that it was not a recipient of

@@ -19,29 +19,7 @@
         ignoreSpace = true;
         expireDuplicatesFirst = true;
       };
-      initContent = let
-        # pnpm picks its global bin directory per platform and only reads
-        # PNPM_HOME once set, so the value has to track the platform too.
-        pnpmHome =
-          if pkgs.stdenv.isDarwin
-          then "$HOME/Library/pnpm"
-          else "$HOME/.local/share/pnpm";
-
-        # The python.org framework build, which has no Linux counterpart.
-        pythonFramework = lib.optionalString pkgs.stdenv.isDarwin ''
-          case ":$PATH:" in
-            *":/Library/Frameworks/Python.framework/Versions/3.14/bin:"*) ;;
-            *) export PATH="/Library/Frameworks/Python.framework/Versions/3.14/bin:$PATH" ;;
-          esac
-        '';
-      in ''
-        export PNPM_HOME="${pnpmHome}"
-        case ":$PATH:" in
-          *":$PNPM_HOME:"*) ;;
-          *) export PATH="$PNPM_HOME:$PATH" ;;
-        esac
-
-        ${pythonFramework}
+      initContent = ''
         eval "$(zoxide init zsh)"
         eval "$(temporal completion zsh)"
         # zellij's completion script ends with an unguarded `_zellij "$@"`, which

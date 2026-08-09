@@ -1,6 +1,8 @@
 _: {
   imports = [
     ../../modules/darwin
+    ../../modules/darwin/homebrew.nix
+    ../../modules/darwin/apps.nix
 
     ./github-runner.nix
   ];
