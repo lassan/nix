@@ -9,6 +9,78 @@
 
   bind = keys: dispatcher: {_args = [keys (mkLuaInline dispatcher)];};
 
+  # Rectangle's window actions, mirrored from modules/darwin/rectangle.nix.
+  # Geometry is resolved against whichever monitor has focus when the bind
+  # fires, so attaching a screen needs no config change. Twelfths because that
+  # makes halves, thirds, quarters and sixths all exact.
+  #
+  # Dispatcher coordinates are absolute, and the monitor's reserved area — the
+  # exclusive zone waybar takes — has to come off by hand. HL.Monitor types it
+  # as a bare integer or a table of sides, so both are handled.
+  place = {
+    x,
+    y,
+    w,
+    h,
+  }: ''
+    function()
+      local mon = hl.get_active_monitor()
+      local side = function(name)
+        if type(mon.reserved) == "number" then return mon.reserved end
+        return mon.reserved[name] or 0
+      end
+
+      local left, top = side("left"), side("top")
+      local width = mon.width - left - side("right")
+      local height = mon.height - top - side("bottom")
+
+      hl.dispatch(hl.dsp.window.resize({
+        x = math.floor(width * ${toString w} / 12),
+        y = math.floor(height * ${toString h} / 12),
+      }))
+      hl.dispatch(hl.dsp.window.move({
+        x = math.floor(mon.x + left + width * ${toString x} / 12),
+        y = math.floor(mon.y + top + height * ${toString y} / 12),
+      }))
+    end'';
+
+  # Grows and shrinks about the window centre, as Rectangle does.
+  resizeBy = step: ''
+    function()
+      hl.dispatch(hl.dsp.window.resize({ x = ${toString (2 * step)}, y = ${toString (2 * step)}, relative = true }))
+      hl.dispatch(hl.dsp.window.move({ x = ${toString (-step)}, y = ${toString (-step)}, relative = true }))
+    end'';
+
+  layoutBinds = [
+    (bind "CTRL + ALT + SUPER + M" "hl.dsp.window.center()")
+    (bind "CTRL + ALT + SUPER + L" (resizeBy 64))
+    (bind "CTRL + ALT + SUPER + H" (resizeBy (-64)))
+    (bind "CTRL + ALT + SUPER + F" (place {
+      x = 3;
+      y = 0;
+      w = 9;
+      h = 12;
+    }))
+    (bind "CTRL + ALT + SUPER + D" (place {
+      x = 0;
+      y = 0;
+      w = 4;
+      h = 6;
+    }))
+    (bind "CTRL + ALT + S" (place {
+      x = 3;
+      y = 0;
+      w = 6;
+      h = 12;
+    }))
+    (bind "CTRL + ALT + F" (place {
+      x = 0;
+      y = 0;
+      w = 3;
+      h = 12;
+    }))
+  ];
+
   workspaceBinds = builtins.concatMap (index: let
     key =
       if index == 10
@@ -61,6 +133,13 @@ in {
           output = "DP-1";
           mode = "3840x1600@74.98";
           position = "0x0";
+          scale = 1;
+        }
+        # Anything else plugged in lands to the right at its preferred mode.
+        {
+          output = "";
+          mode = "preferred";
+          position = "auto";
           scale = 1;
         }
       ];
@@ -250,7 +329,8 @@ in {
         ]
         ++ directionBinds
         ++ moveBinds
-        ++ workspaceBinds;
+        ++ workspaceBinds
+        ++ layoutBinds;
 
       window_rule = [
         # Stacking rather than tiling: everything floats, drag with SUPER+LMB,
