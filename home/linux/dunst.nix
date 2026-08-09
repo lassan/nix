@@ -1,6 +1,4 @@
-_: let
-  theme = import ../theme.nix;
-in {
+_: {
   services.dunst = {
     enable = true;
 
@@ -14,10 +12,7 @@ in {
         offset = "16x48";
         corner_radius = 10;
         frame_width = 2;
-        frame_color = theme.accent;
-        separator_color = "frame";
         gap_size = 6;
-        font = "JetBrainsMono Nerd Font 11";
         markup = "full";
         format = "<b>%s</b>\\n%b";
         icon_position = "left";
@@ -27,22 +22,9 @@ in {
         mouse_right_click = "close_all";
       };
 
-      urgency_low = {
-        inherit (theme) background;
-        foreground = theme.comment;
-        timeout = 5;
-      };
-
-      urgency_normal = {
-        inherit (theme) background foreground;
-        timeout = 8;
-      };
-
-      urgency_critical = {
-        inherit (theme) background foreground;
-        frame_color = theme.red;
-        timeout = 0;
-      };
+      urgency_low.timeout = 5;
+      urgency_normal.timeout = 8;
+      urgency_critical.timeout = 0;
     };
   };
 }

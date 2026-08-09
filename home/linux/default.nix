@@ -1,5 +1,6 @@
 {vars, ...}: {
   imports = [
+    ./theme.nix
     ./hyprland.nix
     ./waybar.nix
     ./vicinae.nix

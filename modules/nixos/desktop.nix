@@ -59,8 +59,6 @@
     config.common.default = "*";
   };
 
-  fonts.packages = [pkgs.nerd-fonts.jetbrains-mono];
-
   environment.systemPackages = with pkgs; [
     grim
     slurp

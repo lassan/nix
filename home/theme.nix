@@ -11,5 +11,10 @@ _: {
     gitui.enable = true;
     yazi.enable = true;
     vim.enable = true;
+
+    firefox = {
+      enable = true;
+      profileNames = ["default"];
+    };
   };
 }
