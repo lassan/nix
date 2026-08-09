@@ -14,9 +14,12 @@
     # base01 would otherwise equal the new base00, flattening the surfaces that
     # rely on the two differing: the hyprpaper gradient, tooltips, inactive
     # borders. It takes the background the scheme originally shipped.
+    # base03 ships at 2.0:1 against the background, which is below even the
+    # large-text floor; #565f89 is the comment colour upstream Tokyo Night uses.
     override = {
       base00 = "#1a1b26";
       base01 = "#16161e";
+      base03 = "#565f89";
       base05 = "#a9b1d6";
       base0B = "#9ece6a";
     };
@@ -33,6 +36,13 @@
       monospace = {
         package = pkgs.nerd-fonts.jetbrains-mono;
         name = "JetBrainsMono Nerd Font";
+      };
+
+      # Drives notifications, the vicinae launcher and GTK/Qt chrome. Narrowed
+      # to the one family because the full google-fonts set is 2.3G.
+      sansSerif = {
+        package = pkgs.google-fonts.override {fonts = ["SUSE"];};
+        name = "SUSE";
       };
     };
 

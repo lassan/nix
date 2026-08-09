@@ -87,7 +87,7 @@
 
       #workspaces button {
         padding: 0 10px;
-        color: @base03;
+        color: @base04;
         background: transparent;
       }
 
@@ -104,7 +104,7 @@
       }
 
       #window {
-        color: @base03;
+        color: @base04;
       }
 
       #cpu,
