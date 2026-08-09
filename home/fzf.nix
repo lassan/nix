@@ -68,10 +68,7 @@ in {
       historyWidget.command = "";
     };
 
-    bat = {
-      enable = true;
-      config.theme = "Monokai Extended";
-    };
+    bat.enable = true;
 
     zsh = {
       # The plugin is sourced from shell.nix, which owns load order: it binds

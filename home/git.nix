@@ -13,6 +13,10 @@
     delta = {
       enable = true;
       enableGitIntegration = true;
+
+      # Stylix has no delta target. It reads bat's theme registry, so naming
+      # the theme stylix generates for bat keeps diffs in the same palette.
+      options.syntax-theme = "base16-stylix";
     };
 
     git = {

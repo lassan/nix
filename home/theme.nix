@@ -5,5 +5,11 @@ _: {
   stylix.targets = {
     ghostty.enable = true;
     zellij.enable = true;
+
+    bat.enable = true;
+    fzf.enable = true;
+    gitui.enable = true;
+    yazi.enable = true;
+    vim.enable = true;
   };
 }
