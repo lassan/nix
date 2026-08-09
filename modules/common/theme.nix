@@ -3,7 +3,19 @@
     enable = true;
 
     polarity = "dark";
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-dark.yaml";
+
+    # The plain tokyo-night-dark scheme misfiles its accents: base08, which
+    # becomes ANSI red, holds a pale blue, so diffs and error states lose their
+    # red. The terminal- variant maps the accents correctly; its background and
+    # foreground are the only things worth taking back from tokyo-night-dark.
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-terminal-dark.yaml";
+    # base0B is teal in the scheme, which collides with cyan and makes diff
+    # additions unreadable; #9ece6a is upstream Tokyo Night's green.
+    override = {
+      base00 = "#1a1b26";
+      base05 = "#a9b1d6";
+      base0B = "#9ece6a";
+    };
 
     # No wallpaper: the Hyprland setup draws its own gradient, and darwin has no
     # target for one. Targets that require an image opt in via lib.stylix.pixel.

@@ -1,5 +1,6 @@
 {vars, ...}: {
   imports = [
+    ./theme.nix
     ./shell.nix
     ./core.nix
     ./vim.nix

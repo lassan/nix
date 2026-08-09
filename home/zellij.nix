@@ -173,7 +173,6 @@ in {
               }
           }
 
-          theme "onedark"
           scrollback_editor "${scrollbackEditor}"
 
           keybinds clear-defaults=true {

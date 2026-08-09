@@ -1,21 +1,9 @@
-# Monokai Classic, matching the ghostty theme in home/ghostty.nix. Imported by
-# the hyprland, waybar, wofi and dunst modules so they cannot drift apart.
-rec {
-  background = "#272822";
-  backgroundAlt = "#1D1E19";
-  foreground = "#F8F8F2";
-  comment = "#75715E";
-
-  red = "#F92672";
-  orange = "#FD971F";
-  yellow = "#E6DB74";
-  green = "#A6E22E";
-  cyan = "#66D9EF";
-  purple = "#AE81FF";
-
-  accent = red;
-  accentAlt = purple;
-
-  # Hyprland's web-hash colours are #RRGGBBAA, alpha last.
-  alpha = colour: a: "${colour}${a}";
+_: {
+  # stylix.autoEnable is off in modules/common/theme.nix, so every target this
+  # user wants is named here. Platform-specific targets live beside their
+  # modules, in home/linux.
+  stylix.targets = {
+    ghostty.enable = true;
+    zellij.enable = true;
+  };
 }
