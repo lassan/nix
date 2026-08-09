@@ -59,6 +59,10 @@
     config.common.default = "*";
   };
 
+  # Points fontconfig's monospace/sans/serif aliases at the stylix fonts, so GTK
+  # and Qt apps resolve them without naming a family.
+  stylix.targets.fontconfig.enable = true;
+
   environment.systemPackages = with pkgs; [
     grim
     slurp

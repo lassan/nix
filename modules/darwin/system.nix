@@ -43,6 +43,13 @@
         "com.apple.keyboard.fnState" = true; # Use F1, F2, etc. keys as standard function keys.
       };
 
+      # Stylix cannot reach native macOS controls, so the accent is set here to
+      # match base0D. AppleHighlightColor takes floats, not hex.
+      CustomUserPreferences.NSGlobalDomain = {
+        AppleAccentColor = 4;
+        AppleHighlightColor = "0.478431 0.635294 0.968627 Blue";
+      };
+
       CustomUserPreferences = {
         "com.apple.desktopservices" = {
           DSDontWriteNetworkStores = true;

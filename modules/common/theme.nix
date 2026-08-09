@@ -35,5 +35,9 @@
         name = "JetBrainsMono Nerd Font";
       };
     };
+
+    # Installs the fonts above; without it every target names a font the system
+    # has not got.
+    targets.font-packages.enable = true;
   };
 }
