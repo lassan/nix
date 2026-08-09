@@ -3,6 +3,7 @@
     ./apps.nix
     ./nix.nix
     ./secrets.nix
+    ./theme.nix
   ];
 
   nixpkgs = {
