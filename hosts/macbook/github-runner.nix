@@ -26,9 +26,16 @@ in {
     # Docker Buildx" with "Cannot read properties of undefined (reading
     # 'buildkitd-flags')" (CI run 27820182704). Poll rather than WatchPaths so a
     # missed tick still fires on wake.
+    # The spec is restated on every start because colima only persists it in
+    # ~/.colima/default/colima.yaml: a `colima delete` silently drops the VM back
+    # to the 2 CPU / 2 GiB defaults, which is under half what a browser e2e
+    # container needs. Disk can only grow, so 100 is a floor, not a resize.
     colima-autostart = {
       command = "${pkgs.writeShellScript "colima-autostart" ''
-        ${pkgs.colima}/bin/colima status >/dev/null 2>&1 || ${pkgs.colima}/bin/colima start
+        ${pkgs.colima}/bin/colima status >/dev/null 2>&1 || \
+          ${pkgs.colima}/bin/colima start \
+            --cpu 8 --memory 16 --disk 100 \
+            --vm-type vz --vz-rosetta --mount-type virtiofs
       ''}";
       serviceConfig = {
         RunAtLoad = true;
@@ -63,13 +70,36 @@ in {
     };
 
     # Runs as the login user because colima and its socket belong to them.
+    #
+    # Not `system prune --all`: its until filter reads image *creation* time, so
+    # every upstream base the e2e harness pins (playwright is built 8 weeks
+    # before the tag ships, supabase 4-15 months) is older than any useful
+    # threshold and got deleted weekly, then re-pulled ~10GiB on the next job.
+    # Tagged images are kept and the sha-tagged deploy images, which are the only
+    # ones that actually accumulate, are swept by name instead.
+    #
+    # Build cache is the real hog and grows with CI volume, not with time: it
+    # reached 24GiB in four days against 16GiB of free disk, which is the
+    # full-disk failure SUP-2217 mis-read as a testcontainers fault. Capping the
+    # size bounds it whatever the merge rate does; an age filter does not.
+    # Daily, because a week of cache overruns the cap between runs.
     docker-prune = {
-      command = "${pkgs.docker}/bin/docker system prune --all --force --filter until=168h";
+      command = "${pkgs.writeShellScript "docker-prune" ''
+        set -u
+        docker=${pkgs.docker}/bin/docker
+        "$docker" container prune --force --filter until=168h
+        "$docker" image prune --force
+        "$docker" volume prune --force
+        "$docker" buildx prune --force --reserved-space=20GB --min-free-space=30GB
+        "$docker" images --filter reference='registry.digitalocean.com/suphq/*:sha-*' \
+          --format '{{.ID}} {{.CreatedAt}}' \
+        | ${pkgs.gawk}/bin/awk -v cutoff="$(/bin/date -u -v-7d '+%Y-%m-%d')" '$2 < cutoff {print $1}' \
+        | ${pkgs.findutils}/bin/xargs -r "$docker" rmi --force
+      ''}";
       serviceConfig = {
         EnvironmentVariables.DOCKER_HOST = "unix://${homeDirectory}/.colima/default/docker.sock";
         StartCalendarInterval = [
           {
-            Weekday = 0;
             Hour = 3;
             Minute = 0;
           }
