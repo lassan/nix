@@ -6,6 +6,8 @@ _: {
     ../../modules/nixos/desktop.nix
     ../../modules/nixos/nvidia.nix
     ../../modules/nixos/apps.nix
+
+    ./github-runner.nix
   ];
 
   networking.hostName = "nixbox";
