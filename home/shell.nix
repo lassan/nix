@@ -21,6 +21,7 @@
       };
       initContent = ''
         eval "$(zoxide init zsh)"
+        eval "$(fnm env --use-on-cd --shell zsh)"
         eval "$(temporal completion zsh)"
         # zellij's completion script ends with an unguarded `_zellij "$@"`, which
         # errors when eval'd outside a completion context. Register it properly.

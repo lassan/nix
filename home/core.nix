@@ -12,6 +12,7 @@
     just
     just-lsp
     uv
+    fnm
 
     nixd
     alejandra
