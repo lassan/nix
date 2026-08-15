@@ -33,6 +33,11 @@ in {
     # pnpm failed with ERR_PNPM_NO_PKG_MANIFEST. _work rather than the runner
     # home, which also holds the registration credentials.
     #
+    # The home mount is restated because any --mount replaces the default set
+    # rather than adding to it: dropping it left `supabase start` bind-mounting
+    # a path the VM cannot see, so dockerd created an empty directory there and
+    # kong served a directory index as the magic-link email body.
+    #
     # The spec is restated on every start because colima only persists it in
     # ~/.colima/default/colima.yaml: a `colima delete` silently drops the VM back
     # to the 2 CPU / 2 GiB defaults, which is under half what a browser e2e
@@ -43,6 +48,7 @@ in {
           ${pkgs.colima}/bin/colima start \
             --cpu 8 --memory 16 --disk 100 \
             --vm-type vz --vz-rosetta --mount-type virtiofs \
+            --mount ${homeDirectory}:w \
             --mount ${runnerWorkDir}:w
       ''}";
       serviceConfig = {

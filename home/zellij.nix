@@ -175,6 +175,14 @@ in {
 
           scrollback_editor "${scrollbackEditor}"
 
+          // Resurrection is the reboot-survival half of the always-on setup
+          // (zellij-daemon.nix is the login half). Viewport + scrollback so a
+          // resurrected pane shows what it showed, not a blank grid; commands
+          // stay suspended on resurrect (no -f) — nothing re-runs unattended.
+          session_serialization true
+          serialize_pane_viewport true
+          scrollback_lines_to_serialize 10000
+
           keybinds clear-defaults=true {
           normal {
               bind "Ctrl l" { }

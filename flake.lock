@@ -681,15 +681,16 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786381738,
-        "narHash": "sha256-JQuEaVvkmuIqw1sJnwF8QxzJVYgBkQMmp0kWLkff//4=",
-        "owner": "marktoda",
+        "lastModified": 1786804888,
+        "narHash": "sha256-zO4UVGRB4vWGxgfvS9HD6YV661dRxbOgR/mTzUxYs70=",
+        "owner": "lassan",
         "repo": "zj-radar",
-        "rev": "418dfe83536011da24d7a3ac90677c4595d358ff",
+        "rev": "f443d70cf960603a6021360d6847bbf0a9a13aef",
         "type": "github"
       },
       "original": {
-        "owner": "marktoda",
+        "owner": "lassan",
+        "ref": "herdr",
         "repo": "zj-radar",
         "type": "github"
       }
