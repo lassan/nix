@@ -681,11 +681,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786804888,
-        "narHash": "sha256-zO4UVGRB4vWGxgfvS9HD6YV661dRxbOgR/mTzUxYs70=",
+        "lastModified": 1786809684,
+        "narHash": "sha256-R3T0+/cCZ3Wme2ku5LsIOXizDqieg2iNb7pFXWJZYME=",
         "owner": "lassan",
         "repo": "zj-radar",
-        "rev": "f443d70cf960603a6021360d6847bbf0a9a13aef",
+        "rev": "8d8f29cd5cd9a4b29ca75225be6cd7a10d37cc28",
         "type": "github"
       },
       "original": {
