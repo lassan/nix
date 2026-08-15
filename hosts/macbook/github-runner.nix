@@ -7,6 +7,7 @@
 }: let
   tokenFile = config.sops.secrets.github-runner-suphq.path;
   homeDirectory = config.users.users.${vars.userName}.home;
+  runnerWorkDir = "/private/var/lib/github-runners/_work";
   inherit (config.networking) hostName;
 in {
   # The daemon reads the token as _github-runner; the sops defaults of owner
@@ -26,6 +27,12 @@ in {
     # Docker Buildx" with "Cannot read properties of undefined (reading
     # 'buildkitd-flags')" (CI run 27820182704). Poll rather than WatchPaths so a
     # missed tick still fires on wake.
+    # _work is mounted because colima's default mount set is the login user's
+    # home only: jobs check out under it, which the VM cannot see, so
+    # `docker run -v "$PWD":/work` in the e2e jobs bound an empty directory and
+    # pnpm failed with ERR_PNPM_NO_PKG_MANIFEST. _work rather than the runner
+    # home, which also holds the registration credentials.
+    #
     # The spec is restated on every start because colima only persists it in
     # ~/.colima/default/colima.yaml: a `colima delete` silently drops the VM back
     # to the 2 CPU / 2 GiB defaults, which is under half what a browser e2e
@@ -35,7 +42,8 @@ in {
         ${pkgs.colima}/bin/colima status >/dev/null 2>&1 || \
           ${pkgs.colima}/bin/colima start \
             --cpu 8 --memory 16 --disk 100 \
-            --vm-type vz --vz-rosetta --mount-type virtiofs
+            --vm-type vz --vz-rosetta --mount-type virtiofs \
+            --mount ${runnerWorkDir}:w
       ''}";
       serviceConfig = {
         RunAtLoad = true;
@@ -109,6 +117,31 @@ in {
       };
     };
   };
+
+  # colima reaches the host filesystem over virtiofs as the login user, so the
+  # 0750 _github-runner job directories are unreadable from inside a container
+  # even once _work is mounted — `docker run -v "$PWD":/work` fails on the mount
+  # source path. ACLs rather than a mode change so the runner's own ownership is
+  # left alone, inheritable so directories it creates for later jobs carry it.
+  # The recursive pass is stamped: it walks every checkout, far too slow to
+  # repeat on each activation, and inheritance covers everything created after.
+  system.activationScripts.postActivation.text = let
+    acl = "list,search,add_file,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,read,write,append,execute,delete,file_inherit,directory_inherit";
+    # Both identities, because the tree has two writers: job steps run as
+    # _github-runner, while anything the container writes through virtiofs lands
+    # owned by the login user. One-directional grants leave the other side unable
+    # to clean up — actions/checkout failed on rmdir of a container-created
+    # .pnpm-store, and pnpm failed on rmdir of a runner-created node_modules.
+    grants = ["user:${vars.userName}" "group:_github-runner"];
+  in ''
+    if [ -d "${runnerWorkDir}" ]; then
+      ${lib.concatMapStringsSep "\n      " (g: ''/bin/chmod +a "${g} allow ${acl}" "${runnerWorkDir}"'') grants}
+      if [ ! -e "${runnerWorkDir}/.colima-acl-stamp" ]; then
+        ${lib.concatMapStringsSep "\n        " (g: ''/bin/chmod -R +a "${g} allow ${acl}" "${runnerWorkDir}"'') grants}
+        /usr/bin/touch "${runnerWorkDir}/.colima-acl-stamp"
+      fi
+    fi
+  '';
 
   # The runner PATH is nix-minimal, so every CLI a workflow calls must be listed
   # in extraPackages; a missing one can fail silently inside $(...) loops.
