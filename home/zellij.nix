@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  lib,
   pkgs,
   ...
 }: let
@@ -16,6 +17,28 @@ in {
   # The sidebar itself is wired declaratively below; this is the
   # `zj-radar setup --check` doctor and the `zj-radar notify` producer shim.
   home.packages = [inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.zj-radar-cli];
+
+  # Stylix emits no frame_unselected, so an unfocused frame falls back to
+  # text_unselected and lands 1.1:1 against the focused one — a hue shift at
+  # matched luminance, which reads as no difference at all. Dropping the
+  # unfocused frame to base02 makes the split a luminance one, at 6.8:1.
+  # Stylix also uses base04 — a foreground slot — as the selected-row
+  # background, leaving base05 text on it at 1.2:1.
+  programs.zellij.themes.stylix.themes.default = with config.lib.stylix.colors.withHashtag; {
+    frame_unselected = {
+      base = base02;
+      background = base00;
+      emphasis_0 = base02;
+      emphasis_1 = base02;
+      emphasis_2 = base02;
+      emphasis_3 = base02;
+    };
+    frame_selected.base = lib.mkForce base0C;
+
+    text_selected.background = lib.mkForce base02;
+    list_selected.background = lib.mkForce base02;
+    table_cell_selected.background = lib.mkForce base02;
+  };
 
   programs.zellij = {
     enable = true;
@@ -162,6 +185,12 @@ in {
     extraConfig = ''
 
           esc_delay 25
+
+          ui {
+              pane_frames {
+                  rounded_corners true
+              }
+          }
 
           // Aliased rather than pathed in the layout so this config block
           // applies everywhere the plugin is launched.

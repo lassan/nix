@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   # Non-text files fall back to a one-line type description rather than dumping
   # binary into the pane.
   fzfPreview = pkgs.writeShellScript "fzf-preview" ''
@@ -8,7 +12,7 @@
         --group-directories-first "$target"
     elif [ -f "$target" ]; then
       if [ "''${target##*.}" = md ]; then
-        CLICOLOR_FORCE=1 ${pkgs.glow}/bin/glow -w="$FZF_PREVIEW_COLUMNS" -s=dark "$target"
+        CLICOLOR_FORCE=1 ${pkgs.glow}/bin/glow -w="$FZF_PREVIEW_COLUMNS" -s="${config.xdg.configHome}/glow/stylix.json" "$target"
       else
         case "$(${pkgs.file}/bin/file --brief --mime-type "$target")" in
           text/* | inode/x-empty | application/json | application/javascript | application/xml)

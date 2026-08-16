@@ -5,7 +5,6 @@ _: {
     settings = {
       macos-option-as-alt = "left";
 
-      background-opacity = 1;
       background-blur = true;
       confirm-close-surface = false;
     };

@@ -4,22 +4,25 @@
 
     polarity = "dark";
 
-    # The plain tokyo-night-dark scheme misfiles its accents: base08, which
-    # becomes ANSI red, holds a pale blue, so diffs and error states lose their
-    # red. The terminal- variant maps the accents correctly; its background and
-    # foreground are the only things worth taking back from tokyo-night-dark.
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-terminal-dark.yaml";
+    # Every replacement below is a value from IBM's own Carbon ramps, so the
+    # scheme stays coherent rather than becoming a hand-mix.
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/oxocarbon-dark.yaml";
     override = {
-      base00 = "#1a1b26";
-      # Would otherwise equal the new base00, flattening everything that relies
-      # on the two differing: the hyprpaper gradient, tooltips, inactive borders.
-      base01 = "#16161e";
-      # Ships at 2.0:1 against the background, below even the large-text floor.
-      base03 = "#565f89";
-      base05 = "#a9b1d6";
-      # Teal in the scheme, which collides with cyan and makes diff additions
-      # unreadable.
-      base0B = "#9ece6a";
+      # Ships at 2.3:1 against the background, below the large-text floor.
+      base03 = "#6f6f6f";
+      # Near-white in the dark-foreground slot, which yazi draws its borders
+      # and separators in.
+      base04 = "#a8a8a8";
+      # Teal in the lightest slot, so ANSI bright white renders teal.
+      base07 = "#ffffff";
+      # Magenta-pink in the red slot: errors and diff deletions lose their red.
+      base08 = "#fa4d56";
+      # Pink in the orange slot.
+      base09 = "#ff832b";
+      # Orange in the yellow slot, leaving no yellow anywhere in ANSI.
+      base0A = "#f1c21b";
+      # Duplicates base0D; reclaims the pink displaced from base09.
+      base0F = "#ff7eb6";
     };
 
     # No wallpaper: the Hyprland setup draws its own gradient, and darwin has no

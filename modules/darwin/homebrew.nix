@@ -52,6 +52,7 @@ in {
       "pulumi"
 
       "rtk-ai/tap/rtk"
+      "hunk"
     ];
     casks = [
       "rectangle"

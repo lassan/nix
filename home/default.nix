@@ -4,6 +4,7 @@
     ./shell.nix
     ./core.nix
     ./vim.nix
+    ./zed.nix
     ./ssh.nix
     ./git.nix
     ./gitui.nix
@@ -12,6 +13,7 @@
     ./zellij.nix
     ./starship.nix
     ./fzf.nix
+    ./glow.nix
     ./worktrunk.nix
     ./yazi.nix
   ];
