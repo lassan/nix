@@ -98,6 +98,22 @@
       enable = true;
       enableZshIntegration = false;
       forceOverwriteSettings = true;
+
+      settings = {
+        # Enter edits the selection; ctrl-y or tab runs it. Stops a mistyped
+        # search from firing whatever happens to be highlighted.
+        enter_accept = false;
+
+        # Up-arrow stays scoped to this shell's own history, matching the zsh
+        # history it visually replaces; ctrl-r still searches everything.
+        filter_mode_shell_up_key_binding = "session";
+
+        # Scopes search to the current git repo when inside one.
+        workspaces = true;
+
+        style = "compact";
+        inline_height = 25;
+      };
     };
   };
 

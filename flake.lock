@@ -252,11 +252,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786826571,
-        "narHash": "sha256-nNqmXIFmESRnU91KARtiekSox0+o+E3AS0d1TuUQ/9o=",
+        "lastModified": 1786887553,
+        "narHash": "sha256-0J8EwNSJ/2OeyuvXgfG+k5uBT1gkg0ww7VEo+14xl50=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c8058ecc1329a71a3c99c4d0353dba4009a66152",
+        "rev": "5bd505963717a894b02a57cdbcc00db28d9b029f",
         "type": "github"
       },
       "original": {
@@ -269,11 +269,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1786874026,
-        "narHash": "sha256-JrjqFbIJxXR9AauBPkuDbLbMF79xXNET3yXXRRgABZg=",
+        "lastModified": 1786888840,
+        "narHash": "sha256-b+w9Dvl0gcujOmpik1ZfvfGvxRN9afblQxIcMrfiCTo=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "2eb37c7257fa15db27a18943bf5c4d2534d33433",
+        "rev": "7a53dcf0ee92d3a12107857df09c1725a7364678",
         "type": "github"
       },
       "original": {
@@ -285,11 +285,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1786873435,
-        "narHash": "sha256-+90H9UFebzNk0sIF7z1ryIJ/h0SWqJBrCCUGK3jUOs0=",
+        "lastModified": 1786890818,
+        "narHash": "sha256-XY0G4RBR8jWsABbfFBcaMFfjjzL5zw2mgjQp8Ppm0uo=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "b29f242b763b823e488001d183594b80b5cc76ec",
+        "rev": "890fb777c0ef4fb3f4f86065baa3dbe340945ef2",
         "type": "github"
       },
       "original": {
@@ -352,6 +352,26 @@
       "original": {
         "owner": "zhaofengli",
         "repo": "nix-homebrew",
+        "type": "github"
+      }
+    },
+    "nix-index-database": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786852476,
+        "narHash": "sha256-IM5CYtf86W4w8eUPpKcY/LpdHElmVBtJhaKnoTKxZEA=",
+        "owner": "nix-community",
+        "repo": "nix-index-database",
+        "rev": "c7962dc97b45129df8d751bedaf37beb5a17706e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-index-database",
         "type": "github"
       }
     },
@@ -421,6 +441,7 @@
         "homebrew-rtk-ai": "homebrew-rtk-ai",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
+        "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs",
         "sops-nix": "sops-nix",
         "stylix": "stylix",

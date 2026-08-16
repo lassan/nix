@@ -3,6 +3,7 @@
     ./theme.nix
     ./shell.nix
     ./core.nix
+    ./nix-index.nix
     ./vim.nix
     ./zed.nix
     ./ssh.nix

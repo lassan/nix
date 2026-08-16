@@ -36,9 +36,11 @@ in {
 
     enable = true;
 
+    # Every `just deploy` would otherwise hit the network and upgrade casks
+    # mid-session. `just brew-upgrade` does it deliberately instead.
     onActivation = {
-      autoUpdate = true;
-      upgrade = true;
+      autoUpdate = false;
+      upgrade = false;
       cleanup = "zap";
     };
 

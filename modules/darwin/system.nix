@@ -18,6 +18,13 @@
 
     configurationRevision = self.rev or self.dirtyRev or null;
 
+    # hidutil applies this at activation only; the equivalent ByHost plist the
+    # Settings UI writes is what carries it across a reboot.
+    keyboard = {
+      enableKeyMapping = true;
+      remapCapsLockToEscape = true;
+    };
+
     defaults = {
       smb.NetBIOSName = config.networking.hostName;
 
@@ -28,6 +35,14 @@
         autohide-time-modifier = 0.3;
         mineffect = "scale";
         show-recents = false;
+
+        # Spaces keep their creation order, so the Rectangle hyper bindings
+        # always land on the same one.
+        mru-spaces = false;
+
+        expose-group-apps = true;
+
+        wvous-br-corner = 1; # 1 is Disabled; the default there is Quick Note.
       };
 
       NSGlobalDomain = {
@@ -41,7 +56,61 @@
         "com.apple.trackpad.scaling" = 1.5;
 
         "com.apple.keyboard.fnState" = true; # Use F1, F2, etc. keys as standard function keys.
+
+        # Substitution mangles code, paths and quotes in every native text field.
+        NSAutomaticCapitalizationEnabled = false;
+        NSAutomaticDashSubstitutionEnabled = false;
+        NSAutomaticQuoteSubstitutionEnabled = false;
+        NSAutomaticSpellingCorrectionEnabled = false;
+        NSAutomaticPeriodSubstitutionEnabled = false;
+        NSAutomaticInlinePredictionEnabled = false;
+
+        NSNavPanelExpandedStateForSaveMode = true;
+        NSNavPanelExpandedStateForSaveMode2 = true;
+
+        # Ctrl-cmd-drag moves a window from anywhere in its body.
+        NSWindowShouldDragOnGesture = true;
+
+        NSDocumentSaveNewDocumentsToCloud = false;
+        AppleShowAllExtensions = true;
+
+        "com.apple.sound.beep.feedback" = 0;
       };
+
+      finder = {
+        AppleShowAllExtensions = true;
+        AppleShowAllFiles = true;
+        FXEnableExtensionChangeWarning = false;
+        FXPreferredViewStyle = "Nlsv";
+        FXDefaultSearchScope = "SCcf"; # Search the current folder, not This Mac.
+        ShowPathbar = true;
+        ShowStatusBar = true;
+        _FXShowPosixPathInTitle = true;
+        _FXSortFoldersFirst = true;
+        QuitMenuItem = true;
+      };
+
+      trackpad = {
+        Clicking = true;
+        TrackpadThreeFingerDrag = true;
+        TrackpadRightClick = true;
+      };
+
+      # Directory created in home/darwin/default.nix; screencapture silently
+      # falls back to the desktop if it does not exist.
+      screencapture = {
+        location = "~/Screenshots";
+        type = "png";
+        disable-shadow = true;
+        show-thumbnail = false; # Otherwise the file only lands after a 5s preview.
+      };
+
+      WindowManager = {
+        GloballyEnabled = false; # Stage Manager.
+        EnableStandardClickToShowDesktop = false;
+      };
+
+      LaunchServices.LSQuarantine = false;
 
       # Stylix cannot reach native macOS controls, so the accent is set here.
       # Derived from base0D rather than hand-converted, since AppleHighlightColor

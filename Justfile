@@ -17,6 +17,12 @@ deploy host="" ip="":
       nh os switch . -H "{{ host }}"; \
     fi
 
+# Upgrade to the versions in the current taps (activation no longer does).
+# `brew update` cannot run: mutableTaps = false pins the taps to the store, so
+# newer definitions arrive via `just update && just deploy` first.
+brew-upgrade:
+    brew upgrade
+
 # Format check, lint, then nix flake check
 check: fmt-check lint
     nix flake check --all-systems --no-build
