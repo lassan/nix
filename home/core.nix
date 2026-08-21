@@ -13,6 +13,7 @@
     just-lsp
     uv
     fnm
+    pi-coding-agent
 
     nixd
     alejandra

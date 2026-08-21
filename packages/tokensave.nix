@@ -4,15 +4,15 @@
   fetchurl,
   autoPatchelfHook,
 }: let
-  version = "7.9.0";
+  version = "7.10.0";
   releases = {
     aarch64-darwin = {
       platform = "aarch64-macos";
-      hash = "sha256-PSrtP4FIgHvRXRhdHUTb548qNmWPydEx4fRKbSla9g4=";
+      hash = "sha256-5ZfRT6+Z0zUYDjzP/s0pRi8+Pi8Md4NKkzkE82OM1WY=";
     };
     x86_64-linux = {
       platform = "x86_64-linux";
-      hash = "sha256-mz3gtzu9ToTbej/GdK9QR5GyNCAKHDl0EE+9MT894zI=";
+      hash = "sha256-LkWVXLhyBxJxfAeD79OQHtI1eILpD0telUKeJtkeL3c=";
     };
   };
   release = releases.${stdenv.hostPlatform.system};

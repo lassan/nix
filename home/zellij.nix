@@ -394,6 +394,17 @@ in {
                       height "90%"
                   }
               }
+              bind "Alt Shift r" {
+                  Run "tuicr" {
+                      floating true
+                      name "review"
+                      close_on_exit true
+                      x "5%"
+                      y "5%"
+                      width "90%"
+                      height "90%"
+                  }
+              }
               bind "Alt a" {
                   MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-next"; }
               }
