@@ -41,7 +41,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     zj-radar = {
-      url = "github:lassan/zj-radar/herdr";
+      url = "github:lassan/zj-radar";
     };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";

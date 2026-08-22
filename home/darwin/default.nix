@@ -1,6 +1,7 @@
 {vars, ...}: {
   imports = [
     ./ghostty.nix
+    ./hindsight.nix
     ./shell.nix
     ./ssh.nix
     ./zellij-daemon.nix

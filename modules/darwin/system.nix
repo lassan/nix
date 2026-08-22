@@ -6,6 +6,8 @@
 }: {
   networking.computerName = config.networking.hostName;
 
+  programs.zsh.enableGlobalCompInit = false;
+
   users.users.${vars.userName} = {
     home = "/Users/${vars.userName}";
     description = vars.userName;

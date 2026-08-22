@@ -17,6 +17,7 @@
     ./glow.nix
     ./worktrunk.nix
     ./yazi.nix
+    ./tuicr.nix
   ];
 
   # homeDirectory is set by the platform bundle beside this one, in home/linux

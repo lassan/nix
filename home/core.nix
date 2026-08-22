@@ -22,6 +22,7 @@
 
     temporal-cli
     tokensave
+    tuicr
   ];
 
   programs = {

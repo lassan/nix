@@ -22,7 +22,7 @@
       initContent = ''
         eval "$(zoxide init zsh)"
         eval "$(fnm env --use-on-cd --shell zsh)"
-        eval "$(temporal completion zsh)"
+        source "$HOME/.config/zsh/completions/temporal.zsh"
         # zellij's completion script ends with an unguarded `_zellij "$@"`, which
         # errors when eval'd outside a completion context. Register it properly.
         eval "$(zellij setup --generate-completion zsh | sed 's/^_zellij "\$@"$/compdef _zellij zellij/')"
@@ -116,6 +116,10 @@
       };
     };
   };
+
+  home.file.".config/zsh/completions/temporal.zsh".source = pkgs.runCommand "temporal-zsh-completion" {} ''
+    ${lib.getExe pkgs.temporal-cli} completion zsh > "$out"
+  '';
 
   # VISUAL stays in sync so tools preferring it do not diverge from EDITOR.
   home.sessionVariables = {

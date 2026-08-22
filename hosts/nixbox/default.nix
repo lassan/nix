@@ -1,6 +1,7 @@
 _: {
   imports = [
     ./hardware-configuration.nix
+    ./hindsight.nix
 
     ../../modules/nixos
     ../../modules/nixos/desktop.nix

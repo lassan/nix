@@ -702,16 +702,15 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786809684,
-        "narHash": "sha256-R3T0+/cCZ3Wme2ku5LsIOXizDqieg2iNb7pFXWJZYME=",
+        "lastModified": 1786381738,
+        "narHash": "sha256-JQuEaVvkmuIqw1sJnwF8QxzJVYgBkQMmp0kWLkff//4=",
         "owner": "lassan",
         "repo": "zj-radar",
-        "rev": "8d8f29cd5cd9a4b29ca75225be6cd7a10d37cc28",
+        "rev": "418dfe83536011da24d7a3ac90677c4595d358ff",
         "type": "github"
       },
       "original": {
         "owner": "lassan",
-        "ref": "herdr",
         "repo": "zj-radar",
         "type": "github"
       }

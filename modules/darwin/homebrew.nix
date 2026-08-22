@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  pkgs,
   vars,
   ...
 }: let
@@ -8,6 +9,7 @@
   # overriding brew-src alone stamps the wrong HOMEBREW_VERSION. Read the tag
   # pinned in flake.nix instead.
   brewVersion = (builtins.fromJSON (builtins.readFile ../../flake.lock)).nodes.brew-src.original.ref;
+  brewfile = pkgs.writeText "Brewfile" config.homebrew.brewfile;
 in {
   nix-homebrew = {
     enable = true;
@@ -41,7 +43,7 @@ in {
     onActivation = {
       autoUpdate = false;
       upgrade = false;
-      cleanup = "zap";
+      cleanup = "none";
     };
 
     masApps = {
@@ -54,7 +56,6 @@ in {
       "pulumi"
 
       "rtk-ai/tap/rtk"
-      "tuicr"
     ];
     casks = [
       "rectangle"
@@ -101,5 +102,24 @@ in {
       "gitbutler"
       "wallspace"
     ];
+  };
+
+  launchd.user.agents.homebrew-maintenance = {
+    command = "${pkgs.writeShellScript "homebrew-maintenance" ''
+      export HOMEBREW_NO_AUTO_UPDATE=1
+      ${config.homebrew.prefix}/bin/brew bundle cleanup --file=${brewfile} --zap --force
+      ${config.homebrew.prefix}/bin/brew cleanup --scrub
+    ''}";
+    serviceConfig = {
+      StartCalendarInterval = [
+        {
+          Weekday = 0;
+          Hour = 3;
+          Minute = 0;
+        }
+      ];
+      StandardOutPath = "/tmp/homebrew-maintenance.log";
+      StandardErrorPath = "/tmp/homebrew-maintenance.log";
+    };
   };
 }
