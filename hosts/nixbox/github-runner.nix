@@ -29,6 +29,10 @@
     # swap to spill into.
     workDir = "${workRoot}/${name}";
 
+    extraEnvironment = {
+      TMPDIR = "${workRoot}/${name}/_temp";
+    };
+
     serviceOverrides = {
       # The upstream default runs the unit in a user namespace where the docker
       # supplementary GID is unmapped, so the socket is unreachable.
@@ -87,7 +91,9 @@ in {
   systemd.tmpfiles.rules = [
     "d ${workRoot} 0700 github-runner github-runner -"
     "d ${workRoot}/${hostName}-01 0700 github-runner github-runner -"
+    "d ${workRoot}/${hostName}-01/_temp 0700 github-runner github-runner -"
     "d ${workRoot}/${hostName}-02 0700 github-runner github-runner -"
+    "d ${workRoot}/${hostName}-02/_temp 0700 github-runner github-runner -"
   ];
 
   # The runner PATH is nix-minimal, so every CLI a workflow calls must be listed
