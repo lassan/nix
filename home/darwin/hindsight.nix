@@ -2,8 +2,7 @@
   home.file.".hindsight/coding-agent.json".text = builtins.toJSON {
     serverMode = "self-hosted";
     apiUrl = "http://127.0.0.1:8888";
-    mapPathToBank."${config.home.homeDirectory}/repos/sup/main" = "sup";
-    banks.sup = {
+    banks."coding-agent::sup" = {
       gitIngest = "full";
       codebaseSurvey = true;
     };
