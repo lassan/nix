@@ -21,7 +21,6 @@
     typescript-language-server
 
     temporal-cli
-    tokensave
     tuicr
   ];
 

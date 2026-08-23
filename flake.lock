@@ -252,11 +252,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787176219,
-        "narHash": "sha256-djoRr6jBpe35q/0JwAvXpFXg1Ktf+X54NU2RLR7wnHw=",
+        "lastModified": 1787379775,
+        "narHash": "sha256-XL2qfqmocfsvuEGyomZg4nOZfkuSe8vZtrOX99I+b6I=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c53d643b3737e2fcd04e6cb3b3580ef50b2087a0",
+        "rev": "ec1a8fdf74ed3f276148ee106299a2ba0e65d51f",
         "type": "github"
       },
       "original": {
@@ -269,11 +269,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1787277843,
-        "narHash": "sha256-wVUvVe0etH4uv/Yfu1BfDNtEabSEqNnh9DpnMmoIaBw=",
+        "lastModified": 1787473864,
+        "narHash": "sha256-efvlMz60ozk40hwnbG75KCLgfodoewibJtzz4Zp5gUw=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "68e3842d56b9a447fd9e5c2804bc312e3be224e3",
+        "rev": "0b4a8fa3916266c984b445dab022c7c1107666db",
         "type": "github"
       },
       "original": {
@@ -285,11 +285,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1787294225,
-        "narHash": "sha256-mR1tsQpI2TANHdunYmX5s10oJ1cIRn6FlV5YSxWkd6E=",
+        "lastModified": 1787468910,
+        "narHash": "sha256-vG9sswL+VlZHK1FhadVwsreuMZADbGDXNgAv9bpLig0=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "6ea1a5cf304b3047488f1293ce3dc23ec6cad141",
+        "rev": "b1220ef247478d225b01ae6c4e126bbab151a365",
         "type": "github"
       },
       "original": {
@@ -342,11 +342,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786686423,
-        "narHash": "sha256-8q3WdB8o3VUI7rOz1OXfioXIaaWbFTAxRJAkWLlfc0s=",
+        "lastModified": 1787330919,
+        "narHash": "sha256-LslMncqN7uOOH5S88WZtO/EVt2HwD8ltUnfyANk+mC0=",
         "owner": "zhaofengli",
         "repo": "nix-homebrew",
-        "rev": "ccabf79a6b9845eb72b51ea1d9c7ce3446350df3",
+        "rev": "b00218e4aec0e5bf07d61a0bb13f842faa582d7b",
         "type": "github"
       },
       "original": {
@@ -362,11 +362,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786852476,
-        "narHash": "sha256-IM5CYtf86W4w8eUPpKcY/LpdHElmVBtJhaKnoTKxZEA=",
+        "lastModified": 1787457452,
+        "narHash": "sha256-FJh4esFS3zqNNuKwvN3t6wrJGewqp1AUF9DAEvoKPD8=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "c7962dc97b45129df8d751bedaf37beb5a17706e",
+        "rev": "c51d5c2ba69c907a34e90c9b6b80cd2b93811745",
         "type": "github"
       },
       "original": {
@@ -377,11 +377,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1787172299,
-        "narHash": "sha256-PShzS87awOlE5XWkxUGBd/58/F+AtE2ZMgFffKj4r8s=",
+        "lastModified": 1787364730,
+        "narHash": "sha256-NcYt9QJfpJiF1lAyN8BDPB4EeScbPU+EwQqPiBElrpU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "07e1d92cdc0ed416cfa11ff3ca40d17e61cfba7a",
+        "rev": "a831408e6378bc02ebf8cc09b52c96ca86f6bab4",
         "type": "github"
       },
       "original": {
@@ -681,11 +681,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1787264045,
-        "narHash": "sha256-IAnyUHhapSpnS+bJQG6nSL8in7jwCeLB3MYi7WEh37A=",
+        "lastModified": 1787456100,
+        "narHash": "sha256-K7QL6Xsd6ZevB32hZAWF+hC1vB6KFqByIpNQix5o4Ic=",
         "owner": "max-sixty",
         "repo": "worktrunk",
-        "rev": "9c37aae5b9af7e5a38306479b2453c919ea7b99c",
+        "rev": "be2c088a610a0b794a4bc5ab8fb4094bbed6574c",
         "type": "github"
       },
       "original": {
@@ -702,15 +702,16 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1786381738,
-        "narHash": "sha256-JQuEaVvkmuIqw1sJnwF8QxzJVYgBkQMmp0kWLkff//4=",
+        "lastModified": 1787479856,
+        "narHash": "sha256-cHP+Syr4dYf3wUZ7tSyUycCGnzvEe94oVy90x8jYJek=",
         "owner": "lassan",
         "repo": "zj-radar",
-        "rev": "418dfe83536011da24d7a3ac90677c4595d358ff",
+        "rev": "ecd4d8a2b16f0bc752d26cbfffe73f046c384ba3",
         "type": "github"
       },
       "original": {
         "owner": "lassan",
+        "ref": "herdr",
         "repo": "zj-radar",
         "type": "github"
       }

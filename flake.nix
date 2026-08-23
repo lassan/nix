@@ -41,7 +41,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     zj-radar = {
-      url = "github:lassan/zj-radar";
+      url = "github:lassan/zj-radar/herdr";
     };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
@@ -89,9 +89,7 @@
 
     overlays.default = import ./overlays;
 
-    packages = forEachSystem (pkgs: {
-      tokensave = pkgs.callPackage ./packages/tokensave.nix {};
-    });
+    packages = forEachSystem (_: {});
 
     # The treefmt wrapper rather than alejandra alone, so `nix fmt` covers the
     # shell and just files too.

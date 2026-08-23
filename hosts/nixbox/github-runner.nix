@@ -7,6 +7,18 @@
   inherit (config.networking) hostName;
   workRoot = "/var/lib/github-runner-work";
 
+  osRelease = pkgs.writeText "os-release" ''
+    PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+    NAME="Debian GNU/Linux"
+    VERSION_ID="12"
+    VERSION="12 (bookworm)"
+    VERSION_CODENAME=bookworm
+    ID=debian
+    HOME_URL="https://www.debian.org/"
+    SUPPORT_URL="https://www.debian.org/support"
+    BUG_REPORT_URL="https://bugs.debian.org/"
+  '';
+
   mkRunner = name: {
     enable = true;
     url = "https://github.com/suphq";
@@ -15,7 +27,7 @@
     ephemeral = false;
     noDefaultLabels = false;
     nodeRuntimes = ["node24"];
-    extraPackages = with pkgs; [docker gnused unzip jq kubectl gh yq-go curl];
+    extraPackages = with pkgs; [docker gnused unzip jq kubectl gh yq-go curl openssl];
     user = "github-runner";
     group = "github-runner";
     runnerGroup = "nixbox-nix";
@@ -43,6 +55,7 @@
       # Upstream 0066 leaves checkout files unreadable by non-root container
       # users such as playwright's pwuser.
       UMask = "0022";
+      BindReadOnlyPaths = ["${osRelease}:/etc/os-release"];
     };
   };
 in {

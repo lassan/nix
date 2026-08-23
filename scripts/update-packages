@@ -14,6 +14,21 @@ prefetch_release() {
   nix hash convert --hash-algo sha256 --to sri "$legacy_hash"
 }
 
+github_release_tag() {
+  local repository="$1"
+  local endpoint="repos/${repository}/releases/latest"
+
+  # Unauthenticated api.github.com allows 60 requests an hour, which this
+  # script exhausts; gh reuses the logged-in token for a 5000/hour limit.
+  if command -v gh >/dev/null && gh auth status >/dev/null 2>&1; then
+    gh api "$endpoint" --jq .tag_name
+  else
+    curl --fail --silent --show-error --location \
+      ${GITHUB_TOKEN:+--header "Authorization: Bearer ${GITHUB_TOKEN}"} \
+      "https://api.github.com/${endpoint}" | jq --exit-status --raw-output .tag_name
+  fi
+}
+
 package_metadata() {
   UPDATE_PACKAGE_FILE="$1" UPDATE_REPOSITORY_ROOT="$repository_root" \
     nix eval --json --impure --expr '
@@ -55,8 +70,7 @@ update_package() {
   repository="${repository%.git}"
   repository="${repository%/}"
 
-  latest_tag="$(curl --fail --silent --show-error --location \
-    "https://api.github.com/repos/${repository}/releases/latest" | jq --exit-status --raw-output .tag_name)"
+  latest_tag="$(github_release_tag "$repository")"
   latest_version="${latest_tag#v}"
 
   if [[ "$current_version" == "$latest_version" ]]; then

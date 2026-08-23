@@ -1,4 +1,9 @@
-{lib, ...}: {
+{
+  config,
+  lib,
+  vars,
+  ...
+}: {
   nix = {
     settings = {
       experimental-features = [
@@ -23,6 +28,13 @@
       keep-derivations = true;
     };
 
+    # Unauthenticated api.github.com allows 60 requests an hour, which flake
+    # input fetching exhausts. The token is a nix.conf line in the secret
+    # rather than an option here: nix.settings lands in the world-readable
+    # /etc/nix/nix.conf. `!include` tolerates the file being absent, so nix
+    # still works before the first activation decrypts it.
+    extraOptions = "!include ${config.sops.secrets.nix-access-tokens.path}\n";
+
     # Hardlinks identical store paths; gc alone never deduplicates.
     optimise.automatic = true;
 
@@ -31,4 +43,7 @@
       options = lib.mkDefault "--delete-older-than 7d";
     };
   };
+
+  # Flake input fetching runs as the invoking user, not the daemon.
+  sops.secrets.nix-access-tokens.owner = vars.userName;
 }
