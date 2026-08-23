@@ -69,7 +69,14 @@
         # Last: it wraps the widgets everything above has finished defining.
         source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 
-        if [[ -z "$ZELLIJ_SESSION_NAME" && "$TERM" == *ghostty* ]]; then
+        # ssh carries TERM but not ZELLIJ_SESSION_NAME, so a remote login from
+        # inside a local zellij would nest a second multiplexer. ssh.nix forwards
+        # this marker instead; sshd needs the matching AcceptEnv.
+        if [[ -n "$ZELLIJ" ]]; then
+          export ZELLIJ_OUTER=1
+        fi
+
+        if [[ -z "$ZELLIJ_SESSION_NAME" && -z "$ZELLIJ_OUTER" && "$TERM" == *ghostty* ]]; then
           zellij attach -c $USER@$(hostname)
         fi
       '';

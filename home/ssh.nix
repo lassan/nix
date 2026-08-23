@@ -15,6 +15,10 @@
         # The agent only signs and never exports, so sops still reads the derived
         # identity at ~/.config/sops/age/keys.txt rather than going through this.
         identityAgent = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
+
+        # Tells the remote shell a multiplexer already owns this terminal, so it
+        # skips its own auto-attach (see shell.nix).
+        sendEnv = ["ZELLIJ_OUTER"];
       };
       nixbox.userKnownHostsFile = "${config.home.homeDirectory}/.ssh/known_hosts ${config.home.homeDirectory}/.ssh/known_hosts.nix";
     };

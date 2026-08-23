@@ -74,6 +74,7 @@
       settings = {
         PasswordAuthentication = false;
         PermitRootLogin = "no";
+        AcceptEnv = ["ZELLIJ_OUTER"];
       };
     };
 
