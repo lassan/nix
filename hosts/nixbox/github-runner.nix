@@ -15,7 +15,7 @@
     ephemeral = false;
     noDefaultLabels = false;
     nodeRuntimes = ["node24"];
-    extraPackages = with pkgs; [docker gnused unzip jq kubectl gh yq-go];
+    extraPackages = with pkgs; [docker gnused unzip jq kubectl gh yq-go curl];
     user = "github-runner";
     group = "github-runner";
     runnerGroup = "nixbox-nix";
@@ -45,6 +45,35 @@ in {
   # Left at the root-owned default: the module's ExecStartPre copies the token
   # into the state dir as root before dropping to the service user.
   sops.secrets.github-runner-suphq = {};
+
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      alsa-lib
+      at-spi2-core
+      cairo
+      cups
+      dbus
+      expat
+      glib
+      libGL
+      libgbm
+      libgcc
+      libx11
+      libxcb
+      libxcomposite
+      libxdamage
+      libxext
+      libxfixes
+      libxkbcommon
+      libxrandr
+      nspr
+      nss
+      pango
+      pciutils
+      vulkan-loader
+    ];
+  };
 
   virtualisation.docker.enable = true;
 
