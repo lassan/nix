@@ -45,6 +45,7 @@ in {
         "-c"
         "${zellij} attach --create-background ${session} || true"
       ];
+      EnvironmentVariables.SSH_AUTH_SOCK = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
       RunAtLoad = true;
       StartInterval = 300;
     };

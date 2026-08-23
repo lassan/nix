@@ -4,7 +4,10 @@
   pnpmHome = "${config.home.homeDirectory}/Library/pnpm";
 in {
   home = {
-    sessionVariables.PNPM_HOME = pnpmHome;
+    sessionVariables = {
+      PNPM_HOME = pnpmHome;
+      SSH_AUTH_SOCK = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
+    };
 
     # The second entry is the python.org framework build, which has no Linux
     # counterpart.

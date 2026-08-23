@@ -233,7 +233,7 @@ commit that introduced that line. Removes most manual `rebase -i`.
 ### 10. Kill the 1,813 `git status` calls ✅ DONE
 
 Both halves landed: `git_status` now carries counts in `home/starship.nix`, and
-`Alt-g` opens `gitui` in a floating pane in `home/zellij.nix`.
+`Alt-Shift-g` opens `gitui` in a floating pane in `home/zellij.nix`.
 
 The prompt went from starship's bare default (`[!?]` — enough to know
 _something_ changed, not enough to stop you typing the command) to a counted,
@@ -268,7 +268,7 @@ And on the zellij side:
 
 - **A `Run` pane inherits the focused pane's _current_ cwd**, including after a
   `cd` — undocumented, and the thing the whole binding depends on. Verified by
-  driving a real pty, since it's what makes `Alt-g` open the right repo when
+  driving a real pty, since it's what makes `Alt-Shift-g` open the right repo when
   hopping between worktrunk worktrees rather than always landing in `$HOME`.
 - **`close_on_exit true`** means `q` in gitui leaves nothing behind, so
   repeated presses can't stack floating panes. The tradeoff: outside a git repo

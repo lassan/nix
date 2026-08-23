@@ -383,7 +383,7 @@ in {
               // outside a git repo gitui exits immediately with an error and
               // the pane just flashes. Reads as "nothing happened", which is
               // the honest outcome anyway.
-              bind "Alt g" {
+              bind "Alt Shift g" {
                   Run "gitui" {
                       floating true
                       name "git"

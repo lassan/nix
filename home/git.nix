@@ -41,7 +41,6 @@
           # (`env: bash\r: No such file or directory`).
           autocrlf = "input";
           longpaths = true;
-          fsmonitor = true;
         };
 
         log.date = "iso";
