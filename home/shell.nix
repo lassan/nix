@@ -55,16 +55,11 @@
         # are read at completion time, so their position doesn't matter.
         source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
 
-        # Alt-f goes to fzf below, so forward-word lives on Alt-Right only. Its
-        # counterpart keeps both Alt-b and Alt-Left.
+        # Ghostty sends Alt-f for Option-Right; retain the CSI form for terminals that distinguish it.
         bindkey -M viins "\eb" backward-word
+        bindkey -M viins "\ef" forward-word
         bindkey -M viins "\e[1;3C" forward-word
         bindkey -M viins "\e[1;3D" backward-word
-
-        # zellij claims Ctrl-T for tab mode (see zellij.nix), so fzf's own binding
-        # never reaches zsh. Alt-f is free there; Alt-Shift-f is a separate chord.
-        bindkey -M viins "\ef" fzf-file-widget
-        bindkey -M vicmd "\ef" fzf-file-widget
 
         # Last: it wraps the widgets everything above has finished defining.
         source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh

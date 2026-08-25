@@ -75,7 +75,6 @@ in {
       "linear"
       "webstorm"
 
-      "dockdoor"
       "reader"
 
       "shortcat"

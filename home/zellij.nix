@@ -185,6 +185,8 @@ in {
     extraConfig = ''
 
           esc_delay 25
+          support_kitty_keyboard_protocol false
+          pane_frame_style "full"
 
           ui {
               pane_frames {

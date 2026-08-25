@@ -43,6 +43,7 @@
 
     extraEnvironment = {
       TMPDIR = "${workRoot}/${name}/_temp";
+      PULUMI_HOME = "${workRoot}/${name}/.pulumi";
     };
 
     serviceOverrides = {
@@ -56,6 +57,7 @@
       # users such as playwright's pwuser.
       UMask = "0022";
       BindReadOnlyPaths = ["${osRelease}:/etc/os-release"];
+      SystemCallFilter = ["capset"];
     };
   };
 in {

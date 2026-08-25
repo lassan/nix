@@ -17,6 +17,9 @@ deploy host="" ip="":
       nh os switch . -H "{{ host }}"; \
     fi
 
+deploy-home:
+    @nix build ".#darwinConfigurations.$(hostname).config.home-manager.users.$USER.home.activationPackage" --out-link "$TMPDIR/home-manager-activation" && "$TMPDIR/home-manager-activation/activate"
+
 # Upgrade to the versions in the current taps (activation no longer does).
 # `brew update` cannot run: mutableTaps = false pins the taps to the store, so
 # newer definitions arrive via `just update && just deploy` first.

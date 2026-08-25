@@ -5,15 +5,15 @@
   autoPatchelfHook,
   zlib,
 }: let
-  version = "0.23.1";
+  version = "0.24.0";
   releases = {
     aarch64-darwin = {
       platform = "aarch64-apple-darwin";
-      hash = "sha256-i63AMsj9knSWwy1aKMuHZdWSwdikdHafhzvImVmuZ2U=";
+      hash = "sha256-JWMXmAM6ZDT2BCxvUbM6bOkYhA4VyrKQ6ZL/3pqHie4=";
     };
     x86_64-linux = {
       platform = "x86_64-unknown-linux-gnu";
-      hash = "sha256-nMH+IJgD+siZPs2n0cC9NVsfzDTipnRuoy/KAGoukA8=";
+      hash = "sha256-ppWbvgVkT95D4/4cE+I2U/JcRBt9NPONAVs6jeharI0=";
     };
   };
   release = releases.${stdenv.hostPlatform.system};
