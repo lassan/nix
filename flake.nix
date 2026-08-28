@@ -13,7 +13,7 @@
     # `command_wrapper` stanza that brew only understands from 6.0.13. Drop this
     # and the nix-homebrew.package override once upstream bumps its own brew-src.
     brew-src = {
-      url = "github:Homebrew/brew/6.0.15";
+      url = "github:Homebrew/brew/6.0.19";
       flake = false;
     };
     home-manager = {
