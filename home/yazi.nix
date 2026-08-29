@@ -69,7 +69,7 @@ in {
 
       opener.edit = [
         {
-          run = ''${pkgs.vim}/bin/vim "$@"'';
+          run = "${pkgs.vim}/bin/vim %s";
           block = true;
         }
       ];
