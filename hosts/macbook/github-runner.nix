@@ -46,7 +46,7 @@ in {
       command = "${pkgs.writeShellScript "colima-autostart" ''
         ${pkgs.colima}/bin/colima status >/dev/null 2>&1 || \
           ${pkgs.colima}/bin/colima start \
-            --cpu 8 --memory 16 --disk 100 \
+            --cpu 8 --memory 8 --disk 100 \
             --vm-type vz --vz-rosetta --mount-type virtiofs \
             --mount ${homeDirectory}:w \
             --mount ${runnerWorkDir}:w
@@ -155,25 +155,6 @@ in {
   # run on darwin.
   services.github-runners = {
     "${hostName}-01" = {
-      enable = true;
-      url = "https://github.com/suphq";
-      inherit tokenFile;
-      replace = true;
-      ephemeral = false;
-      noDefaultLabels = false;
-      nodeRuntimes = ["node24"];
-      extraPackages = with pkgs; [docker gnused unzip jq kubectl gh yq-go];
-      extraEnvironment = {
-        DOCKER_HOST = "unix://${homeDirectory}/.colima/default/docker.sock";
-      };
-      runnerGroup = "macbook-nix";
-      extraLabels = [
-        hostName
-        "aarch64-darwin"
-      ];
-    };
-
-    "${hostName}-02" = {
       enable = true;
       url = "https://github.com/suphq";
       inherit tokenFile;
