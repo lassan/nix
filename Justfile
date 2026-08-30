@@ -24,7 +24,7 @@ deploy-home:
 # `brew update` cannot run: mutableTaps = false pins the taps to the store, so
 # newer definitions arrive via `just update && just deploy` first.
 brew-upgrade:
-    brew upgrade
+    /opt/homebrew/bin/brew upgrade
 
 # Format check, lint, then nix flake check
 check: fmt-check lint
