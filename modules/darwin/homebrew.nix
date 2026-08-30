@@ -99,7 +99,6 @@ in {
       "codex"
 
       "gitbutler"
-      "wallspace"
     ];
   };
 

@@ -14,10 +14,10 @@
         environment = {
           LLAMA_ARG_HOST = "0.0.0.0";
           LLAMA_ARG_PORT = "8080";
-          LLAMA_ARG_HF_REPO = "bartowski/Qwen_Qwen3.5-9B-GGUF";
-          LLAMA_ARG_HF_FILE = "Qwen_Qwen3.5-9B-Q6_K.gguf";
-          LLAMA_ARG_CTX_SIZE = "32768";
-          LLAMA_ARG_N_PARALLEL = "1";
+          LLAMA_ARG_HF_REPO = "google/gemma-4-12B-it-qat-q4_0-gguf";
+          LLAMA_ARG_HF_FILE = "gemma-4-12b-it-qat-q4_0.gguf";
+          LLAMA_ARG_CTX_SIZE = "65536";
+          LLAMA_ARG_N_PARALLEL = "2";
           LLAMA_ARG_N_GPU_LAYERS = "99";
           LLAMA_ARG_MMPROJ_AUTO = "false";
           LLAMA_ARG_REASONING = "off";
@@ -41,8 +41,8 @@
           HINDSIGHT_API_LLM_PROVIDER = "openai";
           HINDSIGHT_API_LLM_BASE_URL = "http://llama:8080/v1";
           HINDSIGHT_API_LLM_API_KEY = "not-needed";
-          HINDSIGHT_API_LLM_MODEL = "qwen3.5-9b";
-          HINDSIGHT_API_LLM_MAX_CONCURRENT = "1";
+          HINDSIGHT_API_LLM_MODEL = "gemma-4-12b";
+          HINDSIGHT_API_LLM_MAX_CONCURRENT = "2";
           HINDSIGHT_API_LLM_TIMEOUT = "300";
           HINDSIGHT_API_LLM_MAX_RETRIES = "2";
           HINDSIGHT_API_WORKER_ID = "nixbox-hindsight";
