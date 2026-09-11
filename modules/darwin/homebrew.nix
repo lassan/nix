@@ -97,6 +97,7 @@ in {
       "opensuperwhisper"
 
       "codex"
+      "chatgpt"
 
       "gitbutler"
     ];
