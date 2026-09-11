@@ -8,7 +8,7 @@
     services = {
       llama = {
         image = "ghcr.io/ggml-org/llama.cpp:server-cuda@sha256:cf2e30bc855cf58cdbdc65d05b5b5e02afa95fb788343a5334d704367ac5c9ac";
-        pull_policy = "always";
+        pull_policy = "missing";
         restart = "unless-stopped";
         devices = ["nvidia.com/gpu=all"];
         environment = {
@@ -38,7 +38,7 @@
 
       hindsight = {
         image = "ghcr.io/vectorize-io/hindsight:0.9.2";
-        pull_policy = "always";
+        pull_policy = "missing";
         restart = "unless-stopped";
         depends_on.llama.condition = "service_healthy";
         environment = {
@@ -105,6 +105,8 @@ in {
       ExecStop = "${dockerCompose} -f ${composeFile} down";
       TimeoutStartSec = 900;
       TimeoutStopSec = 120;
+      Restart = "on-failure";
+      RestartSec = 30;
     };
   };
 }
