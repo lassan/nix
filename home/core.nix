@@ -12,7 +12,7 @@
     just
     just-lsp
     uv
-    fnm
+    nodejs_24
     pi-coding-agent
 
     nixd

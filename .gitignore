@@ -1,3 +1,4 @@
 .tokensave
 plans/
+.direnv/
 .claude/settings.local.json

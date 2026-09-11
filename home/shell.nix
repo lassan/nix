@@ -5,6 +5,12 @@
   ...
 }: {
   programs = {
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
+
     zsh = {
       enable = true;
       enableCompletion = true;
@@ -21,7 +27,6 @@
       };
       initContent = ''
         eval "$(zoxide init zsh)"
-        eval "$(fnm env --use-on-cd --shell zsh)"
         source "$HOME/.config/zsh/completions/temporal.zsh"
         # zellij's completion script ends with an unguarded `_zellij "$@"`, which
         # errors when eval'd outside a completion context. Register it properly.

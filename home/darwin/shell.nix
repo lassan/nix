@@ -12,6 +12,7 @@ in {
     # The second entry is the python.org framework build, which has no Linux
     # counterpart.
     sessionPath = [
+      "${pnpmHome}/bin"
       pnpmHome
       "/Library/Frameworks/Python.framework/Versions/3.14/bin"
     ];
