@@ -1,4 +1,8 @@
 _: {
+  # home-manager grew its own programs.worktrunk, which collides with the
+  # upstream flake module we use for the newer package and shell integration.
+  disabledModules = ["programs/worktrunk.nix"];
+
   programs.worktrunk = {
     enable = true;
     enableZshIntegration = true;
