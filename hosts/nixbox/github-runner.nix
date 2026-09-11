@@ -125,13 +125,17 @@ in {
   # the tag ships, supabase 4-15 months) is older than any useful threshold and
   # gets deleted, then re-pulled ~10GiB on the next job. Tagged images are kept
   # and the sha-tagged deploy images, which are the only ones that actually
-  # accumulate, are swept by name instead.
+  # accumulate, are swept by name instead -- under both the registry tag and the
+  # apps-* tag compose gives the same build. Two days, not seven: the merge rate
+  # puts ~25 of them on disk a day at 0.6-1.6GiB each.
   #
   # Build cache is the real hog and grows with CI volume, not with time: it
   # reached 24GiB in four days on the macbook against 16GiB of free disk, which
   # is the full-disk failure SUP-2217 mis-read as a testcontainers fault. Capping
   # the size bounds it whatever the merge rate does; an age filter does not.
-  # Daily, because a week of cache overruns the cap between runs.
+  # Daily, because a week of cache overruns the cap between runs. --all because
+  # without it the space caps apply only to dangling records, which left 111GiB
+  # of the 140GiB cache untouchable.
   systemd.services.docker-prune = {
     path = with pkgs; [docker gawk findutils coreutils];
     script = ''
@@ -139,11 +143,13 @@ in {
       docker container prune --force --filter until=168h
       docker image prune --force
       docker volume prune --force
-      docker buildx prune --force --reserved-space=20GB --min-free-space=30GB
-      docker images --filter reference='registry.digitalocean.com/suphq/*:sha-*' \
-        --format '{{.ID}} {{.CreatedAt}}' \
-      | awk -v cutoff="$(date -u -d '7 days ago' '+%Y-%m-%d')" '$2 < cutoff {print $1}' \
-      | xargs -r docker rmi --force
+      docker buildx prune --force --all --reserved-space=20GB --min-free-space=30GB
+      for ref in 'registry.digitalocean.com/suphq/*:sha-*' 'apps-*:sha-*'; do
+        docker images --filter reference="$ref" \
+          --format '{{.Repository}}:{{.Tag}} {{.CreatedAt}}' \
+        | awk -v cutoff="$(date -u -d '2 days ago' '+%Y-%m-%d')" '$2 < cutoff {print $1}' \
+        | xargs -r docker rmi --force
+      done
     '';
     serviceConfig.Type = "oneshot";
     after = ["docker.service"];
