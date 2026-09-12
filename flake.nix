@@ -51,10 +51,6 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
-    homebrew-rtk-ai = {
-      url = "github:rtk-ai/homebrew-tap";
-      flake = false;
-    };
   };
 
   outputs = inputs @ {

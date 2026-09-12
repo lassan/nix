@@ -5,18 +5,71 @@
   pkgs,
   ...
 }: let
+  # Trialling ishefi/zellaude; set back to true to restore the zj-radar sidebar.
+  useZjRadar = false;
+
   # Stable path, not the store path: zellij keys plugin permissions on the
   # location string, so a store path re-prompts on every update.
   radarPath = "${config.xdg.configHome}/zellij/plugins/zj_radar.wasm";
+  zellaudePath = "${config.xdg.configHome}/zellij/plugins/zellaude.wasm";
+
+  # Upstream ships no flake, so take the release artifact rather than carry a
+  # wasm32-wasip1 rust toolchain for a trial.
+  zellaudeWasm = pkgs.fetchurl {
+    url = "https://github.com/ishefi/zellaude/releases/download/v0.5.1/zellaude.wasm";
+    hash = "sha256-63Ss3skvmN/m4XwAXBwY29cR1v3G8KMU3n5EUr9PF/k=";
+  };
+
+  radarPane = lib.optionalString useZjRadar ''
+    pane size=32 borderless=false {
+        plugin location="radar"
+    }
+  '';
+
+  zellaudePane = lib.optionalString (!useZjRadar) ''
+    pane size=1 borderless=true {
+        plugin location="zellaude"
+    }
+  '';
+
+  pluginAliases =
+    if useZjRadar
+    then ''
+      radar location="file:${radarPath}" {
+          naming "managed"
+          glyphs "nerd"
+          header false
+      }
+    ''
+    else ''
+      zellaude location="file:${zellaudePath}"
+    '';
+
+  radarKeybinds = lib.optionalString useZjRadar ''
+    bind "Alt a" {
+        MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-next"; }
+    }
+    bind "Alt Shift a" {
+        MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-prev"; }
+    }
+  '';
+
   scrollbackEditor = pkgs.writeShellScript "vim-scrollback" ''
     exec ${pkgs.vim}/bin/vim -R "$@"
   '';
 in {
-  xdg.configFile."zellij/plugins/zj_radar.wasm".source = "${inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/zj_radar.wasm";
+  xdg.configFile =
+    if useZjRadar
+    then {
+      "zellij/plugins/zj_radar.wasm".source = "${inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/zj_radar.wasm";
+    }
+    else {
+      "zellij/plugins/zellaude.wasm".source = zellaudeWasm;
+    };
 
   # The sidebar itself is wired declaratively below; this is the
   # `zj-radar setup --check` doctor and the `zj-radar notify` producer shim.
-  home.packages = [inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.zj-radar-cli];
+  home.packages = lib.optionals useZjRadar [inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.zj-radar-cli];
 
   # Stylix emits no frame_unselected, so an unfocused frame falls back to
   # text_unselected and lands 1.1:1 against the focused one — a hue shift at
@@ -55,10 +108,9 @@ in {
     layouts.default = ''
       layout {
           default_tab_template {
+              ${zellaudePane}
               pane split_direction="vertical" {
-                  pane size=32 borderless=false {
-                      plugin location="radar"
-                  }
+                  ${radarPane}
                   children
               }
               pane size=1 borderless=true {
@@ -66,10 +118,9 @@ in {
               }
           }
           new_tab_template {
+              ${zellaudePane}
               pane split_direction="vertical" {
-                  pane size=32 borderless=false {
-                      plugin location="radar"
-                  }
+                  ${radarPane}
                   pane focus=true
               }
               pane size=1 borderless=true {
@@ -78,10 +129,9 @@ in {
           }
 
           tab_template name="ui" {
+              ${zellaudePane}
               pane split_direction="vertical" {
-                  pane size=32 borderless=false {
-                      plugin location="radar"
-                  }
+                  ${radarPane}
                   children
               }
               pane size=1 borderless=true {
@@ -197,11 +247,7 @@ in {
           // Aliased rather than pathed in the layout so this config block
           // applies everywhere the plugin is launched.
           plugins {
-              radar location="file:${radarPath}" {
-                  naming "managed"
-                  glyphs "nerd"
-                  header false
-              }
+              ${pluginAliases}
           }
 
           scrollback_editor "${scrollbackEditor}"
@@ -407,12 +453,7 @@ in {
                       height "90%"
                   }
               }
-              bind "Alt a" {
-                  MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-next"; }
-              }
-              bind "Alt Shift a" {
-                  MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-prev"; }
-              }
+              ${radarKeybinds}
               bind "Alt p" { TogglePaneInGroup; }
               bind "Alt Shift p" { ToggleGroupMarking; }
               bind "Ctrl q" { Quit; }

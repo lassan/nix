@@ -46,14 +46,45 @@
           HINDSIGHT_API_LLM_BASE_URL = "http://llama:8080/v1";
           HINDSIGHT_API_LLM_API_KEY = "not-needed";
           HINDSIGHT_API_LLM_MODEL = "granite-4.2-3b";
-          HINDSIGHT_API_LLM_MAX_CONCURRENT = "2";
+          # Per-op caps compose with this one rather than replacing it, so the
+          # global cap has to cover every operation at once or reflect queues
+          # behind granite: 2 retain + 1 consolidation + 1 reflect.
+          HINDSIGHT_API_LLM_MAX_CONCURRENT = "4";
+          # llama.cpp serves two slots, so hold granite's own work to two.
+          HINDSIGHT_API_RETAIN_LLM_MAX_CONCURRENT = "2";
+          HINDSIGHT_API_CONSOLIDATION_LLM_MAX_CONCURRENT = "1";
           # A 3B model does not hold the response shape from prompting alone;
           # grammar-enforced schemas keep consolidation batches valid.
           HINDSIGHT_API_LLM_STRICT_SCHEMA = "true";
-          HINDSIGHT_API_LLM_TIMEOUT = "300";
+          HINDSIGHT_API_LLM_TIMEOUT = "600";
           HINDSIGHT_API_LLM_MAX_RETRIES = "2";
-          HINDSIGHT_API_REFLECT_MAX_ITERATIONS = "4";
+          # granite on two slots needs p90 110s and up to 200s per call, so the
+          # default 300s reflect budget expires mid-answer and blanks the page.
+          HINDSIGHT_API_REFLECT_WALL_TIMEOUT = "1800";
+          # Reflect writes the knowledge pages, so it runs on the macbook
+          # instead; granite blanks pages and malforms the delta ops. gpt-oss-20b
+          # tops hindsight's reflect leaderboard at 94.2% among open weights.
+          HINDSIGHT_API_REFLECT_LLM_PROVIDER = "openai";
+          HINDSIGHT_API_REFLECT_LLM_BASE_URL = "http://${vars.tailnet.macbook}:11434/v1";
+          HINDSIGHT_API_REFLECT_LLM_API_KEY = "not-needed";
+          HINDSIGHT_API_REFLECT_LLM_MODEL = "gpt-oss:20b";
+          # Their benchmark runs gpt-oss at low effort; it beats both reasoning
+          # off and medium, and reflect's tool loop needs the reasoning kept on.
+          HINDSIGHT_API_REFLECT_LLM_REASONING_EFFORT = "low";
+          HINDSIGHT_API_REFLECT_LLM_MAX_CONCURRENT = "1";
+          # Budget.LOW halves this, so 4 left reflect two tool calls: one wasted
+          # on a blank page and then a forced empty answer, never reaching the
+          # observations. The upstream default gives it room to fall through.
+          HINDSIGHT_API_REFLECT_MAX_ITERATIONS = "10";
           HINDSIGHT_API_REFLECT_MAX_CONTEXT_TOKENS = "32768";
+          # Upstream ships no debounce, so a burst of consolidations rebuilds
+          # every page at once — 17 refreshes in a minute here. Explicit
+          # API/MCP refreshes ignore this floor.
+          HINDSIGHT_API_MENTAL_MODEL_MIN_REFRESH_INTERVAL_SECONDS = "3600";
+          # Retain fills every shared slot with work that then blocks on its own
+          # two LLM permits, starving page refreshes behind it. A floor keeps two
+          # slots claimable for them; it is a minimum, not a cap.
+          HINDSIGHT_API_WORKER_REFRESH_MENTAL_MODEL_RESERVED_SLOTS = "2";
           HINDSIGHT_API_WORKER_ID = "nixbox-hindsight";
         };
         ports = [

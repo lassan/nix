@@ -2,6 +2,7 @@
   imports = [
     ./ghostty.nix
     ./hindsight.nix
+    ./ollama.nix
     ./shell.nix
     ./ssh.nix
     ./zellij-daemon.nix

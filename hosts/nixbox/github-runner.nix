@@ -95,6 +95,21 @@ in {
   };
 
   virtualisation.docker.enable = true;
+  # The daily prune below only bounds the cache once a day, and CI refills it
+  # faster than that: 34GiB accumulated in the twelve hours after one run, which
+  # is what filled the disk on 2026-09-11. buildkit's own GC enforces the cap
+  # continuously between prunes.
+  virtualisation.docker.daemon.settings.builder.gc = {
+    enabled = true;
+    policy = [
+      {
+        reservedSpace = "20GB";
+        maxUsedSpace = "40GB";
+        minFreeSpace = "50GB";
+        all = true;
+      }
+    ];
+  };
 
   users.users.github-runner = {
     isSystemUser = true;

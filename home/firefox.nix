@@ -29,7 +29,6 @@ _: {
         "sponsorBlocker@ajay.app" = forced "sponsorblock";
         "@react-devtools" = forced "react-devtools";
         "gdpr@cavi.au.dk" = forced "consent-o-matic";
-        "{3c078156-979c-498b-8990-85f7987dd929}" = forced "sidebery";
       };
     };
 
@@ -64,7 +63,7 @@ _: {
         "privacy.clearOnShutdown_v2.formdata" = true;
 
         # Captured verbatim from a customised profile; not hand-editable.
-        "browser.uiCustomization.state" = ''{"placements":{"widget-overflow-fixed-list":[],"unified-extensions-area":["_3c078156-979c-498b-8990-85f7987dd929_-browser-action","sponsorblocker_ajay_app-browser-action","_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action","jid1-mnnxcxisbpnsxq_jetpack-browser-action","atbc_easonwong-browser-action","_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action","_react-devtools-browser-action","gdpr_cavi_au_dk-browser-action"],"nav-bar":["sidebar-button","back-button","forward-button","stop-reload-button","customizableui-special-spring1","vertical-spacer","urlbar-container","customizableui-special-spring2","downloads-button","fxa-toolbar-menu-button","reset-pbm-toolbar-button","unified-extensions-button","firefox-view-button","alltabs-button"],"TabsToolbar":[],"vertical-tabs":["tabbrowser-tabs"],"PersonalToolbar":["personal-bookmarks"]},"seen":["reset-pbm-toolbar-button","developer-button","screenshot-button","atbc_easonwong-browser-action","jid1-mnnxcxisbpnsxq_jetpack-browser-action","_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action","_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action","sponsorblocker_ajay_app-browser-action","_react-devtools-browser-action","gdpr_cavi_au_dk-browser-action","_3c078156-979c-498b-8990-85f7987dd929_-browser-action"],"dirtyAreaCache":["nav-bar","vertical-tabs","PersonalToolbar","TabsToolbar","unified-extensions-area"],"currentVersion":24,"newElementCount":2}'';
+        "browser.uiCustomization.state" = ''{"placements":{"widget-overflow-fixed-list":[],"unified-extensions-area":["sponsorblocker_ajay_app-browser-action","_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action","jid1-mnnxcxisbpnsxq_jetpack-browser-action","atbc_easonwong-browser-action","_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action","_react-devtools-browser-action","gdpr_cavi_au_dk-browser-action"],"nav-bar":["sidebar-button","back-button","forward-button","stop-reload-button","customizableui-special-spring1","vertical-spacer","urlbar-container","customizableui-special-spring2","downloads-button","fxa-toolbar-menu-button","reset-pbm-toolbar-button","unified-extensions-button","firefox-view-button","alltabs-button"],"TabsToolbar":[],"vertical-tabs":["tabbrowser-tabs"],"PersonalToolbar":["personal-bookmarks"]},"seen":["reset-pbm-toolbar-button","developer-button","screenshot-button","atbc_easonwong-browser-action","jid1-mnnxcxisbpnsxq_jetpack-browser-action","_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action","_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action","sponsorblocker_ajay_app-browser-action","_react-devtools-browser-action","gdpr_cavi_au_dk-browser-action"],"dirtyAreaCache":["nav-bar","vertical-tabs","PersonalToolbar","TabsToolbar","unified-extensions-area"],"currentVersion":24,"newElementCount":2}'';
       };
     };
   };

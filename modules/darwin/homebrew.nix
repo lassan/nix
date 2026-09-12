@@ -27,7 +27,6 @@ in {
     taps = {
       "homebrew/homebrew-core" = inputs.homebrew-core;
       "homebrew/homebrew-cask" = inputs.homebrew-cask;
-      "rtk-ai/homebrew-tap" = inputs.homebrew-rtk-ai;
     };
 
     mutableTaps = false;
@@ -54,8 +53,6 @@ in {
       "asimov"
       "doctl"
       "pulumi"
-
-      "rtk-ai/tap/rtk"
     ];
     casks = [
       "rectangle"
