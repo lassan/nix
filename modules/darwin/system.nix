@@ -31,8 +31,10 @@
       smb.NetBIOSName = config.networking.hostName;
 
       dock = {
-        autohide = false;
-        magnification = false;
+        autohide = true;
+        magnification = true;
+        tilesize = 40;
+        largesize = 56;
         autohide-delay = 0.01;
         autohide-time-modifier = 0.3;
         mineffect = "scale";
@@ -44,6 +46,15 @@
 
         expose-group-apps = true;
 
+        static-only = true;
+        minimize-to-application = true;
+        scroll-to-open = true;
+        show-process-indicators = true;
+        showAppExposeGestureEnabled = true;
+
+        wvous-tl-corner = 1;
+        wvous-tr-corner = 2; # Mission Control.
+        wvous-bl-corner = 5; # Start screen saver.
         wvous-br-corner = 1; # 1 is Disabled; the default there is Quick Note.
       };
 
@@ -73,10 +84,15 @@
         # Ctrl-cmd-drag moves a window from anywhere in its body.
         NSWindowShouldDragOnGesture = true;
 
+        AppleWindowTabbingMode = "always";
+
         NSDocumentSaveNewDocumentsToCloud = false;
         AppleShowAllExtensions = true;
 
         "com.apple.sound.beep.feedback" = 0;
+
+        NSStatusItemSpacing = 6;
+        NSStatusItemSelectionPadding = 6;
       };
 
       finder = {
@@ -110,6 +126,10 @@
       WindowManager = {
         GloballyEnabled = false; # Stage Manager.
         EnableStandardClickToShowDesktop = false;
+
+        # Rectangle owns edge drags; the native tiler races it for the same gesture.
+        EnableTilingByEdgeDrag = false;
+        EnableTopTilingByEdgeDrag = false;
       };
 
       LaunchServices.LSQuarantine = false;
