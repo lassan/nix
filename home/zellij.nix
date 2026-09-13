@@ -408,7 +408,7 @@ in {
               // A Run pane inherits the *current* cwd of the focused pane —
               // including after a `cd`, verified against a real pty — so this
               // opens on the repo you are looking at, which is what makes it
-              // usable across worktrunk worktrees.
+              // usable across git worktrees.
               //
               // close_on_exit means `q` in gitui leaves nothing behind, so
               // repeated presses can't stack up floating panes. The tradeoff:

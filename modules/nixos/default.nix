@@ -18,7 +18,6 @@
     useUserPackages = true;
     backupFileExtension = "backup";
     extraSpecialArgs = {inherit inputs vars;};
-    sharedModules = [inputs.worktrunk.homeModules.default];
     users.${vars.userName}.imports = [../../home ../../home/linux];
   };
 }
