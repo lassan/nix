@@ -28,6 +28,7 @@
       initContent = ''
         eval "$(zoxide init zsh)"
         source "$HOME/.config/zsh/completions/temporal.zsh"
+        source "$HOME/.config/zsh/completions/workmux.zsh"
         # zellij's completion script ends with an unguarded `_zellij "$@"`, which
         # errors when eval'd outside a completion context. Register it properly.
         eval "$(zellij setup --generate-completion zsh | sed 's/^_zellij "\$@"$/compdef _zellij zellij/')"
@@ -87,6 +88,7 @@
         px = "pnpm exec";
 
         nx = "pnpm nx"; # temporary alias until I figure out dev shells for globals
+        wm = "workmux";
 
         k = "kubectl";
         kns = "kubectl config set-context --current --namespace";

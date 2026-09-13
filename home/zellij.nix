@@ -5,46 +5,24 @@
   pkgs,
   ...
 }: let
-  # Trialling ishefi/zellaude; set back to true to restore the zj-radar sidebar.
   useZjRadar = false;
 
   # Stable path, not the store path: zellij keys plugin permissions on the
   # location string, so a store path re-prompts on every update.
   radarPath = "${config.xdg.configHome}/zellij/plugins/zj_radar.wasm";
-  zellaudePath = "${config.xdg.configHome}/zellij/plugins/zellaude.wasm";
-
-  # Upstream ships no flake, so take the release artifact rather than carry a
-  # wasm32-wasip1 rust toolchain for a trial.
-  zellaudeWasm = pkgs.fetchurl {
-    url = "https://github.com/ishefi/zellaude/releases/download/v0.5.1/zellaude.wasm";
-    hash = "sha256-63Ss3skvmN/m4XwAXBwY29cR1v3G8KMU3n5EUr9PF/k=";
-  };
-
   radarPane = lib.optionalString useZjRadar ''
     pane size=32 borderless=false {
         plugin location="radar"
     }
   '';
 
-  zellaudePane = lib.optionalString (!useZjRadar) ''
-    pane size=1 borderless=true {
-        plugin location="zellaude"
+  pluginAliases = lib.optionalString useZjRadar ''
+    radar location="file:${radarPath}" {
+        naming "managed"
+        glyphs "nerd"
+        header false
     }
   '';
-
-  pluginAliases =
-    if useZjRadar
-    then ''
-      radar location="file:${radarPath}" {
-          naming "managed"
-          glyphs "nerd"
-          header false
-      }
-    ''
-    else ''
-      zellaude location="file:${zellaudePath}"
-    '';
-
   radarKeybinds = lib.optionalString useZjRadar ''
     bind "Alt a" {
         MessagePlugin "radar" { name "zj_radar.cmd.v1"; payload "attention-next"; }
@@ -58,14 +36,9 @@
     exec ${pkgs.vim}/bin/vim -R "$@"
   '';
 in {
-  xdg.configFile =
-    if useZjRadar
-    then {
-      "zellij/plugins/zj_radar.wasm".source = "${inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/zj_radar.wasm";
-    }
-    else {
-      "zellij/plugins/zellaude.wasm".source = zellaudeWasm;
-    };
+  xdg.configFile = lib.mkIf useZjRadar {
+    "zellij/plugins/zj_radar.wasm".source = "${inputs.zj-radar.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/zj_radar.wasm";
+  };
 
   # The sidebar itself is wired declaratively below; this is the
   # `zj-radar setup --check` doctor and the `zj-radar notify` producer shim.
@@ -91,6 +64,11 @@ in {
     text_selected.background = lib.mkForce base02;
     list_selected.background = lib.mkForce base02;
     table_cell_selected.background = lib.mkForce base02;
+
+    # tab-bar paints a hovered tab ribbon_unselected.emphasis_1 on
+    # ribbon_unselected.base; stylix sets both to base05, so the tab name
+    # vanishes under the cursor.
+    ribbon_unselected.emphasis_1 = lib.mkForce base03;
   };
 
   programs.zellij = {
@@ -108,7 +86,9 @@ in {
     layouts.default = ''
       layout {
           default_tab_template {
-              ${zellaudePane}
+              pane size=1 borderless=true {
+                  plugin location="zellij:tab-bar"
+              }
               pane split_direction="vertical" {
                   ${radarPane}
                   children
@@ -118,7 +98,9 @@ in {
               }
           }
           new_tab_template {
-              ${zellaudePane}
+              pane size=1 borderless=true {
+                  plugin location="zellij:tab-bar"
+              }
               pane split_direction="vertical" {
                   ${radarPane}
                   pane focus=true
@@ -129,7 +111,9 @@ in {
           }
 
           tab_template name="ui" {
-              ${zellaudePane}
+              pane size=1 borderless=true {
+                  plugin location="zellij:tab-bar"
+              }
               pane split_direction="vertical" {
                   ${radarPane}
                   children
@@ -446,6 +430,17 @@ in {
                   Run "tuicr" {
                       floating true
                       name "review"
+                      close_on_exit true
+                      x "5%"
+                      y "5%"
+                      width "90%"
+                      height "90%"
+                  }
+              }
+              bind "Alt Shift w" {
+                  Run "workmux" "dashboard" {
+                      floating true
+                      name "workmux"
                       close_on_exit true
                       x "5%"
                       y "5%"

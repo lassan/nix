@@ -81,10 +81,20 @@
           # every page at once — 17 refreshes in a minute here. Explicit
           # API/MCP refreshes ignore this floor.
           HINDSIGHT_API_MENTAL_MODEL_MIN_REFRESH_INTERVAL_SECONDS = "3600";
-          # Retain fills every shared slot with work that then blocks on its own
-          # two LLM permits, starving page refreshes behind it. A floor keeps two
-          # slots claimable for them; it is a minimum, not a cap.
-          HINDSIGHT_API_WORKER_REFRESH_MENTAL_MODEL_RESERVED_SLOTS = "2";
+          # Reservations are floors, and any type may also claim the shared pool
+          # (slots minus reservations), so a floor of 2 let refresh run 8 at once
+          # behind the single reflect permit: 15s calls queued out to 3 minutes.
+          # Reserving every type down to a shared pool of zero turns the floors
+          # into caps; a type left out here would never be claimable at all.
+          HINDSIGHT_API_WORKER_MAX_SLOTS = "11";
+          HINDSIGHT_API_WORKER_CONSOLIDATION_RESERVED_SLOTS = "2";
+          HINDSIGHT_API_WORKER_RETAIN_RESERVED_SLOTS = "3";
+          HINDSIGHT_API_WORKER_REFRESH_MENTAL_MODEL_RESERVED_SLOTS = "1";
+          HINDSIGHT_API_WORKER_GRAPH_MAINTENANCE_RESERVED_SLOTS = "1";
+          HINDSIGHT_API_WORKER_VECTOR_INDEX_MAINTENANCE_RESERVED_SLOTS = "1";
+          HINDSIGHT_API_WORKER_FILE_CONVERT_RETAIN_RESERVED_SLOTS = "1";
+          HINDSIGHT_API_WORKER_IMPORT_DOCUMENTS_RESERVED_SLOTS = "1";
+          HINDSIGHT_API_WORKER_EXPORT_DOCUMENTS_RESERVED_SLOTS = "1";
           HINDSIGHT_API_WORKER_ID = "nixbox-hindsight";
         };
         ports = [

@@ -16,6 +16,7 @@
     ./fzf.nix
     ./glow.nix
     ./worktrunk.nix
+    ./workmux.nix
     ./yazi.nix
     ./tuicr.nix
   ];

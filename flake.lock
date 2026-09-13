@@ -429,6 +429,7 @@
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "treefmt-nix": "treefmt-nix",
+        "workmux": "workmux",
         "worktrunk": "worktrunk",
         "zj-radar": "zj-radar"
       }
@@ -651,6 +652,26 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "workmux": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789208324,
+        "narHash": "sha256-12PqvZqvASJdBQuskWDg6IiUPvvHQt725eVUnAoXBcQ=",
+        "owner": "raine",
+        "repo": "workmux",
+        "rev": "7b8846aef53f7d63d78988db41c96a1ec5209037",
+        "type": "github"
+      },
+      "original": {
+        "owner": "raine",
+        "repo": "workmux",
         "type": "github"
       }
     },
