@@ -58,14 +58,15 @@
           HINDSIGHT_API_LLM_STRICT_SCHEMA = "true";
           HINDSIGHT_API_LLM_TIMEOUT = "600";
           HINDSIGHT_API_LLM_MAX_RETRIES = "2";
-          # granite loops on some full-diff docs and only stops at the LLM
-          # timeout; the default 64000-token cap let one doc hold a llama slot
-          # for ~2h across retries. Must exceed the banks' retain_chunk_size
-          # (12000). The loop is deterministic, so immediate retries only
-          # re-run it.
+          # granite loops on some inputs and only stops at the LLM timeout;
+          # uncapped output let one doc hold a llama slot for ~2h across
+          # retries. Legitimate extractions reach ~10k tokens and the retain
+          # cap must exceed the banks' retain_chunk_size (12000). The loop is
+          # deterministic, so immediate retries only re-run it.
           HINDSIGHT_API_RETAIN_MAX_COMPLETION_TOKENS = "16384";
-          HINDSIGHT_API_RETAIN_LLM_TIMEOUT = "300";
           HINDSIGHT_API_RETAIN_LLM_MAX_RETRIES = "0";
+          HINDSIGHT_API_CONSOLIDATION_MAX_COMPLETION_TOKENS = "8192";
+          HINDSIGHT_API_CONSOLIDATION_LLM_MAX_RETRIES = "0";
           # Default 3 x 60s marks a task failed after 3 minutes of outage
           # (macbook asleep, reboot); park it instead.
           HINDSIGHT_API_WORKER_MAX_RETRIES = "20";
