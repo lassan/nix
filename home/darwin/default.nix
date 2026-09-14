@@ -1,5 +1,6 @@
 {vars, ...}: {
   imports = [
+    ./firefox.nix
     ./ghostty.nix
     ./hindsight.nix
     ./ollama.nix
