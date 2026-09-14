@@ -32,7 +32,7 @@
 
       dock = {
         autohide = true;
-        magnification = true;
+        magnification = false;
         tilesize = 40;
         largesize = 56;
         autohide-delay = 0.01;

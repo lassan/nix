@@ -71,3 +71,11 @@ update-hyprland-skill:
 
 clean:
     nh clean all --keep 5 --keep-since 7d
+
+# Stop the tailnet Ollama server (the hindsight tunnel stays up)
+ollama-stop:
+    -launchctl bootout "gui/$(id -u)/org.nix-community.home.ollama-tailnet"
+    @while launchctl print "gui/$(id -u)/org.nix-community.home.ollama-tailnet" >/dev/null 2>&1; do sleep 0.2; done
+
+ollama-start:
+    launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/org.nix-community.home.ollama-tailnet.plist
