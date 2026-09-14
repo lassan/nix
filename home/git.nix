@@ -14,9 +14,19 @@
       enable = true;
       enableGitIntegration = true;
 
-      # Stylix has no delta target. It reads bat's theme registry, so naming
-      # the theme stylix generates for bat keeps diffs in the same palette.
-      options.syntax-theme = "base16-stylix";
+      options = {
+        # Stylix has no delta target. It reads bat's theme registry, so naming
+        # the theme stylix generates for bat keeps diffs in the same palette.
+        syntax-theme = "base16-stylix";
+        side-by-side = true;
+        line-numbers = true;
+        navigate = true;
+        hyperlinks = true;
+        keep-plus-minus-markers = true;
+        file-decoration-style = "blue ul";
+        wrap-max-lines = "unlimited";
+        whitespace-error-style = "normal";
+      };
     };
 
     git = {
@@ -44,6 +54,8 @@
         };
 
         log.date = "iso";
+
+        merge.conflictStyle = "zdiff3";
 
         alias = {
           br = "branch";
