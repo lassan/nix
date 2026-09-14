@@ -4,6 +4,12 @@
   ...
 }: let
   compose = pkgs.formats.yaml {};
+  # Keep llama.cpp's default 64-token window: a wider one also penalises the
+  # per-fact JSON boilerplate and costs facts (15 -> 7 on a test chunk).
+  granitePenalty = builtins.toJSON {
+    repeat_penalty = 1.1;
+    repeat_last_n = 64;
+  };
   composeFile = compose.generate "hindsight-compose.yaml" {
     services = {
       llama = {
@@ -67,6 +73,11 @@
           HINDSIGHT_API_RETAIN_LLM_MAX_RETRIES = "0";
           HINDSIGHT_API_CONSOLIDATION_MAX_COMPLETION_TOKENS = "8192";
           HINDSIGHT_API_CONSOLIDATION_LLM_MAX_RETRIES = "0";
+          # The loop is granite cycling through the labels enum inside the
+          # grammar-enforced array (no maxItems); a mild repeat penalty over
+          # the last 256 tokens breaks it without changing the facts.
+          HINDSIGHT_API_RETAIN_LLM_EXTRA_BODY = granitePenalty;
+          HINDSIGHT_API_CONSOLIDATION_LLM_EXTRA_BODY = granitePenalty;
           # Default 3 x 60s marks a task failed after 3 minutes of outage
           # (macbook asleep, reboot); park it instead.
           HINDSIGHT_API_WORKER_MAX_RETRIES = "20";
