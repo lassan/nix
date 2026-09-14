@@ -58,6 +58,18 @@
           HINDSIGHT_API_LLM_STRICT_SCHEMA = "true";
           HINDSIGHT_API_LLM_TIMEOUT = "600";
           HINDSIGHT_API_LLM_MAX_RETRIES = "2";
+          # granite loops on some full-diff docs and only stops at the LLM
+          # timeout; the default 64000-token cap let one doc hold a llama slot
+          # for ~2h across retries. Must exceed the banks' retain_chunk_size
+          # (12000). The loop is deterministic, so immediate retries only
+          # re-run it.
+          HINDSIGHT_API_RETAIN_MAX_COMPLETION_TOKENS = "16384";
+          HINDSIGHT_API_RETAIN_LLM_TIMEOUT = "300";
+          HINDSIGHT_API_RETAIN_LLM_MAX_RETRIES = "0";
+          # Default 3 x 60s marks a task failed after 3 minutes of outage
+          # (macbook asleep, reboot); park it instead.
+          HINDSIGHT_API_WORKER_MAX_RETRIES = "20";
+          HINDSIGHT_API_WORKER_TASK_RETRY_BACKOFF_SECONDS = "300";
           # granite on two slots needs p90 110s and up to 200s per call, so the
           # default 300s reflect budget expires mid-answer and blanks the page.
           HINDSIGHT_API_REFLECT_WALL_TIMEOUT = "1800";
