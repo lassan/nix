@@ -40,9 +40,9 @@
       url = "github:raine/workmux";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    zj-radar = {
-      url = "github:marktoda/zj-radar";
-    };
+    # zj-radar = {
+    #   url = "github:marktoda/zj-radar";
+    # };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;

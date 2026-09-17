@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     ghostty-bin
+    firefox-bin-unwrapped
     colima
     docker
 

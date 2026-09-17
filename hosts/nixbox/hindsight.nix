@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   vars,
   ...
@@ -46,8 +47,11 @@
         image = "ghcr.io/vectorize-io/hindsight:0.9.2";
         pull_policy = "missing";
         restart = "unless-stopped";
+        env_file = [config.sops.templates.hindsight.path];
         depends_on.llama.condition = "service_healthy";
         environment = {
+          # Bundled models bypass Hugging Face's closed-client startup failure.
+          HF_HUB_OFFLINE = "1";
           HINDSIGHT_API_LLM_PROVIDER = "openai";
           HINDSIGHT_API_LLM_BASE_URL = "http://llama:8080/v1";
           HINDSIGHT_API_LLM_API_KEY = "not-needed";
@@ -78,23 +82,18 @@
           # the last 256 tokens breaks it without changing the facts.
           HINDSIGHT_API_RETAIN_LLM_EXTRA_BODY = granitePenalty;
           HINDSIGHT_API_CONSOLIDATION_LLM_EXTRA_BODY = granitePenalty;
-          # Default 3 x 60s marks a task failed after 3 minutes of outage
-          # (macbook asleep, reboot); park it instead.
           HINDSIGHT_API_WORKER_MAX_RETRIES = "20";
           HINDSIGHT_API_WORKER_TASK_RETRY_BACKOFF_SECONDS = "300";
           # granite on two slots needs p90 110s and up to 200s per call, so the
           # default 300s reflect budget expires mid-answer and blanks the page.
           HINDSIGHT_API_REFLECT_WALL_TIMEOUT = "1800";
-          # Reflect writes the knowledge pages, so it runs on the macbook
-          # instead; granite blanks pages and malforms the delta ops. gpt-oss-20b
-          # tops hindsight's reflect leaderboard at 94.2% among open weights.
-          HINDSIGHT_API_REFLECT_LLM_PROVIDER = "openai";
-          HINDSIGHT_API_REFLECT_LLM_BASE_URL = "http://${vars.tailnet.macbook}:11434/v1";
-          HINDSIGHT_API_REFLECT_LLM_API_KEY = "not-needed";
-          HINDSIGHT_API_REFLECT_LLM_MODEL = "gpt-oss:20b";
-          # Their benchmark runs gpt-oss at low effort; it beats both reasoning
-          # off and medium, and reflect's tool loop needs the reasoning kept on.
+          HINDSIGHT_API_REFLECT_LLM_PROVIDER = "deepseek";
+          HINDSIGHT_API_REFLECT_LLM_BASE_URL = "https://api.deepseek.com";
+          HINDSIGHT_API_REFLECT_LLM_MODEL = "deepseek-flash";
           HINDSIGHT_API_REFLECT_LLM_REASONING_EFFORT = "low";
+          HINDSIGHT_API_REFLECT_LLM_EXTRA_BODY = builtins.toJSON {
+            thinking.type = "enabled";
+          };
           HINDSIGHT_API_REFLECT_LLM_MAX_CONCURRENT = "1";
           # Budget.LOW halves this, so 4 left reflect two tool calls: one wasted
           # on a blank page and then a forced empty answer, never reaching the
@@ -147,6 +146,14 @@
   };
   dockerCompose = "${pkgs.docker-compose}/bin/docker-compose";
 in {
+  sops.secrets.deepseek-api-key = {};
+  sops.templates.hindsight = {
+    content = ''
+      HINDSIGHT_API_REFLECT_LLM_API_KEY=${config.sops.placeholder.deepseek-api-key}
+    '';
+    restartUnits = ["hindsight.service"];
+  };
+
   hardware.nvidia-container-toolkit.enable = true;
   users.users.${vars.userName}.extraGroups = ["docker"];
 
