@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ ! -x "$HOME/.nix-profile/bin/nix" ]]; then
+  curl -fsSL https://nixos.org/nix/install -o /tmp/install-nix
+  sh /tmp/install-nix --no-daemon --yes --no-channel-add --no-modify-profile
+  rm /tmp/install-nix
+fi
+
+export USER="$(id -un)"
+source "$HOME/.nix-profile/etc/profile.d/nix.sh"
+export NIX_CONFIG="experimental-features = nix-command flakes"
+cd "$HOME/.config/nix"
+nix build .#homeConfigurations.sprite.activationPackage --out-link "$HOME/.local/state/sprite-home"
+if nix-env -q | grep -q '^nix-'; then
+  nix-env -e nix
+fi
+HOME_MANAGER_BACKUP_EXT=sprite-backup "$HOME/.local/state/sprite-home/activate"
+shell_path="$HOME/.nix-profile/bin/zsh"
+if ! grep -Fxq "$shell_path" /etc/shells; then
+  printf '%s\n' "$shell_path" | sudo tee -a /etc/shells >/dev/null
+fi
+sudo chsh -s "$shell_path" sprite

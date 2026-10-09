@@ -1,23 +1,11 @@
 {vars, ...}: {
   imports = [
     ./theme.nix
-    ./shell.nix
-    ./core.nix
-    ./nix-index.nix
-    ./vim.nix
+    ./terminal.nix
     ./zed.nix
     ./ssh.nix
-    ./git.nix
-    ./gitui.nix
     ./ghostty.nix
     ./firefox.nix
-    ./zellij.nix
-    ./starship.nix
-    ./fzf.nix
-    ./glow.nix
-    ./workmux.nix
-    ./yazi.nix
-    ./tuicr.nix
   ];
 
   # homeDirectory is set by the platform bundle beside this one, in home/linux

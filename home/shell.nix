@@ -28,7 +28,7 @@
       initContent = ''
         eval "$(zoxide init zsh)"
         source "$HOME/.config/zsh/completions/temporal.zsh"
-        source "$HOME/.config/zsh/completions/workmux.zsh"
+        ${lib.optionalString config.workmux.enable ''source "$HOME/.config/zsh/completions/workmux.zsh"''}
         # zellij's completion script ends with an unguarded `_zellij "$@"`, which
         # errors when eval'd outside a completion context. Register it properly.
         eval "$(zellij setup --generate-completion zsh | sed 's/^_zellij "\$@"$/compdef _zellij zellij/')"
@@ -82,17 +82,18 @@
         fi
       '';
 
-      shellAliases = {
-        ls = "eza";
-        pn = "pnpm";
-        px = "pnpm exec";
+      shellAliases =
+        {
+          ls = "eza";
+          pn = "pnpm";
+          px = "pnpm exec";
 
-        nx = "pnpm nx"; # temporary alias until I figure out dev shells for globals
-        wm = "workmux";
+          nx = "pnpm nx"; # temporary alias until I figure out dev shells for globals
 
-        k = "kubectl";
-        kns = "kubectl config set-context --current --namespace";
-      };
+          k = "kubectl";
+          kns = "kubectl config set-context --current --namespace";
+        }
+        // lib.optionalAttrs config.workmux.enable {wm = "workmux";};
     };
 
     # Integration off because the generated `source <(...)` lands wherever Home

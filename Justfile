@@ -3,7 +3,9 @@ default:
 
 # Switch this host, a named host, or deploy to one over SSH
 deploy host="" ip="":
-    @if [ -n "{{ ip }}" ]; then \
+    @if [ "{{ host }}" = "sprite" ]; then \
+      ./scripts/deploy-sprite "{{ ip }}"; \
+    elif [ -n "{{ ip }}" ]; then \
       nixos-rebuild switch --flake ".#{{ host }}" \
         --target-host "hassan@{{ ip }}" --build-host "hassan@{{ ip }}" \
         --sudo --ask-elevate-password --no-reexec; \
@@ -79,3 +81,6 @@ ollama-stop:
 
 ollama-start:
     launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/org.nix-community.home.ollama-tailnet.plist
+
+sprite-shell name:
+    sprite exec -s "{{ name }}" --tty --env "ZELLIJ_OUTER=${ZELLIJ_OUTER:-${ZELLIJ:+1}}" -- /home/sprite/.nix-profile/bin/zsh -l

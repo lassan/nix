@@ -9,6 +9,7 @@
     tldr
 
     gh
+    sprite
     just
     just-lsp
     uv
@@ -21,7 +22,6 @@
     typescript-language-server
 
     temporal-cli
-    tuicr
   ];
 
   programs = {

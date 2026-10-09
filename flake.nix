@@ -5,17 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nix-homebrew = {
-      url = "github:zhaofengli/nix-homebrew";
-      inputs.brew-src.follows = "brew-src";
-    };
-    # nix-homebrew pins brew 6.0.12, but homebrew-cask now uses the
-    # `command_wrapper` stanza that brew only understands from 6.0.13. Drop this
-    # and the nix-homebrew.package override once upstream bumps its own brew-src.
-    brew-src = {
-      url = "github:Homebrew/brew/6.0.15";
-      flake = false;
-    };
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -37,7 +27,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     workmux = {
-      url = "github:raine/workmux";
+      # Newer workmux fails test_dashboard_quit_keys on Darwin.
+      url = "github:raine/workmux/1da41e3b7fecb889aa85696e7f1bea0258e13768";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # zj-radar = {
@@ -83,7 +74,14 @@
       modules = [./hosts/nixbox];
     };
 
-    overlays.default = import ./overlays;
+    homeConfigurations.sprite = inputs.home-manager.lib.homeManagerConfiguration {
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+      extraSpecialArgs = specialArgs;
+      modules = [inputs.stylix.homeModules.stylix ./home/sprite.nix];
+    };
 
     packages = forEachSystem (_: {});
 

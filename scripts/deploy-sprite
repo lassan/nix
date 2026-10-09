@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+sprite_name="${1:?Usage: just deploy sprite <name>}"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repository_root="$(cd "${script_dir}/.." && pwd)"
+archive="$(mktemp)"
+trap 'rm -f "$archive"' EXIT
+
+cd "$repository_root"
+tar -czf "$archive" flake.nix flake.lock vars.nix home modules/common/theme.nix scripts Justfile
+sprite exec -s "$sprite_name" -- bash -c '
+  set -euo pipefail
+  mkdir -p "$HOME/.config/nix"
+  tar -xzf - -C "$HOME/.config/nix"
+' <"$archive"
+sprite exec -s "$sprite_name" -- bash /home/sprite/.config/nix/scripts/bootstrap-sprite

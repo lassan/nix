@@ -426,28 +426,19 @@ in {
                       height "90%"
                   }
               }
-              bind "Alt Shift r" {
-                  Run "tuicr" {
-                      floating true
-                      name "review"
-                      close_on_exit true
-                      x "5%"
-                      y "5%"
-                      width "90%"
-                      height "90%"
-                  }
-              }
-              bind "Alt Shift w" {
-                  Run "workmux" "dashboard" {
-                      floating true
-                      name "workmux"
-                      close_on_exit true
-                      x "5%"
-                      y "5%"
-                      width "90%"
-                      height "90%"
-                  }
-              }
+              ${lib.optionalString config.workmux.enable ''
+        bind "Alt Shift w" {
+            Run "workmux" "dashboard" {
+                floating true
+                name "workmux"
+                close_on_exit true
+                x "5%"
+                y "5%"
+                width "90%"
+                height "90%"
+            }
+        }
+      ''}
               ${radarKeybinds}
               bind "Alt p" { TogglePaneInGroup; }
               bind "Alt Shift p" { ToggleGroupMarking; }
