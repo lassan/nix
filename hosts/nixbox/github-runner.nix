@@ -62,6 +62,9 @@
       # dockerd resolves bind-mount paths on the host, so a private /tmp points
       # testcontainers and playwright mounts at the wrong directory.
       PrivateTmp = false;
+      # ProtectSystem=strict leaves the shared /tmp read-only, and pnpm 12.8
+      # takes its store locks in /tmp/pnpm-*-locks-<uid> whatever TMPDIR says.
+      ReadWritePaths = ["/tmp"];
       # Upstream 0066 leaves checkout files unreadable by non-root container
       # users such as playwright's pwuser.
       UMask = "0022";
