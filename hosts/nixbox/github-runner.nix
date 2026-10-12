@@ -7,11 +7,27 @@
   inherit (config.networking) hostName;
   workRoot = "/var/lib/github-runner-work";
 
-  checkDisk = pkgs.writeShellScript "runner-check-disk.sh" ''
+  # A cancelled or timed-out job loses only the `docker run` client; dockerd
+  # keeps the e2e container and its compose stack holding the slot's ports (run
+  # 38186160487). A runner runs one job at a time, so anything still carrying
+  # its label or slot when a job starts is left over.
+  jobStarted = pkgs.writeShellScript "runner-job-started.sh" ''
     available=$(${pkgs.coreutils}/bin/df --output=avail -B1 ${workRoot} | ${pkgs.coreutils}/bin/tail -n 1)
     if (( available < 30000000000 )); then
       echo "::error::nixbox has less than 30 GB free; restore disk space before retrying."
       exit 1
+    fi
+    docker=${pkgs.docker}/bin/docker
+    mapfile -t leftover < <(
+      "$docker" ps -aq --filter "label=sup.e2e.runner=$RUNNER_NAME"
+      "$docker" ps -a --filter label=com.docker.compose.project \
+        --format '{{.ID}} {{.Label "com.docker.compose.project"}}' \
+        | ${pkgs.gawk}/bin/awk -v suffix="-s$E2E_RUNNER_SLOT" \
+          'index($2, "sup-e2e-") == 1 && substr($2, length($2) - length(suffix) + 1) == suffix {print $1}'
+    )
+    if (( ''${#leftover[@]} )); then
+      echo "Removing ''${#leftover[@]} e2e containers left by an earlier job on $RUNNER_NAME"
+      "$docker" rm --force --volumes "''${leftover[@]}" >/dev/null
     fi
   '';
 
@@ -27,7 +43,7 @@
     BUG_REPORT_URL="https://bugs.debian.org/"
   '';
 
-  mkRunner = name: {
+  mkRunner = name: slot: {
     enable = true;
     url = "https://github.com/suphq";
     inherit tokenFile;
@@ -52,7 +68,10 @@
     extraEnvironment = {
       TMPDIR = "${workRoot}/${name}/_temp";
       PULUMI_HOME = "${workRoot}/${name}/.pulumi";
-      ACTIONS_RUNNER_HOOK_JOB_STARTED = checkDisk;
+      ACTIONS_RUNNER_HOOK_JOB_STARTED = jobStarted;
+      # Three runners share this host, so each e2e suite's fixed ports and
+      # compose project are offset per runner (libs/e2e-core/src/lib/ports.ts).
+      E2E_RUNNER_SLOT = toString slot;
     };
 
     serviceOverrides = {
@@ -106,6 +125,12 @@ in {
     ];
   };
 
+  # nsncd forwards every lookup uncached, so three concurrent pnpm installs sent
+  # the tailnet Pi-hole ~2,500 registry.npmjs.org queries a minute and tripped
+  # its 1000/min rate limit, which answers REFUSED for the whole tailnet.
+  # tailscaled hands MagicDNS to resolved over D-Bus, and resolved caches.
+  services.resolved.enable = true;
+
   virtualisation.docker.enable = true;
   # BuildKit GC reclaims unused cache between scheduled prunes as CI refills it.
   virtualisation.docker.daemon.settings.builder.gc = {
@@ -144,9 +169,9 @@ in {
   # that scripts/select-runner.checks.mjs executes under verify, glibc.bin the
   # ldd that actions such as astral-sh/setup-uv probe for libc.
   services.github-runners = {
-    "${hostName}-01" = mkRunner "${hostName}-01";
-    "${hostName}-02" = mkRunner "${hostName}-02";
-    "${hostName}-03" = mkRunner "${hostName}-03";
+    "${hostName}-01" = mkRunner "${hostName}-01" 1;
+    "${hostName}-02" = mkRunner "${hostName}-02" 2;
+    "${hostName}-03" = mkRunner "${hostName}-03" 3;
   };
 
   # Not `system prune --all`: its until filter reads image *creation* time, so
