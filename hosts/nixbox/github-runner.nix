@@ -89,6 +89,10 @@
       UMask = "0022";
       BindReadOnlyPaths = ["${osRelease}:/etc/os-release"];
       SystemCallFilter = ["capset"];
+      # Three runners share 31 GiB and peaked at all of it, swapping to zram.
+      # A soft cap makes one job reclaim its own page cache before it pushes
+      # the other runners' jobs into swap.
+      MemoryHigh = "12G";
     };
   };
 in {
