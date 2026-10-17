@@ -83,4 +83,4 @@ ollama-start:
     launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/org.nix-community.home.ollama-tailnet.plist
 
 sprite-shell name:
-    sprite exec -s "{{ name }}" --tty --env "ZELLIJ_OUTER=${ZELLIJ_OUTER:-${ZELLIJ:+1}}" -- /home/sprite/.nix-profile/bin/zsh -l
+    sprite exec -s "{{ name }}" --tty -- /home/sprite/.nix-profile/bin/zsh -l

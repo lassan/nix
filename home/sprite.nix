@@ -17,6 +17,7 @@
   };
 
   workmux.enable = false;
+  terminal.autoStartZellij = false;
 
   programs.home-manager.enable = true;
   programs.zsh.profileExtra = ''

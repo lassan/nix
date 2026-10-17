@@ -1,4 +1,9 @@
-{
+{lib, ...}: {
+  options.terminal.autoStartZellij = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+  };
+
   imports = [
     ./shell.nix
     ./core.nix
