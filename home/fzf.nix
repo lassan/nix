@@ -12,7 +12,7 @@
         --group-directories-first "$target"
     elif [ -f "$target" ]; then
       if [ "''${target##*.}" = md ]; then
-        CLICOLOR_FORCE=1 ${pkgs.glow}/bin/glow -w="$FZF_PREVIEW_COLUMNS" -s="${config.xdg.configHome}/glow/stylix.json" "$target"
+        leaf --inline ansi:"$FZF_PREVIEW_COLUMNS" -- "$target"
       else
         case "$(${pkgs.file}/bin/file --brief --mime-type "$target")" in
           text/* | inode/x-empty | application/json | application/javascript | application/xml)

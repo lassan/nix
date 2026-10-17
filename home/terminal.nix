@@ -14,7 +14,7 @@
     ./zellij.nix
     ./starship.nix
     ./fzf.nix
-    ./glow.nix
+    ./leaf.nix
     ./workmux.nix
     ./yazi.nix
     ./terminal-theme.nix

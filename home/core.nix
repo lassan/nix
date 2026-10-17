@@ -5,7 +5,6 @@
     ripgrep
     jq
     zoxide
-    glow
     tldr
 
     gh
