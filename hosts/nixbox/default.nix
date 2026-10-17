@@ -2,6 +2,7 @@ _: {
   imports = [
     ./hardware-configuration.nix
     ./hindsight.nix
+    ./agent-factory.nix
 
     ../../modules/nixos
     ../../modules/nixos/desktop.nix

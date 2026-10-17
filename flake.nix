@@ -31,6 +31,10 @@
       url = "github:raine/workmux/1da41e3b7fecb889aa85696e7f1bea0258e13768";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agent-toolkit = {
+      url = "github:lassan/agent-toolkit";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # zj-radar = {
     #   url = "github:marktoda/zj-radar";
     # };

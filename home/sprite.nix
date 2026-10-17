@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   pkgs,
   ...
@@ -13,10 +14,10 @@
     username = "sprite";
     homeDirectory = "/home/sprite";
     stateVersion = "25.11";
-    packages = [pkgs.nix];
+    packages = [pkgs.nix pkgs.docker inputs.agent-toolkit.packages.${pkgs.stdenv.hostPlatform.system}.agent-factory];
   };
 
-  workmux.enable = false;
+  workmux.enable = true;
   terminal.autoStartZellij = false;
 
   programs.home-manager.enable = true;
