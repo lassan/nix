@@ -101,6 +101,8 @@
 
     atuin = {
       enable = true;
+      # Hydra has no build for this nixpkgs yet and the e2e suite takes 15+ min locally.
+      package = pkgs.atuin.overrideAttrs {doCheck = false;};
       enableZshIntegration = false;
       forceOverwriteSettings = true;
 
